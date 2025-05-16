@@ -22,7 +22,7 @@ export function LoginForm() {
 
     setTimeout(() => {
       setIsLoading(false);
-      router.push("/dashboard");
+      router.push("/profile-setup");
     }, 1500);
   };
 
@@ -78,7 +78,7 @@ export function LoginForm() {
           <Button
             type="submit"
             size="lg"
-            className="w-full"
+            className="w-full bg-primary-400 hover:bg-primary-500"
             disabled={isLoading}
           >
             {isLoading ? "Signing In..." : "Sign In"}
