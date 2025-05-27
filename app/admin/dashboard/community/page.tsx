@@ -24,7 +24,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetCommunitiesQuery, Community } from "@/components/queries/communities/get-communities";
-import { toast } from "react-toastify";
 
 export default function CommunityPage() {
   const [createCommunityOpen, setCreateCommunityOpen] = useState(false);
@@ -68,11 +67,12 @@ export default function CommunityPage() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto pb-16 mt-8">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-4xl font-medium mb-6">Communities</h1>
+      <div className="flex-1 overflow-y-auto pb-16 mt-4 md:mt-8 px-4 md:px-0">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <h1 className="text-2xl md:text-4xl font-medium">Communities</h1>
           <Button
             size="lg"
+            className="sm:size-lg w-full sm:w-auto"
             onClick={() => setCreateCommunityOpen(true)}
           >
             <Plus className="mr-2 h-4 w-4" />
@@ -80,9 +80,9 @@ export default function CommunityPage() {
           </Button>
         </div>
         
-        <div className="flex justify-between items-center mb-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
           <div className="text-sm text-gray-500">{totalCount} communities created</div>
-          <div className="flex items-center">
+          <div className="flex items-center self-end sm:self-auto">
             <span className="text-sm mr-2">Sort by:</span>
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[100px]">
@@ -106,19 +106,19 @@ export default function CommunityPage() {
         ) : (
           <div className="space-y-4">
             {communities.map((community) => (
-              <Card key={community.id} className="p-4 border-none shadow-sm">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 mr-4">
+              <Card key={community.id} className="p-3 sm:p-4 border-none shadow-sm">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-shrink-0">
                     <img
                       src={community.bannerUrl || "/placeholder.svg"}
                       alt={community.name}
-                      className="w-16 h-16 rounded-md object-cover"
+                      className="w-full sm:w-16 h-32 sm:h-16 rounded-md object-cover"
                     />
                   </div>
                   <div className="flex-1">
-                    <div className="flex justify-between">
+                    <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
                       <div>
-                        <div className="flex gap-2 items-center">
+                        <div className="flex flex-wrap gap-2 items-center">
                           <h3 className="text-lg font-medium">
                             {community.name}
                           </h3>
@@ -129,48 +129,50 @@ export default function CommunityPage() {
                             {community.privacy}
                           </Badge>
                         </div>
-                        <p className="text-gray-500 text-sm mt-1">
+                        <p className="text-gray-500 text-sm mt-1 line-clamp-2 sm:line-clamp-1">
                           {community.description}
                         </p>
                       </div>
 
-                      <div className="flex items-center space-x-4">
-                        <div className="flex -space-x-2">
-                          <Avatar className="h-7 w-7 border-2 border-white">
-                            <AvatarImage
-                              src="https://github.com/shadcn.png"
-                              alt="profile image"
-                              className="rounded-full"
-                            />
-                            <AvatarFallback>CN</AvatarFallback>
-                          </Avatar>
-                          <Avatar className="h-7 w-7 border-2 border-white">
-                            <AvatarImage
-                              src="https://github.com/shadcn.png"
-                              alt="profile image"
-                              className="rounded-full"
-                            />
-                            <AvatarFallback>CN</AvatarFallback>
-                          </Avatar>
-                          <Avatar className="h-7 w-7 border-2 border-white">
-                            <AvatarImage
-                              src="https://github.com/shadcn.png"
-                              alt="profile image"
-                              className="rounded-full"
-                            />
-                            <AvatarFallback>CN</AvatarFallback>
-                          </Avatar>
-                        </div>
+                      <div className="flex flex-row sm:flex-col md:flex-row justify-between sm:justify-end items-center sm:items-end md:items-center gap-2 sm:gap-4">
+                        <div className="flex items-center gap-2">
+                          <div className="flex -space-x-2">
+                            <Avatar className="h-6 w-6 sm:h-7 sm:w-7 border-2 border-white">
+                              <AvatarImage
+                                src="https://github.com/shadcn.png"
+                                alt="profile image"
+                                className="rounded-full"
+                              />
+                              <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                            <Avatar className="h-6 w-6 sm:h-7 sm:w-7 border-2 border-white">
+                              <AvatarImage
+                                src="https://github.com/shadcn.png"
+                                alt="profile image"
+                                className="rounded-full"
+                              />
+                              <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                            <Avatar className="h-6 w-6 sm:h-7 sm:w-7 border-2 border-white">
+                              <AvatarImage
+                                src="https://github.com/shadcn.png"
+                                alt="profile image"
+                                className="rounded-full"
+                              />
+                              <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                          </div>
 
-                        <span className="text-sm text-gray-500 whitespace-nowrap">
-                          {community.memberCount} participants
-                        </span>
+                          <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
+                            {community.memberCount} participants
+                          </span>
+                        </div>
 
                         <div className="relative">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreVertical className="h-5 w-5" />
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreVertical className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">

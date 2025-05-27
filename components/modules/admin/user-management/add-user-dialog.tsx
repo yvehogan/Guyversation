@@ -1,11 +1,27 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useMutation } from "@tanstack/react-query";
-import { InviteUserMutation, InviteUserProps, InviteUserResponse } from "@/components/queries/admin/invite-user";
+import {
+  InviteUserMutation,
+  InviteUserProps,
+  InviteUserResponse,
+} from "@/components/queries/admin/invite-user";
 import { toast } from "react-toastify";
 
 interface AddUserDialogProps {
@@ -14,7 +30,11 @@ interface AddUserDialogProps {
   onAddUser: (email: string, role: string) => void;
 }
 
-export function AddUserDialog({ open, onOpenChange, onAddUser }: AddUserDialogProps) {
+export function AddUserDialog({
+  open,
+  onOpenChange,
+  onAddUser,
+}: AddUserDialogProps) {
   const [email, setEmail] = useState("");
   const [userRole, setUserRole] = useState("");
   const [error, setError] = useState("");
@@ -47,13 +67,17 @@ export function AddUserDialog({ open, onOpenChange, onAddUser }: AddUserDialogPr
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent 
-        className="sm:max-w-[450px] flex flex-col overflow-y-auto"
+      <DialogContent
+        className="sm:max-w-[450px] flex flex-col overflow-y-auto w-full"
         style={{
-          transform: "translateX(100%)",
-          marginTop: "0vh",
-          marginBottom: "5vh",
-          height: "95vh",
+          height: "calc(100vh - 2rem)",
+          maxHeight: "100vh",
+          width: "100vw",
+          top: "98%",
+          left: "98%",
+          transform: "translate(-50%, -50%)",
+          position: "fixed",
+          margin: 0,
         }}
       >
         <DialogHeader>
@@ -61,7 +85,7 @@ export function AddUserDialog({ open, onOpenChange, onAddUser }: AddUserDialogPr
             Add New User
           </DialogTitle>
         </DialogHeader>
-        
+
         <div className="grid gap-2 py-6">
           {error && (
             <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md">
@@ -93,10 +117,10 @@ export function AddUserDialog({ open, onOpenChange, onAddUser }: AddUserDialogPr
             </Select>
           </div>
         </div>
-        
+
         <DialogFooter className="mt-auto pb-6">
           <Button
-            size='lg'
+            size="lg"
             className="w-full"
             onClick={handleSubmit}
             disabled={isPending}

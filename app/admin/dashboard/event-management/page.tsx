@@ -203,7 +203,8 @@ export default function EventManagementPage() {
     <>
       <div className="flex-1 overflow-y-auto pb-16 mt-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-medium mb-4">Events</h1>
+          <h1 className="text-2xl md:text-4xl font-medium mb-4">Events</h1>
+
           <Button
             onClick={() => setCreateEventOpen(true)}
             className=""
@@ -217,7 +218,7 @@ export default function EventManagementPage() {
       <Tabs
         defaultValue="all"
         onValueChange={(value) => setActiveTab(value as EventType)}
-        className="border-b border-[#DADADA]"
+        className="border-b border-[#DADADA] overflow-x-auto"
       >
         <TabsList className="mb-3 bg-transparent p-1">
           <TabsTrigger value="all" className="">

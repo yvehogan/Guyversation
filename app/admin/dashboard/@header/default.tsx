@@ -8,7 +8,7 @@ interface HeaderProps {
 const DefaultHeader: React.FC<HeaderProps> = ({ user }) => {
   return (
     <header>
-      <Appbar user={user} />
+      <Appbar />
     </header>
   );
 };

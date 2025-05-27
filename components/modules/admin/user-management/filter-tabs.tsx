@@ -16,7 +16,7 @@ export function FilterTabs({
       {filters.map((filter) => (
         <button
           key={filter}
-          className={`rounded-full text-sm px-6 py-2 ${
+          className={`rounded-full text-sm px-3 whitespace-nowrap md:px-6 py-2 ${
             activeFilter === filter
               ? "bg-primary-200 text-primary-400 hover:bg-transparent hover:text-primary-400"
               : "bg-transparent text-neutral-100 hover:bg-transparent hover:text-neutral-100"

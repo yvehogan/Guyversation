@@ -9,7 +9,7 @@ interface TabNavigationProps {
 export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   return (
     <div className="mb-4">
-      <div className="grid grid-cols-2 w-full max-w-sm bg-white rounded-full overflow-hidden p-2">
+      <div className="grid grid-cols-2 w-full md:max-w-sm bg-white rounded-full overflow-hidden p-2">
         <button
           className={`flex items-center justify-center rounded-full h-10 ${
             activeTab === "all-users"

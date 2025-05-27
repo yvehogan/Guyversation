@@ -126,7 +126,7 @@ export default function DashboardPage() {
               key={index}
               className={`border-0 shadow-none rounded-none px-4 ${
                 (index + 1) % 4 !== 0 && index !== userStats.length - 1
-                  ? "border-r border-grey-500"
+                  ? "border-b md:border-b-0 md:border-r border-grey-500"
                   : ""
               }`}
             >
@@ -154,7 +154,7 @@ export default function DashboardPage() {
               key={index}
               className={`border-0 shadow-none rounded-none px-4 ${
                 (index + 1) % 4 !== 0 && index !== userStats.length - 1
-                  ? "border-r border-grey-500"
+                  ? "border-b md:border-b-0 md:border-r border-grey-500"
                   : ""
               }`}
             >
@@ -182,7 +182,7 @@ export default function DashboardPage() {
               key={index}
               className={`border-0 shadow-none rounded-none px-4 ${
                 (index + 1) % 4 !== 0 && index !== userStats.length - 1
-                  ? "border-r border-grey-500"
+                  ? "border-b md:border-b-0 md:border-r border-grey-500"
                   : ""
               }`}
             >
@@ -203,31 +203,33 @@ export default function DashboardPage() {
       </section>
 
       <section>
-        <h2 className="text-xl font-bold mb-4">Events</h2>
+        <h2 className="text-xl font-medium mb-3">Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-0">
-          <div className="col-span-3 bg-white rounded-2xl overflow-hidden grid grid-cols-3">
-            {eventStats.map((stat, index) => (
-              <Card
-                key={index}
-                className={`border-0 shadow-none rounded-none px-4 ${
-                  index < eventStats.length - 1
-                    ? "border-r border-grey-500"
-                    : ""
-                }`}
-              >
-                <CardContent className="py-3 px-4">
-                  <div className="flex flex-col items-start">
-                    <div className={`p-2 rounded-full ${stat.color} mb-2`}>
-                      <stat.icon className="h-5 w-5" />
+          <div className="col-span-full md:col-span-3 bg-white rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+              {eventStats.map((stat, index) => (
+                <Card
+                  key={index}
+                  className={`border-0 shadow-none rounded-none px-4 ${
+                    index < eventStats.length - 1 && "md:border-r border-grey-500"
+                  } ${
+                    index < eventStats.length - 1 && "border-b md:border-b-0 border-grey-500"
+                  }`}
+                >
+                  <CardContent className="py-4 px-2 md:py-3 md:px-4">
+                    <div className="flex flex-col items-start">
+                      <div className={`p-2 rounded-full ${stat.color} mb-2`}>
+                        <stat.icon className="h-5 w-5" />
+                      </div>
+                      <div className="text-sm text-neutral-200">{stat.title}</div>
+                      <div className="text-[28px] sm:text-[32px] font-normal mt-1">
+                        {stat.value}
+                      </div>
                     </div>
-                    <div className="text-sm text-neutral-200">{stat.title}</div>
-                    <div className="text-[32px] font-normal mt-1">
-                      {stat.value}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
           <div className="hidden md:block"></div>
         </div>

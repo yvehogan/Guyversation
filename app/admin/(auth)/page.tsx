@@ -1,18 +1,18 @@
-import { LoginForm } from '@/components/modules/admin/login-form'
-import Image from 'next/image'
-import Link from 'next/link'
-import React from 'react'
+import { LoginForm } from "@/components/modules/admin/login-form";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
 const page = () => {
   return (
     <>
-      <header className="flex items-center justify-between">
+      <header className="flex flex-col gap-2 items-center justify-between">
         <Image
           src="/svgs/logo.svg"
           alt="Logo"
           width={100}
           height={50}
-          className="h-10 w-auto"
+          className="h-7 w-auto sm:h-10 sm:w-auto"
         />
         <div className="flex items-center gap-2">
           <span className="text-sm text-neutral-100">
@@ -32,7 +32,7 @@ const page = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;

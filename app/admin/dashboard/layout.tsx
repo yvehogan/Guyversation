@@ -10,7 +10,7 @@ const DashboardLayout: React.FC<{
       {sidebar}
       <main className="h-full w-full overflow-hidden">
         {header}
-        <div className="flex justify-center h-[calc(100vh-80px)] w-full items-start gap-x-10 px-3 md:px-10 overflow-y-auto">
+        <div className="flex justify-center h-[calc(100vh-80px)] w-full items-start gap-x-10 md:px-10 overflow-y-auto">
           {children}
         </div>
       </main>

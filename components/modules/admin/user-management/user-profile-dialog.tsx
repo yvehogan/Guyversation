@@ -28,18 +28,19 @@ export function UserProfileDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-[550px] flex flex-col overflow-y-auto"
+        className="sm:max-w-[550px] flex flex-col overflow-y-auto max-h-[95vh] w-[90vw] sm:w-auto"
         style={{
-          transform: "translateX(77%)",
-          marginTop: "0vh",
-          marginBottom: "5vh",
-          height: "95vh",
+          transform: "translate(-50%, -50%)",
+          position: "fixed",
+          top: "97%",
+          left: "98%",
+          margin: 0,
         }}
       >
         <div className="pb-6">
           <div className="flex items-center gap-4 mb-6">
             <div className="relative">
-              <Avatar className="h-20 w-20">
+              <Avatar className="h-16 sm:h-20 w-16 sm:w-20">
                 <AvatarImage
                   src="https://github.com/shadcn.png"
                   alt="profile image"
@@ -49,8 +50,8 @@ export function UserProfileDialog({
               </Avatar>
             </div>
             <div>
-              <h2 className="text-4xl font-medium">
-                {user?.name || "Magnus Carlsen"}
+              <h2 className="text-2xl sm:text-4xl font-medium">
+                {"Magnus Carlsen"}
               </h2>
               <div className="inline-block px-3 py-1 rounded-full text-xs border bg-secondary-100 border-secondary-400 text-primary mt-1">
                 {user?.type || "Mentor"}
@@ -58,8 +59,8 @@ export function UserProfileDialog({
             </div>
           </div>
 
-          <div className="border-b mb-6">
-            <div className="flex space-x-8">
+          <div className="border-b mb-6 overflow-x-auto">
+            <div className="flex space-x-6 sm:space-x-8 min-w-max">
               <button
                 className={`pb-2 px-1 ${
                   activeTab === "profile"
@@ -104,7 +105,7 @@ export function UserProfileDialog({
           </div>
 
           {activeTab === "profile" && (
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               <div>
                 <h3 className="text-base font-medium mb-2">About</h3>
                 <p className="text-black font-light">
@@ -118,11 +119,10 @@ export function UserProfileDialog({
                 </p>
               </div>
 
-              {/* Profile details content */}
               <div className="grid grid-cols-2 gap-8">
                 <div>
                   <h3 className="font-medium mb-2">
-                    Preferred Channel decfdsa
+                    Preferred Channel
                   </h3>
                   <p className="text-black font-light">Chat, Video call</p>
                 </div>
@@ -149,7 +149,7 @@ export function UserProfileDialog({
 
               <div>
                 <h3 className="font-medium mb-2">Credentials</h3>
-                <div className="flex flex-wr gap-2">
+                <div className="flex flex-col md:flex-row gap-2">
                   <a
                     href="#"
                     className="px-3 py-2 rounded-full text-sm border border-primary-400 text-black bg-primary-200 flex items-center"
@@ -184,7 +184,7 @@ export function UserProfileDialog({
           )}
 
           {activeTab === "stats" && (
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               <div className="grid grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-neutral-200 text-sm mb-1 font-medium">
@@ -254,7 +254,7 @@ export function UserProfileDialog({
           )}
 
           {activeTab === "sessions" && (
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               <div className="grid grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-neutral-200 text-sm mb-1">
@@ -286,7 +286,7 @@ export function UserProfileDialog({
                 <h3 className="text-base font-medium mb-4 text-neutral-100">
                   Available sessions
                 </h3>
-                <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                   {["Monday", "Tuesday", "Wednesday", "Thursday"].map((day) => (
                     <div
                       key={day}
@@ -297,7 +297,7 @@ export function UserProfileDialog({
                     </div>
                   ))}
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {["Friday", "Saturday", "Sunday"].map((day) => (
                     <div
                       key={day}
@@ -339,7 +339,7 @@ export function UserProfileDialog({
           )}
 
           {activeTab === "review" && (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div className="bg-primary-200 p-4 rounded-2xl">
                 <p className="text-neutral-100 text-sm font-light">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
