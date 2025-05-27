@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
+import { Providers } from "@/components/ClientProviders";
 
-const unageo = localFont({
+const instrument = localFont({
   src: [
     {
       path: "../public/fonts/Unageo-light.ttf",
@@ -46,8 +47,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${unageo.variable} antialiased`}>
-        {children}
+      <body className={`${instrument.variable} antialiased`}>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

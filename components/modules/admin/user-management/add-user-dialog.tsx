@@ -4,6 +4,9 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useMutation } from "@tanstack/react-query";
+import { InviteUserMutation, InviteUserProps, InviteUserResponse } from "@/components/queries/admin/invite-user";
+import { toast } from "react-toastify";
 
 interface AddUserDialogProps {
   open: boolean;
@@ -11,16 +14,35 @@ interface AddUserDialogProps {
   onAddUser: (email: string, role: string) => void;
 }
 
-export function AddUserDialog({ 
-  open, 
-  onOpenChange, 
-  onAddUser 
-}: AddUserDialogProps) {
+export function AddUserDialog({ open, onOpenChange, onAddUser }: AddUserDialogProps) {
   const [email, setEmail] = useState("");
   const [userRole, setUserRole] = useState("");
+  const [error, setError] = useState("");
+
+  const { mutate: inviteUser, isPending } = useMutation({
+    mutationFn: (values: InviteUserProps) => InviteUserMutation(values),
+    onSuccess: (response: InviteUserResponse) => {
+      if (response.isSuccess) {
+        toast.success(response.message || "User invited successfully!");
+        onAddUser(email, userRole);
+      } else {
+        toast.error(response.message || "Failed to invite user.");
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "An unexpected error occurred.");
+    },
+  });
 
   const handleSubmit = () => {
-    onAddUser(email, userRole);
+    setError("");
+
+    if (!email || !userRole) {
+      setError("Email and role are required.");
+      return;
+    }
+
+    inviteUser({ email, role: userRole });
   };
 
   return (
@@ -41,6 +63,11 @@ export function AddUserDialog({
         </DialogHeader>
         
         <div className="grid gap-2 py-6">
+          {error && (
+            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md">
+              {error}
+            </div>
+          )}
           <div className="grid gap-2 mb-5">
             <Label htmlFor="email">Email Address</Label>
             <Input
@@ -72,8 +99,9 @@ export function AddUserDialog({
             size='lg'
             className="w-full"
             onClick={handleSubmit}
+            disabled={isPending}
           >
-            Add User
+            {isPending ? "Inviting..." : "Add User"}
           </Button>
         </DialogFooter>
       </DialogContent>

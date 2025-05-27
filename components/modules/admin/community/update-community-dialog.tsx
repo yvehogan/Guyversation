@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
@@ -19,54 +19,71 @@ import {
 import { Button } from "@/components/ui/button";
 import { Plus, Upload } from "lucide-react";
 import {
-  CreateCommunityMutation,
-  CreateCommunityProps,
+  UpdateCommunityMutation,
+  UpdateCommunityProps,
+} from "@/components/queries/communities/update-community";
+import {
   CommunityPrivacy,
   CommunityAudience,
 } from "@/components/queries/communities/create-community";
+import { Community } from "@/components/queries/communities/get-communities";
 import { toast } from "react-toastify";
 
-interface CreateCommunityDialogProps {
+interface UpdateCommunityDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreateCommunity: () => void;
+  community: Community | null;
 }
 
-export function CreateCommunityDialog({
+export function UpdateCommunityDialog({
   open,
   onOpenChange,
-  onCreateCommunity,
-}: CreateCommunityDialogProps) {
+  community,
+}: UpdateCommunityDialogProps) {
   const [communityName, setCommunityName] = useState("");
   const [communityDescription, setCommunityDescription] = useState("");
   const [targetAudience, setTargetAudience] = useState<CommunityAudience>("Everyone");
   const [privacy, setPrivacy] = useState<CommunityPrivacy>("Open");
-  const [groupLimit, setGroupLimit] = useState("100");
+  const [groupLimit, setGroupLimit] = useState("");
   const [banner, setBanner] = useState<File | null>(null);
   const [rules, setRules] = useState("");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (community && open) {
+      setCommunityName(community.name || "");
+      setCommunityDescription(community.description || "");
+      setTargetAudience((community.audience || "Everyone") as CommunityAudience);
+      setPrivacy((community.privacy || "Open") as CommunityPrivacy);
+      setGroupLimit(community.limit?.toString() || "100");
+      setRules(community.rules || "");
+      setPreviewUrl(community.bannerUrl);
+      setBanner(null);
+    }
+  }, [community, open]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setBanner(e.target.files[0]);
+      const file = e.target.files[0];
+      setBanner(file);
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
   const queryClient = useQueryClient();
-  const { mutate: createCommunity, isPending } = useMutation({
-    mutationFn: (values: CreateCommunityProps) => CreateCommunityMutation(values),
+  const { mutate: updateCommunity, isPending } = useMutation({
+    mutationFn: (values: UpdateCommunityProps) => UpdateCommunityMutation(values),
     onSuccess: (response) => {
       if (response.isSuccess) {
-        toast.success(response.message || "Community created successfully!");
-        resetForm();
-
+        toast.success(response.message || "Community updated successfully!");
+        
         queryClient.invalidateQueries({ queryKey: ["admin-communities"] });
         queryClient.invalidateQueries({ queryKey: ["communities"] });
-
-        onCreateCommunity();
+        
         onOpenChange(false);
       } else {
-        toast.error(response.message || "Failed to create community.");
+        toast.error(response.message || "Failed to update community.");
       }
     },
     onError: (error: Error) => {
@@ -74,17 +91,7 @@ export function CreateCommunityDialog({
     },
   });
 
-  const resetForm = () => {
-    setCommunityName("");
-    setCommunityDescription("");
-    setTargetAudience("Everyone");
-    setPrivacy("Open");
-    setGroupLimit("100");
-    setBanner(null);
-    setRules("");
-  };
-
-  const handleCreateCommunity = () => {
+  const handleUpdateCommunity = () => {
     setError("");
 
     if (!communityName) {
@@ -92,10 +99,16 @@ export function CreateCommunityDialog({
       return;
     }
 
-    createCommunity({
+    if (!community?.id) {
+      setError("Community ID is missing");
+      return;
+    }
+
+    updateCommunity({
+      id: community.id,
       name: communityName,
       description: communityDescription,
-      banner,
+      banner: banner,
       privacy: privacy,
       audience: targetAudience,
       rules: rules,
@@ -103,21 +116,25 @@ export function CreateCommunityDialog({
     });
   };
 
+  if (!community) {
+    return null;
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-3xl rounded-[30px]">
         <DialogHeader className="border-b border-grey-500 pb-4">
           <DialogTitle className="text-4xl font-medium">
-            Create Community
+            Update Community
           </DialogTitle>
         </DialogHeader>
 
         <div className="mt-6 mb-4 flex justify-center">
           <label htmlFor="banner-upload" className="relative cursor-pointer">
             <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
-              {banner ? (
+              {previewUrl ? (
                 <img
-                  src={URL.createObjectURL(banner)}
+                  src={previewUrl}
                   alt="Banner preview"
                   className="w-full h-full object-cover rounded-full"
                 />
@@ -139,7 +156,7 @@ export function CreateCommunityDialog({
         </div>
 
         {error && (
-          <div className="p-3 mb-4 text-sm text-warning-200 bg-red-50 rounded-md">
+          <div className="p-3 mb-4 text-sm text-red-500 bg-red-50 rounded-md">
             {error}
           </div>
         )}
@@ -226,14 +243,23 @@ export function CreateCommunityDialog({
           </div>
         </div>
 
-        <Button
-          onClick={handleCreateCommunity}
-          size="lg"
-          className="w-1/2 mx-auto"
-          disabled={isPending}
-        >
-          {isPending ? "Creating..." : "Create community"}
-        </Button>
+        <div className="flex gap-3 justify-end">
+          <Button
+            onClick={() => onOpenChange(false)}
+            variant="outline"
+            size="lg"
+            disabled={isPending}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleUpdateCommunity}
+            size="lg"
+            disabled={isPending}
+          >
+            {isPending ? "Updating..." : "Update Community"}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

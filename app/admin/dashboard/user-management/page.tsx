@@ -10,7 +10,10 @@ import { TabNavigation } from "@/components/modules/admin/user-management/tab-na
 import { UserManagementHeader } from "@/components/modules/admin/user-management/user-header";
 import { UserProfileDialog } from "@/components/modules/admin/user-management/user-profile-dialog";
 import { UserInterface, UsersTable } from "@/components/modules/admin/user-management/user-table";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { GetUsersQuery, GetUsersResponse, User } from "@/components/queries/admin/get-users";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 export default function UserManagementPage() {
   // State for dialogs
@@ -23,7 +26,6 @@ export default function UserManagementPage() {
   const [confirmRequestOpen, setConfirmRequestOpen] = useState(false);
   const [successRequestOpen, setSuccessRequestOpen] = useState(false);
   
-  // State for user data
   const [selectedUser, setSelectedUser] = useState<UserInterface | null>(null);
   const [viewingUser, setViewingUser] = useState<UserInterface | null>(null);
   const [email, setEmail] = useState("");
@@ -31,124 +33,37 @@ export default function UserManagementPage() {
   
   // State for UI
   const [activeTab, setActiveTab] = useState("all-users");
-  const [activeFilter, setActiveFilter] = useState("All Users");
+  const [activeFilter, setActiveFilter] = useState<"All Users" | "Anonymous" | "Mentee" | "Mentor">("All Users");
   const [profileTab, setProfileTab] = useState("profile");
 
-  // Sample users data
-  const users: UserInterface[] = [
-    {
-      id: 1,
-      name: "Ezekiel David Ayo",
-      type: "Mentee",
-      status: "Active",
-      location: "Lagos, Nigeria",
-      time: "Today",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 2,
-      name: "Ezekiel David Ayo",
-      type: "Mentor",
-      status: "Active",
-      location: "Abuja, Nigeria",
-      time: "5 days ago",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 3,
-      name: "Ezekiel David Ayo",
-      type: "Mentee",
-      status: "Active",
-      location: "Lagos, Nigeria",
-      time: "1 week ago",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 4,
-      name: "Anonymous",
-      type: "Anonymous",
-      status: "-",
-      location: "-",
-      time: "2 weeks ago",
-    },
-    {
-      id: 5,
-      name: "Ezekiel David Ayo",
-      type: "School",
-      status: "Active",
-      location: "Abuja, Nigeria",
-      time: "2 weeks ago",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 6,
-      name: "Ezekiel David Ayo",
-      type: "Mentor",
-      status: "Pending",
-      location: "Lagos, Nigeria",
-      time: "3 weeks ago",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 7,
-      name: "Anonymous",
-      type: "Anonymous",
-      status: "-",
-      location: "-",
-      time: "30 Nov, 2025",
-    },
-    {
-      id: 8,
-      name: "Ezekiel David Ayo",
-      type: "Mentor",
-      status: "Active",
-      location: "Abuja, Nigeria",
-      time: "30 Nov, 2025",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 9,
-      name: "Ezekiel David Ayo",
-      type: "School",
-      status: "Active",
-      location: "Abuja, Nigeria",
-      time: "30 Nov, 2025",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 10,
-      name: "Ezekiel David Ayo",
-      type: "Mentor",
-      status: "Pending",
-      location: "Lagos, Nigeria",
-      time: "30 Nov, 2025",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 11,
-      name: "Ezekiel David Ayo",
-      type: "School",
-      status: "Active",
-      location: "Abuja, Nigeria",
-      time: "30 Nov, 2025",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: 12,
-      name: "Anonymous",
-      type: "Anonymous",
-      status: "-",
-      location: "-",
-      time: "30 Nov, 2025",
-    },
-  ];
+const queryResult = useQuery<GetUsersResponse, Error>({
+  queryKey: ["users", activeFilter],
+  queryFn: () => GetUsersQuery(activeFilter !== "All Users" ? { userType: activeFilter } : undefined),
+});
 
-  // Filter users based on active filter
-  const filteredUsers = users.filter((user) => {
-    if (activeFilter === "All Users") return true;
-    return user.type === activeFilter;
-  });
+useEffect(() => {
+  if (queryResult.error) {
+    toast.error(queryResult.error.message || "Failed to fetch users.");
+  }
+}, [queryResult.error]);
 
+const { isLoading, isError } = queryResult;
+const data = queryResult.data as GetUsersResponse | undefined;
+
+
+const users: UserInterface[] = data?.data?.map((user) => ({
+  id: user.id,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  type:
+    user.userType === 0
+      ? "Mentee"
+      : user.userType === 1
+      ? "Mentor"
+      : "Anonymous",
+  status: "Active",
+  image: user.profilePictureUrl ?? undefined,
+})) ?? [];
   // Event handlers
   const handleAddUser = (email: string, role: string) => {
     setEmail(email);
@@ -204,18 +119,22 @@ export default function UserManagementPage() {
                 "All Users",
                 "Mentee",
                 "Mentor",
-                "School",
                 "Anonymous",
-                "Parent",
               ]}
               activeFilter={activeFilter}
-              onFilterChange={setActiveFilter}
+              onFilterChange={(filter) => setActiveFilter(filter as "All Users" | "Mentee" | "Mentor" | "Anonymous")}
             />
-            <UsersTable 
-              users={filteredUsers} 
-              onViewProfile={handleViewProfile}
-              onRevokeAccess={handleRevokeAccess}
-            />
+            {isLoading ? (
+              <p>Loading users...</p>
+            ) : isError ? (
+              <p>Failed to load users.</p>
+            ) : (
+              <UsersTable 
+                users={users} 
+                onViewProfile={handleViewProfile}
+                onRevokeAccess={handleRevokeAccess}
+              />
+            )}
           </div>
         )}
 
@@ -224,10 +143,10 @@ export default function UserManagementPage() {
             <FilterTabs
               filters={["All Users", "Mentee", "Anonymous"]}
               activeFilter={activeFilter}
-              onFilterChange={setActiveFilter}
+              onFilterChange={(filter) => setActiveFilter(filter as "All Users" | "Mentee" | "Mentor" | "Anonymous")}
             />
             <RequestsTable 
-              users={filteredUsers.slice(0, 6)} 
+              users={users.slice(0, 6)} 
               onViewRequest={handleViewRequest}
             />
           </div>

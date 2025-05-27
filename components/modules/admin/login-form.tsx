@@ -1,7 +1,5 @@
 "use client";
-
 import type React from "react";
-
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,21 +7,46 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { LoginMutation, LoginProps, LoginResponse } from "@/components/queries/auth/login";
+import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const { mutate: login, isPending } = useMutation({
+    mutationFn: (values: LoginProps) => LoginMutation(values),
+    onSuccess: (response: LoginResponse) => {
+      if (response.isSuccess) {
+        Cookies.set("GUYVERSATION_USER_ID", response.data?.userId || "");
+        Cookies.set("GUYVERSATION_ACCESS_TOKEN", response.data?.accessToken || "", { expires: 7 });
+
+        toast.success(response.message);
+        router.push("/admin/dashboard");
+      } else {
+        toast.error(response.message || "Login failed. Please check your credentials.");
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setError("");
 
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/admin/dashboard");
-    }, 1500);
+    // Basic validation
+    if (!email || !password) {
+      setError("Email and password are required.");
+      return;
+    }
+
+    login({ email, password });
   };
 
   return (
@@ -45,6 +68,11 @@ export function LoginForm() {
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4 mt-16">
+          {error && (
+            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md">
+              {error}
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
             <Input
@@ -79,9 +107,9 @@ export function LoginForm() {
             type="submit"
             size="lg"
             className="w-full"
-            disabled={isLoading}
+            disabled={isPending}
           >
-            {isLoading ? "Signing In..." : "Sign In"}
+            {isPending ? "Signing In..." : "Sign In"}
           </Button>
         </form>
       </div>
