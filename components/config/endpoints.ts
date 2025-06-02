@@ -1,9 +1,4 @@
-import { trace } from "console";
-
 export const endpoints = (
-  id?: string | number,
-  organizationId?: string,
-  projectId?: string
 ) => {
   return {
     auth: {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, Clock, Check, Radio } from "lucide-react";
+import { Clock, Check, Radio } from "lucide-react";
 import { LuCalendarDays } from "react-icons/lu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";

@@ -60,7 +60,8 @@ const GetCommunitiesQuery = async (
     }
 
     const errorMessage =
-      (error as any)?.response?.data?.message || 'An unexpected error occurred.';
+      // (error as any)?.response?.data?.message || 'An unexpected error occurred.';
+      ((error as unknown) as { response?: { data?: { message?: string } } })?.response?.data?.message || "An unexpected error occurred.";
     return {
       isSuccess: false,
       statusCode: '500',

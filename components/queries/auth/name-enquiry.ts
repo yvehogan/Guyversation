@@ -1,5 +1,5 @@
 import { endpoints } from '@/components/config/endpoints';
-import { axios } from '@/components/lib/axios';
+import { axios } from '@/lib/axios';
 import axiosDefault from 'axios';
 
 export interface NameEnquiryProps {

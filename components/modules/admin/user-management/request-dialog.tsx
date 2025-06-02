@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from "@/components/ui/dialog";
-import { X } from "lucide-react";
 import Image from "next/image";
 
 interface ConfirmRequestDialogProps {

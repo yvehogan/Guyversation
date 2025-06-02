@@ -1,6 +1,5 @@
 import { endpoints } from "@/components/config/endpoints";
-import { axios } from "@/components/lib/axios";
-import { HttpResponse } from "@/components/types";
+import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
 export interface LogoutResponse {
@@ -14,7 +13,7 @@ export interface LogoutResponse {
 
 const LogoutMutation = async () => {
   try {
-    const response = await axios.post<HttpResponse<LogoutResponse>>(
+    const response = await axios.post<LogoutResponse>(
       endpoints().auth.logout
     );
 

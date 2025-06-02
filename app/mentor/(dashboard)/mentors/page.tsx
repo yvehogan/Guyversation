@@ -65,8 +65,9 @@ export default function MentorPage() {
             onSendMessage={() => {
               setShowMenteeProfile(false)
               setShowMenteeChat(true)
-            }}
-          />
+            } } onAccept={function (): void {
+              throw new Error("Function not implemented.")
+            } }          />
 
           <MenteeChatDialog mentee={selectedMentee} open={showMenteeChat} onOpenChange={setShowMenteeChat} />
         </>

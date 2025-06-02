@@ -1,11 +1,7 @@
 import { Appbar } from "@/components/modules/admin/appbar";
 import React from "react";
 
-interface HeaderProps {
-    user: any;
-  }
-
-const Header: React.FC<HeaderProps> = ({ user }) => {
+const Header = () => {
 
   return (
     <header>

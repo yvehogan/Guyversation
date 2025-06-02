@@ -1,6 +1,5 @@
 import { endpoints } from "@/components/config/endpoints";
-import { axios } from "@/components/lib/axios";
-import { HttpResponse } from "@/components/types";
+import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
 export interface ForgotPasswordProps {
@@ -13,7 +12,7 @@ export interface ForgotPasswordResponse {
 
 const ForgotPasswordMutation = async (payload: ForgotPasswordProps) => {
   try {
-    const response = await axios.post<HttpResponse<ForgotPasswordResponse>>(
+    const response = await axios.post<ForgotPasswordResponse>(
       endpoints().auth.forgot_password,
       payload,
       {

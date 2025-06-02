@@ -3,25 +3,25 @@ import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
 export interface GetUsersProps {
-  userType?: "Anonymous" | "Mentee" | "Mentor"; // Optional filter
+  userType?: "Anonymous" | "Mentee" | "Mentor";
 }
 
 export interface User {
-  id: string; // Matches the API response
+  id: string;
   firstName: string;
   lastName: string;
-  userType: number; // 0 = Mentee, 1 = Mentor, etc.
+  userType: number;
   profilePictureUrl: string | null;
   email: string;
   middleName?: string | null;
   summary?: string | null;
   isModerator: boolean;
-  availabilities: any[];
-  socialMedia: any[];
-  credentials: any[];
-  expertises: any[];
-  languages: any[];
-  channels: any[];
+  availabilities: unknown[];
+  socialMedia: unknown[];
+  credentials: unknown[];
+  expertises: unknown[];
+  languages: unknown[];
+  channels: unknown[];
 }
 
 export interface GetUsersResponse {
@@ -56,7 +56,6 @@ const GetUsersQuery = async (
       }
     );
 
-    // Ensure we're returning the exact structure expected by GetUsersResponse
     return response.data;
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
@@ -70,7 +69,7 @@ const GetUsersQuery = async (
     }
 
     const errorMessage =
-      (error as any)?.response?.data?.message || "An unexpected error occurred.";
+      ((error as unknown) as { response?: { data?: { message?: string } } })?.response?.data?.message || "An unexpected error occurred.";
     return {
       isSuccess: false,
       statusCode: "500",

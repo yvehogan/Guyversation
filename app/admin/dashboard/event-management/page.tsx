@@ -27,11 +27,6 @@ interface Event {
 }
 
 export default function EventManagementPage() {
-  const user = {
-    name: "Alex Hormozi",
-    role: "Admin",
-    image: "/placeholder.svg?height=40&width=40",
-  };
 
   const [createEventOpen, setCreateEventOpen] = useState(false);
 

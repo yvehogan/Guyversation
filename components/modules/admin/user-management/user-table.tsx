@@ -18,6 +18,7 @@ export interface UserInterface {
   location?: string;
   time?: string; 
   image?: string;
+  name?: string;
 }
 
 interface UsersTableProps {

@@ -7,7 +7,6 @@ import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 import { ADMIN_DASHBOARD_LINKS } from "@/constants/dashboard";
-import { normalize } from "@/lib/string";
 import { cn } from "@/lib/utils";
 import { SidebarUser } from "@/components/shared/sidebar-user";
 

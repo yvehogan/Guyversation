@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { FaLinkedinIn } from "react-icons/fa";
 import { BsTwitterX } from "react-icons/bs";
 
@@ -20,8 +19,6 @@ export function UserProfileDialog({
   open,
   onOpenChange,
   user,
-  isRequest = false,
-  onAcceptRequest,
 }: UserProfileDialogProps) {
   const [activeTab, setActiveTab] = useState("profile");
 

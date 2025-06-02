@@ -39,7 +39,7 @@ export function RequestsTable({ users, onViewRequest }: RequestsTableProps) {
     
     return {
       id: user.id.toString(),
-      name: user.name,
+      name: `${user.firstName} ${user.lastName}` || user.name || "Unknown User", // Ensure name is always a string
       age: 25, // Default or get from user if available
       location: user.location || "",
       time: user.time || "",

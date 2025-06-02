@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CommunityEvent } from "@/components/modules/communities/community-event";
 
-// Mock database of communities
 const communitiesData = {
   "1": {
     id: "1",
@@ -53,28 +52,44 @@ const communitiesData = {
   },
 };
 
-interface PageProps {
+interface Community {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+}
+
+// Change back to a regular type for client components
+type PageProps = {
   params: {
     id: string;
   };
-}
+  searchParams?: Record<string, string | string[] | undefined>;
+};
 
 export default function CommunityDetailPage({ params }: PageProps) {
   const [postContent, setPostContent] = useState("");
-  const [community, setCommunity] = useState<any>(null);
+  const [community, setCommunity] = useState<Community | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCommunity = () => {
+    const fetchCommunity = async () => {
       setLoading(true);
+
+      // If params is a Promise in Next.js 15, handle it here
+      const communityId =
+        typeof params.id === "object" && "then" in params.id
+          ? await (params.id as unknown as Promise<string>)
+          : params.id;
+
       const foundCommunity =
-        communitiesData[params.id as keyof typeof communitiesData];
+        communitiesData[communityId as keyof typeof communitiesData];
 
       if (foundCommunity) {
         setCommunity(foundCommunity);
       } else {
         setCommunity({
-          id: params.id,
+          id: communityId,
           name: "Community Not Found",
           description: "This community could not be found.",
           image: "/placeholder.svg?height=80&width=80",
@@ -171,8 +186,8 @@ export default function CommunityDetailPage({ params }: PageProps) {
   return (
     <div className="container mx-auto">
       <div className="mt-6">
-        <h1 className="text-4xl font-medium mb-2">{community.name}</h1>
-        <p className="text-neutral-200">{community.description}</p>
+        <h1 className="text-4xl font-medium mb-2">{community?.name}</h1>
+        <p className="text-neutral-200">{community?.description}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mt-5">
@@ -204,7 +219,10 @@ export default function CommunityDetailPage({ params }: PageProps) {
           <div className="">
             <div className="space-y-6">
               {posts.map((post) => (
-                <div key={post.id} className="space-y-4 bg-white rounded-[30px] px-6 py-4">
+                <div
+                  key={post.id}
+                  className="space-y-4 bg-white rounded-[30px] px-6 py-4"
+                >
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarImage

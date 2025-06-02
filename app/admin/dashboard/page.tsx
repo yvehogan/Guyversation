@@ -1,9 +1,6 @@
 import { IoPersonOutline, IoEllipsisHorizontalCircle } from "react-icons/io5";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  User,
-  UserRound,
-  UserCheck,
   CircleCheck,
   Network,
   ExternalLink,

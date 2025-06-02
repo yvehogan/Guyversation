@@ -43,7 +43,6 @@ export function RequestProfileDialog({
   request,
   open,
   onOpenChange,
-  onAccept,
   onDecline,
 }: RequestProfileDialogProps) {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);

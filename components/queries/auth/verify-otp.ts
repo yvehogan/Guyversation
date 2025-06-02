@@ -1,6 +1,5 @@
 import { endpoints } from "@/components/config/endpoints";
-import { axios } from "@/components/lib/axios";
-import { HttpResponse } from "@/components/types";
+import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
 export interface VerifyOTPProps {
@@ -12,12 +11,12 @@ export interface VerifyOTPResponse {
   isSuccess: boolean;
   statusCode: string;
   message: string;
-  metaData: any;
+  metaData: unknown;
 }
 
 export const VerifyOTPMutation = async (payload: VerifyOTPProps) => {
   try {
-    const response = await axios.post<HttpResponse<VerifyOTPResponse>>(
+    const response = await axios.post<VerifyOTPResponse>(
       endpoints().auth.verify_email,
       payload,
       {

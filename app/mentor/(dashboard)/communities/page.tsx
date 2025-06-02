@@ -79,7 +79,7 @@ export default function CommunitiesPage() {
       <h1 className="text-4xl font-medium mb-6">Communities</h1>
       <div className="flex justify-between items-center">
         <p className="text-black text-sm">
-          We've found <span className="font-medium">133</span> communities for you
+          We&apos;ve found <span className="font-medium">133</span> communities for you
         </p>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Camera } from "lucide-react"
 import { ProfileData } from "./profile-setup"
+import Image from "next/image"
 
 interface ProfileStepProps {
   profileData: ProfileData
@@ -39,7 +40,7 @@ export function ProfileStep({ profileData, updateProfileData, onNext }: ProfileS
         <div className="relative">
           <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
             {profileImage ? (
-              <img src={profileImage || "/placeholder.svg"} alt="Profile" className="w-full h-full object-cover" />
+              <Image src={profileImage || "/placeholder.svg"} alt="Profile" className="w-full h-full object-cover" />
             ) : null}
           </div>
           <label

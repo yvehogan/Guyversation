@@ -25,6 +25,7 @@ import {
   CommunityAudience,
 } from "@/components/queries/communities/create-community";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 interface CreateCommunityDialogProps {
   open: boolean;
@@ -116,7 +117,7 @@ export function CreateCommunityDialog({
           <label htmlFor="banner-upload" className="relative cursor-pointer">
             <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
               {banner ? (
-                <img
+                <Image
                   src={URL.createObjectURL(banner)}
                   alt="Banner preview"
                   className="w-full h-full object-cover rounded-full"

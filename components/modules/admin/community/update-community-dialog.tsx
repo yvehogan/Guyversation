@@ -28,6 +28,7 @@ import {
 } from "@/components/queries/communities/create-community";
 import { Community } from "@/components/queries/communities/get-communities";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 interface UpdateCommunityDialogProps {
   open: boolean;
@@ -133,7 +134,7 @@ export function UpdateCommunityDialog({
           <label htmlFor="banner-upload" className="relative cursor-pointer">
             <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
               {previewUrl ? (
-                <img
+                <Image
                   src={previewUrl}
                   alt="Banner preview"
                   className="w-full h-full object-cover rounded-full"

@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { DeleteCommunityMutation } from "@/components/queries/communities/delete-community";
 import { toast } from "react-toastify";
-import { AlertTriangle } from "lucide-react";
 import Image from "next/image";
 
 interface DeleteCommunityDialogProps {

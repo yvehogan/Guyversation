@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ProfileData } from "./profile-setup";
 import Link from "next/link";
+import Image from "next/image";
 
 interface ReviewStepProps {
   profileData: ProfileData;
@@ -17,7 +18,7 @@ export function ReviewStep({ profileData, onPrevious }: ReviewStepProps) {
         <div className="relative">
           <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
             {profileData.profileImage ? (
-              <img
+              <Image
                 src={profileData.profileImage || "/placeholder.svg"}
                 alt="Profile"
                 className="w-full h-full object-cover"

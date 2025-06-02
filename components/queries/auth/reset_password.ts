@@ -1,6 +1,5 @@
 import { endpoints } from "@/components/config/endpoints";
-import { axios } from "@/components/lib/axios";
-import { HttpResponse } from "@/components/types";
+import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
 export interface ResetPasswordProps {
@@ -17,7 +16,7 @@ export interface ResetPasswordResponse {
 const ResetPasswordMutation = async (payload: ResetPasswordProps) => {
   try {
     const { emailAddress, resetCode, ...payloadData } = payload;
-    const response = await axios.post<HttpResponse<ResetPasswordResponse>>(
+    const response = await axios.post<ResetPasswordResponse>(
       `${endpoints().auth.resetPassword}?emailAddress=${emailAddress}&resetCode=${resetCode}`,
       payloadData
     );

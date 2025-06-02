@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import Cookies from 'js-cookie';
 
 const baseURL = process.env.NEXT_PUBLIC_SERVER_URL;
@@ -30,14 +30,14 @@ const createInstance = () => {
   });
 
   instance.interceptors.response.use(
-    (response: any) => response,
-    (error: any) => {
-      if (error.response && error.response.status === 401) {
-        // Handle unauthorized errors (including expired tokens)
+    (response: AxiosResponse) => response,
+    (error: unknown) => {
+      const err = error as AxiosError;
+      if (err.response && err.response.status === 401) {
         handleTokenExpiration();
-        
+
         return Promise.reject({
-          ...error,
+          error,
           handled: true,
         });
       }
@@ -48,18 +48,15 @@ const createInstance = () => {
   return instance;
 };
 
-// Create a function to check token expiration
 function checkTokenExpiration(token: string) {
   if (!token) return { isExpired: true };
   
   try {
-    // Extract the payload part of the JWT
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const payload = JSON.parse(window.atob(base64));
     
-    // Check if token has expired
-    const expirationTime = payload.exp * 1000; // Convert to milliseconds
+    const expirationTime = payload.exp * 1000;
     const currentTime = Date.now();
     
     return { 

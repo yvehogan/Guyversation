@@ -1,6 +1,5 @@
 import { endpoints } from "@/components/config/endpoints";
-import { axios } from "@/components/lib/axios";
-import { HttpResponse } from "@/components/types";
+import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
 export interface VerifyProps {
@@ -17,7 +16,7 @@ export interface EmailResponse {
 
 const VerifyEmailMutation = async (payload: VerifyProps) => {
   try {
-    const response = await axios.post<HttpResponse<EmailResponse>>(
+    const response = await axios.post<EmailResponse>(
       endpoints().auth.verify_email,
       payload,
       {

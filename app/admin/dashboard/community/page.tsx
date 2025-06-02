@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -24,6 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetCommunitiesQuery, Community } from "@/components/queries/communities/get-communities";
+import Image from "next/image";
 
 export default function CommunityPage() {
   const [createCommunityOpen, setCreateCommunityOpen] = useState(false);
@@ -31,7 +31,6 @@ export default function CommunityPage() {
   const [updateCommunityOpen, setUpdateCommunityOpen] = useState(false);
   const [selectedCommunity, setSelectedCommunity] = useState<Community | null>(null);
   const [sortBy, setSortBy] = useState("size");
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -109,7 +108,7 @@ export default function CommunityPage() {
               <Card key={community.id} className="p-3 sm:p-4 border-none shadow-sm">
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-shrink-0">
-                    <img
+                    <Image
                       src={community.bannerUrl || "/placeholder.svg"}
                       alt={community.name}
                       className="w-full sm:w-16 h-32 sm:h-16 rounded-md object-cover"

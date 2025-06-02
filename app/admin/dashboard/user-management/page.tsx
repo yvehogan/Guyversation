@@ -11,7 +11,7 @@ import { UserManagementHeader } from "@/components/modules/admin/user-management
 import { UserProfileDialog } from "@/components/modules/admin/user-management/user-profile-dialog";
 import { UserInterface, UsersTable } from "@/components/modules/admin/user-management/user-table";
 import { useState, useEffect } from "react";
-import { GetUsersQuery, GetUsersResponse, User } from "@/components/queries/admin/get-users";
+import { GetUsersQuery, GetUsersResponse } from "@/components/queries/admin/get-users";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
@@ -34,7 +34,6 @@ export default function UserManagementPage() {
   // State for UI
   const [activeTab, setActiveTab] = useState("all-users");
   const [activeFilter, setActiveFilter] = useState<"All Users" | "Anonymous" | "Mentee" | "Mentor">("All Users");
-  const [profileTab, setProfileTab] = useState("profile");
 
 const queryResult = useQuery<GetUsersResponse, Error>({
   queryKey: ["users", activeFilter],
