@@ -6,7 +6,7 @@ import { Providers } from "@/components/ClientProviders";
 const instrument = localFont({
   src: [
     {
-      path: "../public/fonts/Unageo-light.ttf",
+      path: "../public/fonts/Unageo-Light.ttf",
       weight: "300",
       style: "normal",
     },
