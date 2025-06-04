@@ -1,46 +1,83 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Camera } from "lucide-react"
-import { ProfileData } from "./profile-setup"
+import { Camera, PlusCircle, Trash2 } from "lucide-react"
+import { ProfileData, SocialMediaEntry } from "./profile-setup"
 import Image from "next/image"
+import { UtilityItem } from "@/components/queries/utilities/get-utilities"
 
 interface ProfileStepProps {
   profileData: ProfileData
   updateProfileData: (data: Partial<ProfileData>) => void
   onNext: () => void
+  languages: UtilityItem[]
+  expertises: UtilityItem[]
+  channels: UtilityItem[]
 }
 
-export function ProfileStep({ profileData, updateProfileData, onNext }: ProfileStepProps) {
-  const [profileImage, setProfileImage] = useState<string | null>(profileData.profileImage)
+export function ProfileStep({ 
+  profileData, 
+  updateProfileData, 
+  onNext,
+  languages,
+  expertises,
+  channels
+}: ProfileStepProps) {
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    typeof profileData.profileImage === 'string' ? profileData.profileImage : null
+  );
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      updateProfileData({ profileImage: file });
+      
+      const reader = new FileReader();
       reader.onload = (event) => {
-        const imageUrl = event.target?.result as string
-        setProfileImage(imageUrl)
-        updateProfileData({ profileImage: imageUrl })
-      }
-      reader.readAsDataURL(file)
+        const imageUrl = event.target?.result as string;
+        setImagePreview(imageUrl);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
+
+  const addSocialMedia = () => {
+    updateProfileData({ 
+      socialMedia: [...profileData.socialMedia, { socialMediaType: "Facebook", handle: "", url: "" }] 
+    });
+  };
+
+  const updateSocialMedia = (index: number, field: keyof SocialMediaEntry, value: string) => {
+    const updated = [...profileData.socialMedia];
+    updated[index] = { ...updated[index], [field]: value };
+    updateProfileData({ socialMedia: updated });
+  };
+
+  const removeSocialMedia = (index: number) => {
+    updateProfileData({ 
+      socialMedia: profileData.socialMedia.filter((_, i) => i !== index) 
+    });
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-center mb-8">
         <div className="relative">
           <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-            {profileImage ? (
-              <Image src={profileImage || "/placeholder.svg"} alt="Profile" className="w-full h-full object-cover" />
+            {imagePreview ? (
+              <Image 
+                src={imagePreview} 
+                alt="Profile" 
+                width={128} 
+                height={128} 
+                className="w-full h-full object-cover" 
+              />
             ) : null}
           </div>
           <label
@@ -89,17 +126,18 @@ export function ProfileStep({ profileData, updateProfileData, onNext }: ProfileS
           <div className="space-y-2">
             <Label htmlFor="areaOfExpertise">Area of Expertise</Label>
             <Select
-              value={profileData.areaOfExpertise}
-              onValueChange={(value) => updateProfileData({ areaOfExpertise: value })}
+              value={profileData.areaOfExpertiseId}
+              onValueChange={(value) => updateProfileData({ areaOfExpertiseId: value })}
             >
               <SelectTrigger id="areaOfExpertise" className="w-full">
                 <SelectValue placeholder="Select Area of Expertise" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="tech-leadership">Tech Leadership</SelectItem>
-                <SelectItem value="product-design">Product Design</SelectItem>
-                <SelectItem value="software-development">Software Development</SelectItem>
-                <SelectItem value="data-science">Data Science</SelectItem>
+                {expertises.map((expertise) => (
+                  <SelectItem key={expertise.id} value={expertise.id}>
+                    {expertise.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -121,31 +159,37 @@ export function ProfileStep({ profileData, updateProfileData, onNext }: ProfileS
         <div className="space-y-2">
           <Label htmlFor="preferredChannel">Preferred Channel</Label>
           <Select
-            value={profileData.preferredChannel}
-            onValueChange={(value) => updateProfileData({ preferredChannel: value })}
+            value={profileData.preferredChannelId}
+            onValueChange={(value) => updateProfileData({ preferredChannelId: value })}
           >
             <SelectTrigger id="preferredChannel" className="w-full">
               <SelectValue placeholder="Select Preferred Channel" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="video-call">Video Call</SelectItem>
-              <SelectItem value="chat">Chat</SelectItem>
-              <SelectItem value="email">Email</SelectItem>
+              {channels.map((channel) => (
+                <SelectItem key={channel.id} value={channel.id}>
+                  {channel.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
         
         <div className="space-y-2">
           <Label htmlFor="languages">Languages</Label>
-          <Select value={profileData.languages} onValueChange={(value) => updateProfileData({ languages: value })}>
+          <Select 
+            value={profileData.languageId} 
+            onValueChange={(value) => updateProfileData({ languageId: value })}
+          >
             <SelectTrigger id="languages" className="w-full">
               <SelectValue placeholder="Select Languages" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="english">English</SelectItem>
-              <SelectItem value="french">French</SelectItem>
-              <SelectItem value="spanish">Spanish</SelectItem>
-              <SelectItem value="yoruba">Yoruba</SelectItem>
+              {languages.map((language) => (
+                <SelectItem key={language.id} value={language.id}>
+                  {language.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -163,16 +207,91 @@ export function ProfileStep({ profileData, updateProfileData, onNext }: ProfileS
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="socialMediaLink">
-            Social Media <span className="text-gray-400">(optional)</span>
-          </Label>
-          <Input
-            id="socialMediaLink"
-            placeholder="Your social media link"
-            value={profileData.socialMediaLink}
-            onChange={(e) => updateProfileData({ socialMediaLink: e.target.value })}
-          />
+          <Label>Credential Type</Label>
+          <Select
+            defaultValue="Link"
+            onValueChange={(value) => {/* Optional credential type handling */}}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Credential Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Link">Link</SelectItem>
+              <SelectItem value="Certificate">Certificate</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <Label>Social Media Profiles</Label>
+          <Button 
+            type="button" 
+            variant="ghost" 
+            size="sm" 
+            onClick={addSocialMedia}
+            className="flex items-center text-primary-600"
+          >
+            <PlusCircle className="h-4 w-4 mr-1" /> Add
+          </Button>
+        </div>
+
+        {profileData.socialMedia.length === 0 ? (
+          <div className="text-sm text-gray-500 italic">No social media profiles added</div>
+        ) : (
+          <div className="space-y-3">
+            {profileData.socialMedia.map((social, index) => (
+              <div key={index} className="grid grid-cols-12 gap-2 items-center">
+                <div className="col-span-3">
+                  <Select
+                    value={social.socialMediaType}
+                    onValueChange={(value) => updateSocialMedia(index, 'socialMediaType', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Platform" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Facebook">Facebook</SelectItem>
+                      <SelectItem value="X">X</SelectItem>
+                      <SelectItem value="LinkedIn">LinkedIn</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="col-span-4">
+                  <Input
+                    placeholder="Username"
+                    value={social.handle}
+                    onChange={(e) => updateSocialMedia(index, 'handle', e.target.value)}
+                  />
+                </div>
+                
+                <div className="col-span-4">
+                  <Input
+                    placeholder="URL"
+                    value={social.url}
+                    onChange={(e) => updateSocialMedia(index, 'url', e.target.value)}
+                  />
+                </div>
+                
+                <div className="col-span-1 text-center">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeSocialMedia(index)}
+                    className="text-red-500 p-0 h-auto"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex justify-end mt-8">

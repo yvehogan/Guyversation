@@ -29,6 +29,7 @@ type RequestItem = {
     twitter?: string;
     linkedin?: string;
   };
+  email?: string;
 };
 
 interface RequestProfileDialogProps {
@@ -193,14 +194,16 @@ export function RequestProfileDialog({
         </DialogContent>
       </Dialog>
 
-      {/* Confirmation Dialog */}
+      {/* Mentorship Confirmation Dialog */}
       <ConfirmRequestDialog 
-        open={isConfirmDialogOpen} 
-        onOpenChange={setIsConfirmDialogOpen} 
-        onConfirm={handleConfirmAccept}
+        open={isConfirmDialogOpen}
+        onOpenChange={setIsConfirmDialogOpen}
+        onConfirm={handleConfirmAccept} 
+        email={request.email || ""} 
+        role={"Mentee"} 
       />
 
-      {/* Success Dialog */}
+      {/* Mentorship Success Dialog */}
       <SuccessRequestDialog
         open={isSuccessDialogOpen}
         onOpenChange={handleSuccessDialogClose}

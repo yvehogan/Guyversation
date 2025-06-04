@@ -76,8 +76,8 @@ export function SuccessRevokeAccessDialog({
           <h2 className="text-[36px] font-medium mb-2">Access Revoked</h2>
           <p className="text-neutral-200">
             You revoked <span className="font-medium">
-              {user?.firstName || user?.name?.split(" ")[0] || "User"}{" "}
-              {user?.lastName || user?.name?.split(" ")[1] || ""}
+              {user?.firstName}
+              {user?.lastName}
             </span> access.
           </p>
         </div>

@@ -2,49 +2,46 @@ import { endpoints } from '@/components/config/endpoints';
 import { axios } from '@/lib/axios';
 import axiosDefault from 'axios';
 
-export interface ValidateCodeProps {
+export interface ResetPasswordProps {
   email: string;
+  newPassword: string;
   otp: string;
 }
 
-export interface ValidateCodeResponse {
+export interface ResetPasswordResponse {
   isSuccess: boolean;
   statusCode: string;
   message: string;
   metaData: null;
   data: null | {
-    isValid: boolean;
     email: string;
   };
 }
 
-/**
- * Mutation function to validate a password reset code
- */
-const ValidateCodeMutation = async (
-  payload: ValidateCodeProps
-): Promise<ValidateCodeResponse> => {
+const ResetPasswordMutation = async (
+  payload: ResetPasswordProps
+): Promise<ResetPasswordResponse> => {
   try {
-    const response = await axios.post<ValidateCodeResponse>(
-      endpoints().auth.verify_otp,
+    const response = await axios.post<ResetPasswordResponse>(
+      endpoints().auth.reset_password,
       payload
     );
 
     return {
       isSuccess: response.status === 200,
       statusCode: response.status.toString(),
-      message: response.data.message || "Code validated successfully",
+      message: response.data.message || "Password reset successful",
       metaData: response.data.metaData || null,
       data: response.data.data,
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
-      console.log('Verify OTP API error response:', error.response.data);
+      console.log('Reset Password API error response:', error.response.data);
       
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),
-        message: error.response.data?.message || "Invalid verification code",
+        message: error.response.data?.message || "Failed to reset password",
         metaData: null,
         data: null,
       };
@@ -60,4 +57,4 @@ const ValidateCodeMutation = async (
   }
 };
 
-export { ValidateCodeMutation };
+export { ResetPasswordMutation };

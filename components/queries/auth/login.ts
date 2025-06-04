@@ -13,6 +13,8 @@ export interface LoginResponseData {
   refreshToken: string;
   expiry: string;
   userId: string;
+  role: string;
+  isDefaultPassword?: boolean;
 }
 
 export interface LoginResponse {
@@ -41,22 +43,24 @@ const LoginMutation = async (
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
+      // Log the exact error response for debugging
+      console.log('Login API error response:', error.response.data);
+      
+      // Return the exact error response format from the server
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),
-        message: error.response.data?.message || "An error occurred.",
+        message: error.response.data?.message || "Authentication failed",
         metaData: null,
         data: null,
       };
     }
 
-    const errorMessage =
-      // (error as unknown)?.response?.data?.message || "An unexpected error occurred.";
-      ((error as unknown) as { response?: { data?: { message?: string } } })?.response?.data?.message || "An unexpected error occurred.";
+    // Fallback for non-Axios errors
     return {
       isSuccess: false,
       statusCode: "500",
-      message: errorMessage,
+      message: "An error occurred while connecting to the server",
       metaData: null,
       data: null,
     };

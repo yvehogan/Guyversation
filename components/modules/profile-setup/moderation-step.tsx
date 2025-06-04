@@ -3,25 +3,50 @@
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, X } from "lucide-react"
 import { ProfileData } from "./profile-setup"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { UtilityItem } from "@/components/queries/utilities/get-utilities"
 
 interface ModerationStepProps {
   profileData: ProfileData
   updateProfileData: (data: Partial<ProfileData>) => void
   onNext: () => void
   onPrevious: () => void
+  channels: UtilityItem[]
 }
 
-export function ModerationStep({ profileData, updateProfileData, onNext, onPrevious }: ModerationStepProps) {
+export function ModerationStep({ 
+  profileData, 
+  updateProfileData, 
+  onNext, 
+  onPrevious,
+  channels
+}: ModerationStepProps) {
   const handleModeratorChange = (value: string) => {
     updateProfileData({ isModerator: value === "yes" })
+    
+    if (value === "no") {
+      updateProfileData({ channelIds: [] })
+    }
   }
 
   const handleChannelChange = (value: string) => {
-    updateProfileData({ channels: [...profileData.channels, value] })
+    if (!profileData.channelIds.includes(value)) {
+      updateProfileData({ channelIds: [...profileData.channelIds, value] })
+    }
   }
+  
+  const removeChannel = (channelToRemove: string) => {
+    updateProfileData({
+      channelIds: profileData.channelIds.filter(channel => channel !== channelToRemove)
+    })
+  }
+  
+  const getChannelName = (channelId: string) => {
+    const channel = channels.find(c => c.id === channelId);
+    return channel ? channel.name : channelId;
+  };
 
   return (
     <div className="space-y-8">
@@ -51,12 +76,32 @@ export function ModerationStep({ profileData, updateProfileData, onNext, onPrevi
               <SelectValue placeholder="Select Channel" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="health-wellness">Health and Wellness</SelectItem>
-              <SelectItem value="technology-updates">Technology Updates</SelectItem>
-              <SelectItem value="career-advice">Career Advice</SelectItem>
-              <SelectItem value="personal-finance">Personal Finance</SelectItem>
+              {channels.map(channel => (
+                <SelectItem key={channel.id} value={channel.id}>
+                  {channel.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
+          
+          {profileData.channelIds.length > 0 && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-500 mb-2">Selected Channels:</p>
+              <div className="flex flex-wrap gap-2">
+                {profileData.channelIds.map((channelId, index) => (
+                  <div key={index} className="bg-primary-50 text-primary-600 px-3 py-1 rounded-full flex items-center">
+                    {getChannelName(channelId)}
+                    <button 
+                      className="ml-2 text-primary-400 hover:text-primary-600"
+                      onClick={() => removeChannel(channelId)}
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -68,7 +113,7 @@ export function ModerationStep({ profileData, updateProfileData, onNext, onPrevi
         >
           <ChevronLeft className="h-4 w-4" /> Previous
         </Button>
-        <Button onClick={onNext} className=" flex items-center gap-2">
+        <Button onClick={onNext} className="flex items-center gap-2">
           Next <ChevronRight className="h-4 w-4" />
         </Button>
       </div>

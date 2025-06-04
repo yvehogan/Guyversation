@@ -1,26 +1,36 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ProfileHeader } from "./header"
 import { StepIndicator } from "./step-indicator"
 import { ProfileStep } from "./profile-step"
 import { ModerationStep } from "./moderation-step"
 import { AvailabilityStep } from "./availability-step"
 import { ReviewStep } from "./review-step"
+import Cookies from "js-cookie"
+import { useQuery } from "@tanstack/react-query"
+import { getLanguages, getExpertises, getChannels, UtilityItem } from "@/components/queries/utilities/get-utilities"
+
+export type SocialMediaEntry = {
+  socialMediaType: string;
+  handle: string;
+  url: string;
+}
 
 export type ProfileData = {
   firstName: string
   lastName: string
   phoneNumber: string
+  email: string
   summary: string
-  areaOfExpertise: string
-  preferredChannel: string
-  languages: string
+  areaOfExpertiseId: string
+  preferredChannelId: string
+  languageId: string
   credentialLink: string
-  socialMediaLink: string
-  profileImage: string | null
+  socialMedia: SocialMediaEntry[] // Single field for social media
+  profileImage: string | File | null
   isModerator: boolean
-  channels: string[]
+  channelIds: string[]
   availability: {
     days: string[]
     timeFrom: string
@@ -29,22 +39,59 @@ export type ProfileData = {
 }
 
 export function ProfileSetup() {
+  const [userId, setUserId] = useState<string>("")
   const [currentStep, setCurrentStep] = useState(0)
   const [profileData, setProfileData] = useState<ProfileData>({
     firstName: "",
     lastName: "",
     phoneNumber: "",
+    email: "",
     summary: "",
-    areaOfExpertise: "",
-    preferredChannel: "",
-    languages: "",
+    areaOfExpertiseId: "",
+    preferredChannelId: "",
+    languageId: "",
     credentialLink: "",
-    socialMediaLink: "",
+    socialMedia: [],
     profileImage: null,
     isModerator: false,
-    channels: [],
+    channelIds: [],
     availability: [],
   })
+
+  const { data: languagesData } = useQuery({
+    queryKey: ["languages"],
+    queryFn: getLanguages,
+  })
+
+  const { data: expertisesData } = useQuery({
+    queryKey: ["expertises"],
+    queryFn: getExpertises,
+  })
+
+  const { data: channelsData } = useQuery({
+    queryKey: ["channels"],
+    queryFn: getChannels,
+  })
+
+  const languages = languagesData?.data || []
+  const expertises = expertisesData?.data || []
+  const channels = channelsData?.data || []
+
+  useEffect(() => {
+    const userIdFromCookie = Cookies.get("GUYVERSATION_USER_ID")
+    const userEmailFromCookie = Cookies.get("GUYVERSATION_USER_EMAIL")
+    
+    if (userIdFromCookie) {
+      setUserId(userIdFromCookie)
+    }
+    
+    if (userEmailFromCookie) {
+      setProfileData(prev => ({
+        ...prev,
+        email: userEmailFromCookie
+      }))
+    }
+  }, [])
 
   const steps = [
     { id: "profile", label: "Profile" },
@@ -77,7 +124,7 @@ export function ProfileSetup() {
       />
 
       <div className="relative z-10">
-        <ProfileHeader email="magnusCarlsen@gmail.com" />
+        <ProfileHeader email={profileData.email} />
 
         <div className="container mx-auto px-4 py-8">
           <div className="text-center mb-8">
@@ -94,7 +141,14 @@ export function ProfileSetup() {
 
             <div className="bg-white rounded-3xl p-8 flex-1 shadow-sm">
               {currentStep === 0 && (
-                <ProfileStep profileData={profileData} updateProfileData={updateProfileData} onNext={handleNext} />
+                <ProfileStep 
+                  profileData={profileData} 
+                  updateProfileData={updateProfileData} 
+                  onNext={handleNext} 
+                  languages={languages}
+                  expertises={expertises}
+                  channels={channels}
+                />
               )}
               {currentStep === 1 && (
                 <ModerationStep
@@ -102,6 +156,7 @@ export function ProfileSetup() {
                   updateProfileData={updateProfileData}
                   onNext={handleNext}
                   onPrevious={handlePrevious}
+                  channels={channels} // Pass channels to ModerationStep
                 />
               )}
               {currentStep === 2 && (
@@ -112,7 +167,16 @@ export function ProfileSetup() {
                   onPrevious={handlePrevious}
                 />
               )}
-              {currentStep === 3 && <ReviewStep profileData={profileData} onPrevious={handlePrevious} />}
+              {currentStep === 3 && (
+                <ReviewStep 
+                  profileData={profileData} 
+                  userId={userId} 
+                  onPrevious={handlePrevious}
+                  languages={languages}
+                  expertises={expertises}
+                  channels={channels}
+                />
+              )}
             </div>
           </div>
         </div>

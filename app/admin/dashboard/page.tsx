@@ -114,7 +114,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="w-full pb-24 overflow-y-auto">
+    <div className="w-full pb-42 overflow-y-auto">
       <section className="mb-8 mt-6">
         <h2 className="text-xl font-medium mb-3">User Statistics</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 bg-white rounded-2xl overflow-hidden">

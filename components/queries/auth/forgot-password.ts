@@ -2,54 +2,55 @@ import { endpoints } from '@/components/config/endpoints';
 import { axios } from '@/lib/axios';
 import axiosDefault from 'axios';
 
-export interface ValidateCodeProps {
+export interface ForgotPasswordProps {
   email: string;
-  otp: string;
 }
 
-export interface ValidateCodeResponse {
+export interface ForgotPasswordResponse {
   isSuccess: boolean;
   statusCode: string;
   message: string;
   metaData: null;
   data: null | {
-    isValid: boolean;
     email: string;
   };
 }
 
 /**
- * Mutation function to validate a password reset code
+ * Mutation function to request a password reset
  */
-const ValidateCodeMutation = async (
-  payload: ValidateCodeProps
-): Promise<ValidateCodeResponse> => {
+const ForgotPasswordMutation = async (
+  payload: ForgotPasswordProps
+): Promise<ForgotPasswordResponse> => {
   try {
-    const response = await axios.post<ValidateCodeResponse>(
-      endpoints().auth.verify_otp,
+    const response = await axios.post<ForgotPasswordResponse>(
+      endpoints().auth.forgot_password,
       payload
     );
 
     return {
       isSuccess: response.status === 200,
       statusCode: response.status.toString(),
-      message: response.data.message || "Code validated successfully",
+      message: response.data.message || "Reset link sent to your email",
       metaData: response.data.metaData || null,
       data: response.data.data,
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
-      console.log('Verify OTP API error response:', error.response.data);
+      // Log the error response for debugging
+      console.log('Forgot Password API error response:', error.response.data);
       
+      // Return the error in the expected format
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),
-        message: error.response.data?.message || "Invalid verification code",
+        message: error.response.data?.message || "Failed to send reset link",
         metaData: null,
         data: null,
       };
     }
 
+    // Fallback for non-Axios errors
     return {
       isSuccess: false,
       statusCode: "500",
@@ -60,4 +61,4 @@ const ValidateCodeMutation = async (
   }
 };
 
-export { ValidateCodeMutation };
+export { ForgotPasswordMutation };

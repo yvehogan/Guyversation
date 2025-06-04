@@ -40,7 +40,6 @@ export function LoginForm() {
     e.preventDefault();
     setError("");
 
-    // Basic validation
     if (!email || !password) {
       setError("Email and password are required.");
       return;
@@ -97,7 +96,7 @@ export function LoginForm() {
           </div>
           <div className="flex justify-end mb-16">
             <Link
-              href="/admin/change-password"
+              href="/forgot-password"
               className="text-sm text-[#9333ea] hover:underline"
             >
               Forgot Password?

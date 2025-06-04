@@ -1,127 +1,154 @@
 "use client";
-
 import type React from "react";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { ResetPasswordMutation, ResetPasswordProps } from "@/components/queries/auth/reset-password";
 
 export function ResetPasswordForm() {
   const router = useRouter();
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordStrength, setPasswordStrength] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const calculatePasswordStrength = (password: string) => {
-    // Simple password strength calculation
-    if (!password) return 0;
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem("reset_email");
+    const storedCode = sessionStorage.getItem("reset_code");
+    
+    if (storedEmail) {
+      setEmail(storedEmail);
+    } else {
+      toast.error("Email not found, please try again");
+      router.push("/forgot-password");
+      return;
+    }
+    
+    if (storedCode) {
+      setOtp(storedCode);
+    } else {
+      toast.error("Verification code not found, please try again");
+      router.push("/verify-code");
+    }
+  }, [router]);
 
-    let strength = 0;
-
-    // Length check
-    if (password.length >= 8) strength += 33;
-
-    // Complexity checks
-    if (/[A-Z]/.test(password)) strength += 17;
-    if (/[0-9]/.test(password)) strength += 17;
-    if (/[^A-Za-z0-9]/.test(password)) strength += 33;
-
-    return Math.min(100, strength);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-    setPasswordStrength(calculatePasswordStrength(newPassword));
-  };
+  const { mutate: resetPassword, isPending } = useMutation({
+    mutationFn: (values: ResetPasswordProps) => ResetPasswordMutation(values),
+    onSuccess: (response) => {
+      if (response.isSuccess) {
+        sessionStorage.removeItem("reset_email");
+        sessionStorage.removeItem("reset_code");
+        
+        toast.success(response.message || "Password reset successful");
+        
+        const isAdminPath = window.location.pathname.includes('/admin');
+        const loginPath = isAdminPath ? "/admin" : "/";
+        
+        setTimeout(() => {
+          router.push(loginPath);
+        }, 1500);
+      } else {
+        setError(response.message || "Failed to reset password");
+        toast.error(response.message || "Failed to reset password");
+      }
+    },
+    onError: (error: any) => {
+      const errorMessage = error.message || "An unexpected error occurred";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    }
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (password !== confirmPassword) {
-      alert("Passwords don't match");
+    setError("");
+    
+    if (!newPassword || !confirmPassword) {
+      setError("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
-    setIsLoading(true);
+    if (newPassword !== confirmPassword) {
+      setError("Passwords don't match");
+      toast.error("Passwords don't match");
+      return;
+    }
 
-    // Simulate password reset
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/password-success");
-    }, 1500);
+    if (newPassword.length < 8) {
+      setError("Password must be at least 8 characters long");
+      toast.error("Password must be at least 8 characters long");
+      return;
+    }
+    resetPassword({
+      email,
+      newPassword,
+      otp
+    });
   };
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-8 px-4">
       <div className="space-y-6 max-w-md mx-auto w-full">
-
-    <div className="space-y-6">
-      <div className="space-y-2 text-center">
-        <div className="inline-flex h-12 w-12 items-center justify-center">
-          <Image
-            src="/icons/forgot_password.png"
-            alt="Logo"
-            width={100}
-            height={50}
-            className="h-10 w-auto"
-          />
-        </div>
-        <h1 className="text-4xl font-semibold">Set new password</h1>
-        <p className="text-grey-400">Must be at least 8 characters</p>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-4 mt-14">
-        <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            placeholder="Enter Your Password"
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-            minLength={8}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="confirm-password">Confirm Password</Label>
-          <Input
-            id="confirm-password"
-            placeholder="Enter Password"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className="space-y-1 mt-8 mb-16">
-          <div className="flex items-center justify-between mb-2">
-            <Label>Password Strength</Label>
+        <div className="space-y-2 text-center">
+          <div className="inline-flex h-12 w-12 items-center justify-center">
+            <Image
+              src="/icons/forgot_password.png"
+              alt="Logo"
+              width={100}
+              height={50}
+              className="h-10 w-auto"
+            />
           </div>
-          <Progress
-            value={passwordStrength}
-            color="password"
-            className="h-2"
-          />
+          <h1 className="text-4xl font-semibold">Reset Password</h1>
+          <p className="text-grey-400">
+            Please enter your new password below
+          </p>
         </div>
-        <Button
-          type="submit"
-          size='lg'
-          className="w-full"
-          disabled={
-            isLoading || password.length < 8 || password !== confirmPassword
-          }
-        >
-          {isLoading ? "Processing..." : "Continue"}
-        </Button>
-      </form>
-    </div>
-    </div>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-16">
+          {error && (
+            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md">
+              {error}
+            </div>
+          )}
+          <div className="space-y-2">
+            <Label htmlFor="newPassword">New Password</Label>
+            <Input
+              id="newPassword"
+              placeholder="Enter new password"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2 mb-16">
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Input
+              id="confirmPassword"
+              placeholder="Confirm new password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            disabled={isPending}
+          >
+            {isPending ? "Resetting..." : "Reset Password"}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

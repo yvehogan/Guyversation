@@ -24,52 +24,15 @@ export function LoginForm() {
       if (response.isSuccess) {
         Cookies.set("GUYVERSATION_USER_ID", response.data?.userId || "");
         Cookies.set("GUYVERSATION_ACCESS_TOKEN", response.data?.accessToken || "", { expires: 7 });
-        Cookies.set("GUYVERSATION_USER_EMAIL", email);
-
-        const userRole = response.data?.role || "";
-        Cookies.set("GUYVERSATION_USER_TYPE", userRole);
 
         toast.success(response.message);
-
-        if (userRole === "Admin") {
-          router.push("/admin/dashboard");
-        } else {
-          // router.push("/mentor");
-          router.push("/profile-setup");
-        }
+        router.push("/mentor");
       } else {
-        toast.dismiss();
-
-        if (response.message === "Please verify your email address") {
-          sessionStorage.setItem("user_email", email);
-
-          const isAdminPath = window.location.pathname.includes('/admin');
-          const redirectPath = isAdminPath ? "/admin/change-password" : "/change-password";
-
-          router.push(redirectPath);
-          return;
-        }
-
-        setError(response.message);
-
-        toast.error(response.message);
-
-        console.log("Login error response:", response);
+        toast.error(response.message || "Login failed. Please check your credentials.");
       }
     },
-    onError: (error: any) => {
-      console.error("Unhandled login error:", error);
-
-      let errorMessage = "An unexpected error occurred";
-
-      if (error.handled && error.error?.response?.data?.message) {
-        errorMessage = error.error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-
-      setError(errorMessage);
-      toast.error(errorMessage);
+    onError: (error: Error) => {
+      toast.error(error.message);
     },
   });
 
@@ -79,17 +42,10 @@ export function LoginForm() {
 
     if (!email || !password) {
       setError("Email and password are required.");
-      toast.error("Email and password are required.");
       return;
     }
 
-    try {
-      login({ email, password });
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("An error occurred during login");
-      toast.error("An error occurred during login");
-    }
+    login({ email, password });
   };
 
   return (
@@ -105,23 +61,16 @@ export function LoginForm() {
               className="h-10 w-auto"
             />
           </div>
-          <h1 className="text-4xl font-semibold">
-            Welcome Back
-          </h1>
+          <h1 className="text-4xl font-semibold">Welcome back!</h1>
           <p className="text-grey-400">
             Please fill the details below to sign into your account.
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4 mt-16">
           {error && (
-            <div
-              className="p-3 text-sm text-red-500 bg-red-50 rounded-md"
-              dangerouslySetInnerHTML={{
-                __html: error === "Please verify your email address"
-                  ? `Please verify your email address. <a href='${window.location.pathname.includes('/admin') ? "/admin/change-password" : "/change-password"}' class='text-primary-400 font-medium underline'>Click here to verify and set your password</a>.`
-                  : error,
-              }}
-            />
+            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md">
+              {error}
+            </div>
           )}
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>

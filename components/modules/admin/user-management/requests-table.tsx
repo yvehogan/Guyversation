@@ -10,43 +10,36 @@ interface RequestsTableProps {
 }
 
 export function RequestsTable({ users, onViewRequest }: RequestsTableProps) {
-  // Add state for dialog control
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserInterface | null>(null);
 
-  // Handler for view request button
   const handleViewRequest = (user: UserInterface) => {
     setSelectedUser(user);
     setIsDialogOpen(true);
   };
 
-  // Handlers for dialog actions
   const handleAccept = () => {
-    // Add your accept logic here
     setIsDialogOpen(false);
-    // Optionally call the parent handler
     if (selectedUser) onViewRequest(selectedUser);
   };
 
   const handleDecline = () => {
-    // Add your decline logic here
     setIsDialogOpen(false);
   };
 
-  // Convert UserInterface to RequestItem format
   const mapUserToRequest = (user: UserInterface | null) => {
     if (!user) return null;
     
     return {
       id: user.id.toString(),
-      name: `${user.firstName} ${user.lastName}` || user.name || "Unknown User", // Ensure name is always a string
-      age: 25, // Default or get from user if available
-      location: user.location || "",
-      time: user.time || "",
+      name: `${user.firstName} ${user.lastName}`,
+      age: 25,
+      location: "",
+      time: "",
       avatar: "https://github.com/shadcn.png",
-      goal: "Career advancement", // Default or get from user if available
-      careerPath: user.type || "",
-      interests: ["Technology", "Mentorship"], // Default or get from user if available
+      goal: "Career advancement",
+      careerPath: "",
+      interests: ["Technology", "Mentorship"],
       socials: {
         twitter: "@user",
         linkedin: "user-profile"
@@ -82,14 +75,14 @@ export function RequestsTable({ users, onViewRequest }: RequestsTableProps) {
                       />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
-                    <span>{user.name}</span>
+                    <span>{user.firstName}</span>
                   </div>
                 </td>
-                <td className="py-4 px-4">{user.type}</td>
-                <td className="py-4 px-4">{user.location}</td>
-                <td className="py-4 px-4">{user.time}</td>
+                <td className="py-4 px-4">{user.userTypeName}</td>
+                <td className="py-4 px-4">test</td>
+                <td className="py-4 px-4">test</td>
                 <td className="py-4 px-4">
-                  {user.type !== "Anonymous" ? (
+                  {user.userTypeName !== "Anonymous" ? (
                     <Button
                       variant="outline"
                       className=""

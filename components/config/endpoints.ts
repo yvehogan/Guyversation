@@ -1,17 +1,15 @@
-export const endpoints = (
-) => {
+export const endpoints = () => {
+  const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || '';
+  
   return {
     auth: {
       login: `/auth/login`,
-      register: `/auth/register-organization`,
-      verify_email: `/auth/verify-email`,
-      confirm_email: `/auth/email-confirmation`,
-      logout: `/logout`,
+      change_default_password: `/auth/change-default-password`,
       forgot_password: `/auth/forgot-password`,
+      reset_password: `/auth/reset-password`,
       validateCode: `/auth/validate-reset-code`,
-      resetPassword: `/auth/reset-password`,
-      documentation: `/auth/documentation`,
-      verify_account: `/services/name-enquiry`,
+      verify_otp: `/auth/verify-otp`,
+      resend_otp: `/auth/resend-otp`,
     },
     admin: {
       invite_user: `/admin/invite-user`,
@@ -25,6 +23,15 @@ export const endpoints = (
       delete: (communityId: string) => `/communities/${communityId}`,
       join: (communityId: string) => `/communities/${communityId}/join`,
       leave: (communityId: string) => `/communities/${communityId}/leave`,
+    },
+    events: {
+      create: `/events`,
+      list: `/events`,
+    },
+    utilities: {
+      language: `/utilities/languages`,
+      expertises: `/utilities/expertises`,
+      channels: `/utilities/channels`,
     }
   };
 };

@@ -23,7 +23,7 @@ export const Sidebar = () => {
       return true;
     }
     if (href !== "/admin/dashboard") {
-      return pathname.startsWith(href);
+      return pathname?.startsWith(href);
     }
     return false;
   };

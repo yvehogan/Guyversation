@@ -2,49 +2,47 @@ import { endpoints } from '@/components/config/endpoints';
 import { axios } from '@/lib/axios';
 import axiosDefault from 'axios';
 
-export interface ValidateCodeProps {
+export interface ResendOtpProps {
   email: string;
-  otp: string;
 }
 
-export interface ValidateCodeResponse {
+export interface ResendOtpResponse {
   isSuccess: boolean;
   statusCode: string;
   message: string;
   metaData: null;
   data: null | {
-    isValid: boolean;
     email: string;
   };
 }
 
 /**
- * Mutation function to validate a password reset code
+ * Mutation function to resend a verification code
  */
-const ValidateCodeMutation = async (
-  payload: ValidateCodeProps
-): Promise<ValidateCodeResponse> => {
+const ResendOtpMutation = async (
+  payload: ResendOtpProps
+): Promise<ResendOtpResponse> => {
   try {
-    const response = await axios.post<ValidateCodeResponse>(
-      endpoints().auth.verify_otp,
+    const response = await axios.post<ResendOtpResponse>(
+      endpoints().auth.resend_otp,
       payload
     );
 
     return {
       isSuccess: response.status === 200,
       statusCode: response.status.toString(),
-      message: response.data.message || "Code validated successfully",
+      message: response.data.message || "Verification code resent successfully",
       metaData: response.data.metaData || null,
       data: response.data.data,
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
-      console.log('Verify OTP API error response:', error.response.data);
+      console.log('Resend OTP API error response:', error.response.data);
       
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),
-        message: error.response.data?.message || "Invalid verification code",
+        message: error.response.data?.message || "Failed to resend verification code",
         metaData: null,
         data: null,
       };
@@ -60,4 +58,4 @@ const ValidateCodeMutation = async (
   }
 };
 
-export { ValidateCodeMutation };
+export { ResendOtpMutation };

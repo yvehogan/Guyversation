@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -17,11 +18,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar, Clock } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { CreateEventMutation, CreateEventProps } from "@/components/queries/events/create-event";
+import { toast } from "react-toastify";
 
 interface CreateEventDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreateEvent: (eventData: EventFormData) => void;
+  onCreateEvent: () => void;
 }
 
 export interface EventFormData {
@@ -29,8 +33,10 @@ export interface EventFormData {
   description: string;
   location: string;
   category: string;
-  date: string;
-  time: string;
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
 }
 
 export function CreateEventDialog({
@@ -38,30 +44,78 @@ export function CreateEventDialog({
   onOpenChange,
   onCreateEvent,
 }: CreateEventDialogProps) {
+  const queryClient = useQueryClient();
   const [eventTitle, setEventTitle] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [eventLocation, setEventLocation] = useState("");
   const [eventCategory, setEventCategory] = useState("");
-  const [eventDate, setEventDate] = useState("");
-  const [eventTime, setEventTime] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [endTime, setEndTime] = useState("");
 
-  const handleCreateEvent = () => {
-    onCreateEvent({
-      title: eventTitle,
-      description: eventDescription,
-      location: eventLocation,
-      category: eventCategory,
-      date: eventDate,
-      time: eventTime,
-    });
+  // Create mutation for API call
+  const { mutate: createEvent, isPending } = useMutation({
+    mutationFn: (data: CreateEventProps) => CreateEventMutation(data),
+    onSuccess: (response) => {
+      if (response.isSuccess) {
+        toast.success(response.message || "Event created successfully!");
 
-    // Reset form
+        queryClient.invalidateQueries({ queryKey: ['events'] });
+
+        onCreateEvent();
+        resetForm();
+        onOpenChange(false);
+      } else {
+        toast.error(response.message || "Failed to create event");
+      }
+    },
+    onError: (error: any) => {
+      console.error("Error creating event:", error);
+      toast.error(error.message || "An error occurred while creating the event");
+    },
+  });
+
+  const resetForm = () => {
     setEventTitle("");
     setEventDescription("");
     setEventLocation("");
     setEventCategory("");
-    setEventDate("");
-    setEventTime("");
+    setStartDate("");
+    setStartTime("");
+    setEndDate("");
+    setEndTime("");
+  };
+
+  const handleCreateEvent = () => {
+    if (!eventTitle || eventTitle.trim() === "") {
+      toast.warning("Please enter an event title");
+      return;
+    }
+
+    if (!startDate || !startTime) {
+      toast.warning("Please enter a start date and time");
+      return;
+    }
+
+    const finalEndDate = endDate || startDate;
+    const finalEndTime = endTime || startTime;
+
+    const eventData: CreateEventProps = {
+      title: eventTitle.trim(),
+      description: eventDescription || "",
+      eventType: eventCategory || "General",
+      location: eventLocation || "",
+      startDate: startDate,
+      startTime: startTime,
+      endDate: finalEndDate,
+      endTime: finalEndTime,
+    };
+
+    console.log("Submitting event with data:", eventData);
+    console.log("Title field:", eventData.title);
+
+    createEvent(eventData);
   };
 
   return (
@@ -87,7 +141,7 @@ export function CreateEventDialog({
             <Label htmlFor="location">Location</Label>
             <Input
               id="location"
-              placeholder="Insert number only"
+              placeholder="Lagos, Nigeria"
               value={eventLocation}
               onChange={(e) => setEventLocation(e.target.value)}
               className="mt-1"
@@ -103,8 +157,8 @@ export function CreateEventDialog({
               className="mt-1 h-full min-h-[150px]"
             />
           </div>
-          <div className="flex flex-col justify-between">
-            <div className=" gap-7 mt-3">
+          <div className="flex flex-col justify-between gap-4">
+            <div className="gap-7 mt-3">
               <div>
                 <Label htmlFor="category">Category</Label>
                 <Select value={eventCategory} onValueChange={setEventCategory}>
@@ -114,32 +168,61 @@ export function CreateEventDialog({
                   <SelectContent>
                     <SelectItem value="workshop">Workshop</SelectItem>
                     <SelectItem value="webinar">Webinar</SelectItem>
-                    <SelectItem value="fireside">Fireside chat</SelectItem>
+                    <SelectItem value="FiresideChat">Fireside chat</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
-            <div className="col-span-2 mt-20">
-              <Label>Schedule</Label>
+
+            <div className="col-span-2">
+              <Label className="font-medium">Start Date & Time</Label>
               <div className="grid grid-cols-2 gap-4 mt-1">
                 <div className="relative">
                   <Input
-                    id="date"
-                    type="text"
-                    placeholder="Date"
-                    value={eventDate}
-                    onChange={(e) => setEventDate(e.target.value)}
+                    id="start-date"
+                    type="date"
+                    placeholder="Start Date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
                     className="pl-10"
                   />
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
                 <div className="relative">
                   <Input
-                    id="time"
-                    type="text"
-                    placeholder="Time"
-                    value={eventTime}
-                    onChange={(e) => setEventTime(e.target.value)}
+                    id="start-time"
+                    type="time"
+                    placeholder="Start Time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    className="pl-10"
+                  />
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                </div>
+              </div>
+            </div>
+
+            <div className="col-span-2">
+              <Label className="font-medium">End Date & Time</Label>
+              <div className="grid grid-cols-2 gap-4 mt-1">
+                <div className="relative">
+                  <Input
+                    id="end-date"
+                    type="date"
+                    placeholder="End Date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="pl-10"
+                  />
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                </div>
+                <div className="relative">
+                  <Input
+                    id="end-time"
+                    type="time"
+                    placeholder="End Time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
                     className="pl-10"
                   />
                   <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -151,8 +234,9 @@ export function CreateEventDialog({
         <Button
           onClick={handleCreateEvent}
           className="w-1/2 mx-auto mt-8"
+          disabled={isPending}
         >
-          Create Event
+          {isPending ? "Creating..." : "Create Event"}
         </Button>
       </DialogContent>
     </Dialog>

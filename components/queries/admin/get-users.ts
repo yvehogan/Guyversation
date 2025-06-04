@@ -10,7 +10,7 @@ export interface User {
   id: string;
   firstName: string;
   lastName: string;
-  userType: number;
+  userTypeName: string;
   profilePictureUrl: string | null;
   email: string;
   middleName?: string | null;

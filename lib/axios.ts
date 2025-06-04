@@ -7,23 +7,17 @@ const createInstance = () => {
     baseURL,
   });
 
-  // Add request interceptor to check token expiration before each request
   instance.interceptors.request.use((config) => {
     const accessToken = Cookies.get('GUYVERSATION_ACCESS_TOKEN');
     
-    // Check if token exists
     if (accessToken) {
-      // Check if token is expired
       const tokenExpiration = checkTokenExpiration(accessToken);
       
       if (tokenExpiration.isExpired) {
-        // Handle token expiration
         handleTokenExpiration();
-        // Don't add the expired token to the request
         return config;
       }
       
-      // Add valid token to headers
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
@@ -33,7 +27,17 @@ const createInstance = () => {
     (response: AxiosResponse) => response,
     (error: unknown) => {
       const err = error as AxiosError;
-      if (err.response && err.response.status === 401) {
+      
+      const isLoginRequest = err.config?.url?.includes('/auth/login');
+      
+      // Check if user is already on a login page (either homepage or admin login)
+      const isOnLoginPage = typeof window !== 'undefined' && 
+        (window.location.pathname === '/' || 
+         window.location.pathname === '/admin' ||
+         window.location.pathname === '/login');
+      
+      // Only handle token expiration if it's not a login request and not already on login page
+      if (err.response && err.response.status === 401 && !isLoginRequest && !isOnLoginPage) {
         handleTokenExpiration();
 
         return Promise.reject({
@@ -69,28 +73,23 @@ function checkTokenExpiration(token: string) {
   }
 }
 
-// Handle token expiration and redirect
 function handleTokenExpiration() {
-  // Clear all auth cookies
   Cookies.remove('GUYVERSATION_ACCESS_TOKEN');
   Cookies.remove('GUYVERSATION_USER_ID');
   
-  // Check if we're in browser environment
   if (typeof window !== 'undefined') {
-    // Check if user is admin by checking the current URL
-    const isAdmin = window.location.pathname.includes('/admin');
+    const userType = Cookies.get('GUYVERSATION_USER_TYPE');
+    const isAdmin = userType === 'Admin' || window.location.pathname.includes('/admin');
     
-    // Create an expiration message
     const message = 'Your session has expired. Please log in again.';
     
-    // Store the message in sessionStorage to display after redirect
     sessionStorage.setItem('auth_expiry_message', message);
     
     // Redirect based on user type
     if (isAdmin) {
       window.location.href = '/admin';
     } else {
-      window.location.href = '/login';
+      window.location.href = '/';
     }
   }
 }

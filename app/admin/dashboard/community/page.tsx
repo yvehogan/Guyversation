@@ -109,7 +109,9 @@ export default function CommunityPage() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-shrink-0">
                     <Image
-                      src={community.bannerUrl || "/placeholder.svg"}
+                      src="/banner.png"
+                      width={200}
+                      height={100}
                       alt={community.name}
                       className="w-full sm:w-16 h-32 sm:h-16 rounded-md object-cover"
                     />

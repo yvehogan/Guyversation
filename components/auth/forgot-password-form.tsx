@@ -6,20 +6,47 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { ForgotPasswordMutation, ForgotPasswordProps } from "@/components/queries/auth/forgot-password";
 
 export function ForgotPasswordForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { mutate: forgotPassword, isPending } = useMutation({
+    mutationFn: (values: ForgotPasswordProps) => ForgotPasswordMutation(values),
+    onSuccess: (response) => {
+      if (response.isSuccess) {
+        sessionStorage.setItem("reset_email", email);
+        
+        toast.success(response.message || "Reset link sent to your email");
+        
+        router.push("/verify-code");
+      } else {
+        setError(response.message || "Failed to send reset link");
+        toast.error(response.message || "Failed to send reset link");
+      }
+    },
+    onError: (error: any) => {
+      const errorMessage = error.message || "An unexpected error occurred";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    }
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setError("");
+    
+    if (!email) {
+      setError("Email address is required");
+      toast.error("Email address is required");
+      return;
+    }
 
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/verify-code");
-    }, 1500);
+    forgotPassword({ email });
   };
 
   return (
@@ -42,6 +69,11 @@ export function ForgotPasswordForm() {
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4 mt-16">
+          {error && (
+            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-md">
+              {error}
+            </div>
+          )}
           <div className="space-y-2 mb-24">
             <Label htmlFor="email">Email Address</Label>
             <Input
@@ -57,9 +89,9 @@ export function ForgotPasswordForm() {
             type="submit"
             size='lg'
             className="w-full"
-            disabled={isLoading}
+            disabled={isPending}
           >
-            {isLoading ? "Sending..." : "Send Reset Link"}
+            {isPending ? "Sending..." : "Send Reset Link"}
           </Button>
         </form>
       </div>

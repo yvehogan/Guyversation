@@ -4,10 +4,34 @@ import { Search } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { usePathname } from "next/navigation"
+import { getUserInfo, getDisplayName } from "@/lib/user-utils"
+import { useEffect, useState } from "react"
 
 export function Appbar() {
   const pathname = usePathname()
   const isDashboardPage = pathname === "/admin/dashboard"
+  const [userName, setUserName] = useState("User")
+  const [userRole, setUserRole] = useState("")
+  const [userInitials, setUserInitials] = useState("U")
+  
+  useEffect(() => {
+    const userInfo = getUserInfo();
+    const displayName = getDisplayName();
+    
+    setUserName(displayName);
+    setUserRole(userInfo.role || "User");
+    
+    if (userInfo.firstName && userInfo.lastName) {
+      setUserInitials(`${userInfo.firstName.charAt(0)}${userInfo.lastName.charAt(0)}`.toUpperCase());
+    } else if (displayName) {
+      const nameParts = displayName.split(' ');
+      if (nameParts.length > 1) {
+        setUserInitials(`${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase());
+      } else {
+        setUserInitials(displayName.charAt(0).toUpperCase());
+      }
+    }
+  }, []);
   
   return (
     <header className={`w-full px-4 sm:px-6 md:px-10 mt-7 mb-4 ${
@@ -16,7 +40,7 @@ export function Appbar() {
       {isDashboardPage && (
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-10">
           <div className="flex flex-col">
-            <h1 className="text-2xl md:text-4xl font-medium tracking-tight">Welcome back, Magnus!</h1>
+            <h1 className="text-2xl md:text-4xl font-medium tracking-tight">Welcome back, {userName}!</h1>
             <p className="text-neutral-200 mt-2">Let&apos;s see what&apos;s on your plate today.</p>
           </div>
           
@@ -42,12 +66,12 @@ export function Appbar() {
             </div>
             <div className="hidden md:flex items-center gap-2">
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" alt="profile image" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src="" alt="profile image" />
+                <AvatarFallback>{userInitials}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-base font-medium">Magnus Carlsen</p>
-                <p className="text-xs text-neutral-200">Mentor</p>
+                <p className="text-base font-medium">{userName}</p>
+                <p className="text-xs text-neutral-200">{userRole}</p>
               </div>
             </div>
           </div>
@@ -66,12 +90,12 @@ export function Appbar() {
           </div>
           <div className="flex items-center gap-2">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="profile image" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src="" alt="profile image" />
+              <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
             <div className="hidden md:block">
-              <p className="text-base font-medium">Magnus Carlsen</p>
-              <p className="text-xs text-neutral-200">Mentor</p>
+              <p className="text-base font-medium">{userName}</p>
+              <p className="text-xs text-neutral-200">{userRole}</p>
             </div>
           </div>
         </div>

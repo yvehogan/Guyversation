@@ -16,7 +16,6 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 export default function UserManagementPage() {
-  // State for dialogs
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [confirmAddOpen, setConfirmAddOpen] = useState(false);
   const [successAddOpen, setSuccessAddOpen] = useState(false);
@@ -31,7 +30,6 @@ export default function UserManagementPage() {
   const [email, setEmail] = useState("");
   const [userRole, setUserRole] = useState("");
   
-  // State for UI
   const [activeTab, setActiveTab] = useState("all-users");
   const [activeFilter, setActiveFilter] = useState<"All Users" | "Anonymous" | "Mentee" | "Mentor">("All Users");
 
@@ -49,21 +47,15 @@ useEffect(() => {
 const { isLoading, isError } = queryResult;
 const data = queryResult.data as GetUsersResponse | undefined;
 
-
 const users: UserInterface[] = data?.data?.map((user) => ({
   id: user.id,
   firstName: user.firstName,
   lastName: user.lastName,
-  type:
-    user.userType === 0
-      ? "Mentee"
-      : user.userType === 1
-      ? "Mentor"
-      : "Anonymous",
+  userTypeName: user.userTypeName,
   status: "Active",
   image: user.profilePictureUrl ?? undefined,
+  email: user.email,
 })) ?? [];
-  // Event handlers
   const handleAddUser = (email: string, role: string) => {
     setEmail(email);
     setUserRole(role);

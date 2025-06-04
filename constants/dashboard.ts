@@ -1,6 +1,9 @@
   
   import { MdDashboard, MdEvent } from "react-icons/md";
   import { IoIosPeople } from "react-icons/io";
+  import { BsFillPeopleFill } from "react-icons/bs";
+  import { MdPersonAddAlt1 } from "react-icons/md";
+  import { IoMdCalendar } from "react-icons/io";
   import { IoNotifications, IoSettingsSharp, IoPerson } from "react-icons/io5";
   import { IconType } from "react-icons";
   
@@ -28,16 +31,16 @@
     {
       label: "User Management",
       href: "/admin/dashboard/user-management",
-      icon: MdDashboard,
+      icon: MdPersonAddAlt1,
     },
     {
       label: "Community",
       href: "/admin/dashboard/community",
-      icon: MdDashboard,
+      icon: BsFillPeopleFill,
     },
     {
       label: "Event Management",
       href: "/admin/dashboard/event-management",
-      icon: MdDashboard,
+      icon: IoMdCalendar,
     },
   ]

@@ -12,7 +12,7 @@ import { SidebarUser } from "@/components/shared/sidebar-user";
 
 export const Sidebar = () => {
   const pathname = usePathname();
-  const isActive = (href: string) => href === normalize(pathname);
+  const isActive = (href: string) => href === normalize(pathname ?? '');
 
   return (
     <>

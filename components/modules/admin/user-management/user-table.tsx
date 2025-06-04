@@ -13,12 +13,10 @@ export interface UserInterface {
   id: string;
   firstName: string;
   lastName: string;
-  type: "Mentee" | "Mentor" | "School" | "Anonymous" | "-"; 
-  status: "Active" | "Pending" | "-";
-  location?: string;
-  time?: string; 
+  userTypeName: string;
+  status: string;
   image?: string;
-  name?: string;
+  email?: string;
 }
 
 interface UsersTableProps {
@@ -97,7 +95,7 @@ export function UsersTable({
                     <span>{`${user.firstName} ${user.lastName}`}</span>
                   </div>
                 </td>
-                <td className="py-4 px-4">{user.type}</td>
+                <td className="py-4 px-4">{user.userTypeName}</td>
                 <td className="py-4 px-4">
                   {user.status !== "-" && (
                     <span
