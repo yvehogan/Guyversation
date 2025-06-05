@@ -33,9 +33,9 @@ export function CommunityCard({ community }: CommunityCardProps) {
   }
 
   return (
-    <div className="grid grid-cols-[auto_1fr_auto] gap-4 items-center bg-white p-4 rounded-lg">
+    <div className="flex flex-col md:flex-row justify-between gap-4 items-center bg-white p-5 rounded-lg w-full">
       {/* Community Image - First Column */}
-      <div className="flex-shrink-0">
+      <div className="flex gap-5 items-center">
         <Link href={`/dashboard/communities/${community.id}`}>
           <div className="h-16 w-16 rounded-lg overflow-hidden">
             <Image
@@ -48,11 +48,8 @@ export function CommunityCard({ community }: CommunityCardProps) {
             />
           </div>
         </Link>
-      </div>
-
-      {/* Community Info - Second Column */}
       <div className="flex flex-col min-w-0">
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center gap-2 mb-3">
           <Link href={`/dashboard/communities/${community.id}`} className="text-xl font-medium hover:underline truncate">
             {community.name}
           </Link>
@@ -68,6 +65,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
           </Badge>
         </div>
         <p className="text-neutral-200 text-xs line-clamp-2">{community.description}</p>
+      </div>
       </div>
 
       {/* Actions - Third Column */}

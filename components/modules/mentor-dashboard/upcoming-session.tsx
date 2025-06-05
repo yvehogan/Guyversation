@@ -106,7 +106,7 @@ export function UpcomingSessions() {
   ];
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-xl font-medium">
           Upcoming Sessions <span className="text-sm text-grey-500">(7)</span>
@@ -115,8 +115,8 @@ export function UpcomingSessions() {
           See all
         </Button>
       </div>
-      <Card className="flex-1 flex flex-col overflow-hidden">
-        <CardContent className="h-[calc(100%-400px)] overflow-y-auto pr-2 pt-2 pb-6">
+      <Card className="flex- flex flex-col overflow-hidden">
+        <CardContent className=" h-screen md:max-h-[620px] overflow-y-auto pr-2 pt-2 pb-40 md:pb-24">
           <div className="space-y-6">
             {sessionItems.map((item, index) => {
               const colorScheme =

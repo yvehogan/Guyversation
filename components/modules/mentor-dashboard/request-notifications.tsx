@@ -152,25 +152,25 @@ export function RequestNotifications() {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <Card className="flex flex-1 overflow-hidden flex-col h-full">
+    <div className="flex flex-col">
+      <Card className="flex overflow-hidden flex-col">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <h3 className="text-xl font-medium">
               Request Notifications
-              <span className="text-sm text-grey-500">(7)</span>
+              <span className="text-sm text-grey-500 mx-2">(7)</span>
             </h3>
           </div>
           <Button variant="link" className="text-primary-400 text-sm">
             See all
           </Button>
         </CardHeader>
-        <CardContent className="h-[calc(100%-400px)] overflow-y-auto pr-2 pt-2 pb-10">
+        <CardContent className="max-h-[400px] overflow-y-auto pr-2 pt-2">
           <div className="space-y-4">
             {requestItems.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between border-b border-[#DADADA] py-3"
+                className="flex items-center justify-between border-b border-[#DADADA] py-3 whitespace-nowrap gap-5 overflow-x-auto"
               >
                 <div className="w-1/3 flex items-center gap-3">
                   <Avatar>

@@ -39,7 +39,6 @@ export default function MentorPage() {
   }
 
   const handleDeclineRequest = () => {
-    // Handle decline request logic here
     setShowRequestProfile(false)
   }
 

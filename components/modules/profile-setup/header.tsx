@@ -8,7 +8,7 @@ interface HeaderProps {
 export function ProfileHeader({ email }: HeaderProps) {
   return (
     <header className="bg-white py-4 px-4">
-      <div className="flex  justify-between max-w-6xl mx-auto">
+      <div className="flex flex-col md:flex-row items-center  justify-between max-w-6xl mx-auto">
         <Image
           src="/svgs/logo.svg"
           alt="Logo"

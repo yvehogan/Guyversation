@@ -29,9 +29,7 @@ interface ApiProfileData {
   profileImage?: string;
 }
 
-// Simplified data transformation
 const transformProfileData = async (profileData: ProfileData): Promise<ApiProfileData> => {
-  // Convert image to base64 if needed
   let profileImageStr = undefined;
   if (profileData.profileImage instanceof File) {
     const reader = new FileReader();
@@ -43,14 +41,12 @@ const transformProfileData = async (profileData: ProfileData): Promise<ApiProfil
     profileImageStr = profileData.profileImage;
   }
   
-  // Map social media entries directly from the structured array
   const social = profileData.socialMedia.map(item => ({
     socialMediaType: item.socialMediaType,
     handle: item.handle,
     url: item.url
   }));
   
-  // Transform availability
   const availability = profileData.availability.flatMap(slot => 
     slot.days.map(day => ({
       day,
@@ -59,7 +55,6 @@ const transformProfileData = async (profileData: ProfileData): Promise<ApiProfil
     }))
   );
 
-  // Return transformed data
   return {
     firstName: profileData.firstName,
     lastName: profileData.lastName,

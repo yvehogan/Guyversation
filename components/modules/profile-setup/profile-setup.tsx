@@ -27,7 +27,7 @@ export type ProfileData = {
   preferredChannelId: string
   languageId: string
   credentialLink: string
-  socialMedia: SocialMediaEntry[] // Single field for social media
+  socialMedia: SocialMediaEntry[]
   profileImage: string | File | null
   isModerator: boolean
   channelIds: string[]
@@ -126,16 +126,16 @@ export function ProfileSetup() {
       <div className="relative z-10">
         <ProfileHeader email={profileData.email} />
 
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-4 md:py-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-medium text-neutral-100">Welcome to Guyversation</h1>
+            <h1 className="text-2xl md:text-4xl font-medium text-neutral-100">Welcome to Guyversation</h1>
             <p className="text-neutral-200">Let&apos;s set up your mentor profile</p>
           </div>
         </div>
 
         <div className="container mx-auto px-4">
           <div className="flex gap-6 max-w-6xl mx-auto">
-            <div className="bg-white rounded-3xl p-8 w-80 shadow-sm">
+            <div className="hidden md:block bg-white rounded-3xl p-8 w-80 shadow-sm">
               <StepIndicator steps={steps} currentStep={currentStep} />
             </div>
 
@@ -156,7 +156,7 @@ export function ProfileSetup() {
                   updateProfileData={updateProfileData}
                   onNext={handleNext}
                   onPrevious={handlePrevious}
-                  channels={channels} // Pass channels to ModerationStep
+                  channels={channels}
                 />
               )}
               {currentStep === 2 && (

@@ -46,16 +46,20 @@ export function RequestProfileDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-[450px] overflow-y-auto"
+        className="sm:max-w-[450px] flex flex-col overflow-y-auto w-full"
         style={{
-          transform: "translateX(100%)",
-          marginTop: "0vh",
-          marginBottom: "5vh",
-          height: "97vh",
+          height: "calc(100vh - 2rem)",
+          maxHeight: "100vh",
+          width: "100vw",
+          top: "98%",
+          left: "98%",
+          transform: "translate(-50%, -50%)",
+          position: "fixed",
+          margin: 0,
         }}
       >
         <DialogHeader className="relative border-b">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 mb-6">
             <Avatar className="h-20 w-20">
               <AvatarImage
                 src="https://github.com/shadcn.png"

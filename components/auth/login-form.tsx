@@ -93,7 +93,7 @@ export function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-8 px-4">
+    <div className="md:min-h-screen flex flex-col justify-center py-8 px-4">
       <div className="space-y-6 max-w-md mx-auto w-full">
         <div className="space-y-2 text-center">
           <div className="inline-flex h-12 w-12 items-center justify-center">
@@ -112,7 +112,7 @@ export function LoginForm() {
             Please fill the details below to sign into your account.
           </p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-16">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-0 md:mt-16">
           {error && (
             <div
               className="p-3 text-sm text-red-500 bg-red-50 rounded-md"

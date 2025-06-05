@@ -34,12 +34,12 @@ export function Appbar() {
   }, []);
 
   return (
-    <header className={`flex justify-between w-full items-center gap-x-10 px-10 mt-7 ${
+    <header className={`flex flex-col md:flex-row justify-between w-full items-center gap-x-10 px-5 md:px-10 mt-7 mb-5 ${
       isCommunitiesPage ? 'h-24 md:h-10' : 'h-38 md:h-20'
     }`}>
       {!isCommunitiesPage && (
         <div>
-          <h1 className="text-4xl font-medium tracking-tight">Welcome back, {userName}!</h1>
+          <h1 className="text-2xl md:text-4xl font-medium tracking-tight">Welcome back, {userName}!</h1>
           <p className="text-neutral-200 mt-2">Let&apos;s see what&apos;s on your plate today.</p>
         </div>
       )}
@@ -50,12 +50,12 @@ export function Appbar() {
           <Input 
             type="search" 
             placeholder="Search" 
-            className={`w-full min-w-[200px] rounded-full pl-10 bg-white ${
+            className={`w-full  md:min-w-[200px] rounded-full pl-10 bg-white ${
               isCommunitiesPage ? 'md:w-[500px]' : 'md:w-[300px]'
             }`}
           />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="md:flex items-center gap-2 hidden">
           <Avatar>
             <AvatarImage src="" alt="profile image" />
             <AvatarFallback>{userInitials}</AvatarFallback>

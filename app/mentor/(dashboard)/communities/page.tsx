@@ -77,7 +77,7 @@ export default function CommunitiesPage() {
   return (
     <div className="container mx-auto py-6 flex flex-col h-full">
       <h1 className="text-4xl font-medium mb-6">Communities</h1>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-5">
         <p className="text-black text-sm">
           We&apos;ve found <span className="font-medium">133</span> communities for you
         </p>
@@ -95,7 +95,7 @@ export default function CommunitiesPage() {
         </DropdownMenu>
       </div>
 
-      <div className="space-y-4 overflow-y-auto flex-1 mb-8 ">
+      <div className="space-y-4 overflow-y-auto mb-32 md:mb-12 h-full ">
         {communities.map((community) => (
           <CommunityCard key={community.id} community={community} />
         ))}

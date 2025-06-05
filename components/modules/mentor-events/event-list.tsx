@@ -171,11 +171,11 @@ export function EventsList() {
   const totalEvents = filteredEvents.length;
 
   return (
-    <div className="bg-white rounded-[30px] p-4  h-[calc(100%-50px)] overflow-y-auto mb-8">
+    <div className="bg-white rounded-[30px] p-4 h-full overflow-y-auto">
       <Tabs
         defaultValue="all"
         onValueChange={(value) => setActiveTab(value as EventType)}
-        className="border-b border-[#DADADA]"
+        className="border-b border-[#DADADA] overflow-x-auto"
       >
         <TabsList className="mb-3 bg-transparent p-1">
           <TabsTrigger value="all" className="">
@@ -200,17 +200,17 @@ export function EventsList() {
         {filteredEvents.map((event) => (
           <div
             key={event.id}
-            className="border-b border-[#DADADA] pb-6 last:border-b-0"
+            className="border-b border-[#DADADA] pb-6 last:border-b-0 flex flex-col md:flex-row justify-between"
           >
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="relative flex-shrink-0 flex flex-col items-center justify-center bg-primary-100 p-3 rounded-lg w-[62px] h-[85px]">
+            <div className="flex flex-co md:flex-row gap-6">
+              <div className="relative flex-shrink-0 flex flex-col items-center justify-center bg-primary-100 p-3 rounded-lg w-[50px] md:w-[62px] h-[85px]">
                 <div className="text-sm text-neutral-100">
                   {event.date.month}
                 </div>
                 <div className="text-2xl font-semibold mb-6">
                   {event.date.day}
                 </div>
-                <div className="absolute bottom-0 flex items-center justify-center text-xs bg-primary-300 text-white w-[62px] h-7 rounded-br-xl rounded-bl-xl">
+                <div className="absolute bottom-0 flex items-center justify-center text-xs bg-primary-300 text-white w-[50px] md:w-[62px] h-7 rounded-br-xl rounded-bl-xl">
                   {event.time}
                 </div>
               </div>
@@ -246,6 +246,7 @@ export function EventsList() {
               </div>
               </div>
 
+            </div>
               <div className="flex flex-col md:flex-row gap-2 md:items-center">
                 <Button variant="link" className="text-primary-400">
                   View details
@@ -254,7 +255,6 @@ export function EventsList() {
                   Register to attend
                 </Button>
               </div>
-            </div>
           </div>
         ))}
       </div>

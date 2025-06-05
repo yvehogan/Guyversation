@@ -90,7 +90,7 @@ export function ProfileStep({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-3 md:gap-6">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name</Label>
           <Input
@@ -111,7 +111,7 @@ export function ProfileStep({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-3 md:gap-6">
         <div className="flex flex-col space-y-6">
           <div className="space-y-2">
             <Label htmlFor="phoneNumber">Phone Number</Label>
@@ -143,7 +143,7 @@ export function ProfileStep({
           </div>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-2 my-3 md:my-0">
           <Label htmlFor="summary">Summary</Label>
           <Textarea
             id="summary"
@@ -155,8 +155,8 @@ export function ProfileStep({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-2">
+      <div className="grid md:grid-cols-2 gap-3 md:gap-6">
+        <div className="space-y-3">
           <Label htmlFor="preferredChannel">Preferred Channel</Label>
           <Select
             value={profileData.preferredChannelId}
@@ -195,7 +195,23 @@ export function ProfileStep({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
+      <div className="space-y-2">
+          <Label>Credential Type</Label>
+          <Select
+            defaultValue="Link"
+            onValueChange={(value) => {/* Optional credential type handling */}}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Credential Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Link">Link</SelectItem>
+              <SelectItem value="Certificate">Certificate</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="credentialLink">Upload Credential</Label>
           <Input
@@ -206,22 +222,7 @@ export function ProfileStep({
           />
         </div>
         
-        <div className="space-y-2">
-          <Label>Credential Type</Label>
-          <Select
-            defaultValue="Link"
-            onValueChange={(value) => {/* Optional credential type handling */}}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Credential Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Link">Link</SelectItem>
-              <SelectItem value="Certificate">Certificate</SelectItem>
-              <SelectItem value="Other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+       
       </div>
 
       <div className="space-y-4">
@@ -243,13 +244,13 @@ export function ProfileStep({
         ) : (
           <div className="space-y-3">
             {profileData.socialMedia.map((social, index) => (
-              <div key={index} className="grid grid-cols-12 gap-2 items-center">
+              <div key={index} className="grid grid-cols-6 md:grid-cols-12 gap-2 items-center">
                 <div className="col-span-3">
                   <Select
                     value={social.socialMediaType}
                     onValueChange={(value) => updateSocialMedia(index, 'socialMediaType', value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Platform" />
                     </SelectTrigger>
                     <SelectContent>
