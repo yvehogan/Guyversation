@@ -7,12 +7,14 @@ interface ConfirmRevokeAccessDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
+  isLoading?: boolean;
 }
 
 export function ConfirmRevokeAccessDialog({
   open,
   onOpenChange,
-  onConfirm
+  onConfirm,
+  isLoading = false
 }: ConfirmRevokeAccessDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -35,6 +37,7 @@ export function ConfirmRevokeAccessDialog({
             size="lg"
             className="flex-1"
             onClick={() => onOpenChange(false)}
+            disabled={isLoading}
           >
             Cancel
           </Button>
@@ -42,8 +45,9 @@ export function ConfirmRevokeAccessDialog({
             className="flex-1 bg-warning-200 hover:bg-red-700 text-white"
             onClick={onConfirm}
             size="lg"
+            disabled={isLoading}
           >
-            Revoke access
+            {isLoading ? "Revoking..." : "Revoke access"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -74,11 +78,10 @@ export function SuccessRevokeAccessDialog({
             className="mx-auto mb-4"
           />
           <h2 className="text-[36px] font-medium mb-2">Access Revoked</h2>
-          <p className="text-neutral-200">
+          <p className="text-neutral-500">
             You revoked <span className="font-medium">
-              {user?.firstName}
-              {user?.lastName}
-            </span> access.
+              {user?.firstName} {user?.lastName}
+            </span>'s access.
           </p>
         </div>
       </DialogContent>

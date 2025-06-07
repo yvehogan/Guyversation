@@ -136,6 +136,8 @@ export function UpdateCommunityDialog({
               {previewUrl ? (
                 <Image
                   src={previewUrl}
+                  width={40}
+                  height={40}
                   alt="Banner preview"
                   className="w-full h-full object-cover rounded-full"
                 />

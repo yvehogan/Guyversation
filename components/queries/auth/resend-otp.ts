@@ -37,8 +37,6 @@ const ResendOtpMutation = async (
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
-      console.log('Resend OTP API error response:', error.response.data);
-      
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),

@@ -3,7 +3,7 @@
 import { AddUserDialog } from "@/components/modules/admin/user-management/add-user-dialog";
 import { ConfirmAddUserDialog, SuccessAddUserDialog } from "@/components/modules/admin/user-management/confirm-and-add-user-dialog";
 import { FilterTabs } from "@/components/modules/admin/user-management/filter-tabs";
-import { ConfirmRevokeAccessDialog, SuccessRevokeAccessDialog } from "@/components/modules/admin/user-management/request-access-dialog";
+// import { ConfirmRevokeAccessDialog, SuccessRevokeAccessDialog } from "@/components/modules/admin/user-management/request-access-dialog";
 import { ConfirmRequestDialog, SuccessRequestDialog } from "@/components/modules/admin/user-management/request-dialog";
 import { RequestsTable } from "@/components/modules/admin/user-management/requests-table";
 import { TabNavigation } from "@/components/modules/admin/user-management/tab-navigation";
@@ -12,6 +12,7 @@ import { UserProfileDialog } from "@/components/modules/admin/user-management/us
 import { UserInterface, UsersTable } from "@/components/modules/admin/user-management/user-table";
 import { useState, useEffect } from "react";
 import { GetUsersQuery, GetUsersResponse } from "@/components/queries/admin/get-users";
+import { UserDetails } from "@/components/queries/users/get-user-details";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
@@ -26,7 +27,7 @@ export default function UserManagementPage() {
   const [successRequestOpen, setSuccessRequestOpen] = useState(false);
   
   const [selectedUser, setSelectedUser] = useState<UserInterface | null>(null);
-  const [viewingUser, setViewingUser] = useState<UserInterface | null>(null);
+  const [viewingUser, setViewingUser] = useState<UserDetails | null>(null);
   const [email, setEmail] = useState("");
   const [userRole, setUserRole] = useState("");
   
@@ -78,13 +79,13 @@ const users: UserInterface[] = data?.data?.map((user) => ({
     setSuccessRevokeOpen(true);
   };
 
-  const handleViewProfile = (user: UserInterface) => {
+  const handleViewProfile = (user: UserDetails) => {
     setViewingUser(user);
     setProfileOpen(true);
   };
 
   const handleViewRequest = (user: UserInterface) => {
-    setViewingUser(user);
+    setViewingUser(user as unknown as UserDetails);
     setProfileOpen(true);
   };
 
@@ -164,7 +165,7 @@ const users: UserInterface[] = data?.data?.map((user) => ({
         onOpenChange={setSuccessAddOpen}
       />
 
-      <ConfirmRevokeAccessDialog
+      {/* <ConfirmRevokeAccessDialog
         open={confirmRevokeOpen}
         onOpenChange={setConfirmRevokeOpen}
         onConfirm={handleConfirmRevoke}
@@ -174,7 +175,7 @@ const users: UserInterface[] = data?.data?.map((user) => ({
         open={successRevokeOpen}
         onOpenChange={setSuccessRevokeOpen}
         user={selectedUser}
-      />
+      /> */}
 
       <UserProfileDialog
         open={profileOpen}

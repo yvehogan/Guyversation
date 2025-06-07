@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserInterface } from "../user-table";
+import { UserDetails } from "@/components/queries/users/get-user-details";
 
 interface ProfileHeaderProps {
-  user: UserInterface | null;
+  user: UserDetails | null;
 }
 
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
@@ -20,10 +20,10 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       </div>
       <div>
         <h2 className="text-2xl sm:text-4xl font-medium">
-          {"Magnus Carlsen"}
+          {user?.firstName} {user?.lastName}
         </h2>
         <div className="inline-block px-3 py-1 rounded-full text-xs border bg-secondary-100 border-secondary-400 text-primary mt-1">
-          {user?.userTypeName || "Mentor"}
+          {user?.userTypeName}
         </div>
       </div>
     </div>

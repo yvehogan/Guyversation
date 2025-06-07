@@ -1,8 +1,6 @@
 import axios, { AxiosError } from "axios";
 
 export const handleAxiosError = <T>(error: unknown, genericMessage: string) => {
-  console.log("error", error);
-
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
     if (axiosError.response && typeof axiosError.response.data === "string") {

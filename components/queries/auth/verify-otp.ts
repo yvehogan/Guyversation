@@ -39,8 +39,6 @@ const ValidateCodeMutation = async (
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
-      console.log('Verify OTP API error response:', error.response.data);
-      
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),

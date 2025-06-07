@@ -43,10 +43,6 @@ const LoginMutation = async (
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
-      // Log the exact error response for debugging
-      console.log('Login API error response:', error.response.data);
-      
-      // Return the exact error response format from the server
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),
@@ -56,7 +52,6 @@ const LoginMutation = async (
       };
     }
 
-    // Fallback for non-Axios errors
     return {
       isSuccess: false,
       statusCode: "500",

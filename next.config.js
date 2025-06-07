@@ -1,13 +1,24 @@
-// Convert your existing config from TypeScript to JavaScript
-
-// Example conversion:
-// Before: const config: NextConfig = { ... }
-// After: const config = { ... }
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Your existing configuration here
-  // Remove any TypeScript-specific syntax
+  reactStrictMode: true,
+  images: {
+    domains: [
+      'github.com',
+      'res.cloudinary.com',
+    ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

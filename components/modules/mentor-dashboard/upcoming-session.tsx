@@ -89,7 +89,6 @@ export function UpcomingSessions() {
   const [journalReason, setJournalReason] = useState("");
 
   const handleJournalSubmit = () => {
-    console.log("Journal Submitted:", journalReason);
     setIsJournalOpen(false);
     setJournalReason("");
   };

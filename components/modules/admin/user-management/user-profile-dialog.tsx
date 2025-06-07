@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { UserInterface } from "./user-table";
+import { UserDetails } from "@/components/queries/users/get-user-details";
 import ProfileHeader from "./user-profile-dialog/profile-header";
 import ProfileTab from "./user-profile-dialog/profile-tab";
 import SessionsTab from "./user-profile-dialog/sessions-tab";
@@ -11,7 +11,7 @@ import EventsTab from "./user-profile-dialog/events-tab";
 interface UserProfileDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  user: UserInterface | null;
+  user: UserDetails | null;
   isRequest?: boolean;
   onAcceptRequest?: () => void;
 }
@@ -26,13 +26,14 @@ export function UserProfileDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-[550px] flex flex-col overflow-y-auto max-h-[95vh] w-[90vw]"
+        className="sm:max-w-[550px] flex flex-col overflow-y-auto max-h-[85vh] w-[90vw]"
         style={{
-          transform: "translate(-50%, -50%)",
-          position: "fixed",
-          top: "97%",
+          position: "absolute",
+          top: "95%",
           left: "98%",
-          margin: 0,
+          transform: "translate(-50%, -50%)",
+          margin: "20px 0",
+          maxHeight: "calc(100vh - 40px)"
         }}
       >
         <div className="pb-6">
@@ -93,8 +94,8 @@ export function UserProfileDialog({
             </div>
           </div>
 
-          {activeTab === "profile" && <ProfileTab />}
-          {activeTab === "sessions" && <SessionsTab />}
+          {activeTab === "profile" && <ProfileTab user={user} />}
+          {activeTab === "sessions" && <SessionsTab user={user} />}
           {activeTab === "stats" && <StatsTab />}
           {activeTab === "review" && <ReviewTab />}
           {activeTab === "events" && <EventsTab open={open} />}

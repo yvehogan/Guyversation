@@ -14,6 +14,8 @@ export const endpoints = () => {
     admin: {
       invite_user: `/admin/invite-user`,
       users: `/users`,
+      revoke_user_access: `/revoke-user-access`,
+      user_details: `/users`,
     },
     communities: {
       create: `/communities`,

@@ -54,7 +54,6 @@ export function LoginForm() {
 
         toast.error(response.message);
 
-        console.log("Login error response:", response);
       }
     },
     onError: (error: any) => {

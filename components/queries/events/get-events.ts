@@ -46,8 +46,6 @@ export const GetEventsQuery = async (): Promise<GetEventsResponse> => {
       }
     });
 
-    console.log('Events fetch response:', response.data);
-
     return {
       isSuccess: true,
       statusCode: "200",

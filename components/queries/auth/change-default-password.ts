@@ -3,10 +3,10 @@ import { axios } from '@/lib/axios';
 import axiosDefault from 'axios';
 
 export interface ChangeDefaultPasswordProps {
-  email: string;              // User's email
-  defaultPassword: string;    // The default/current password
-  newPassword: string;        // The new password to set
-  confirmPassword: string;    // Confirmation of the new password
+  email: string;             
+  defaultPassword: string;    
+  newPassword: string;        
+  confirmPassword: string;   
 }
 
 export interface ChangeDefaultPasswordResponse {
@@ -41,10 +41,6 @@ const ChangeDefaultPasswordMutation = async (
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
-      // Log the exact error response for debugging
-      console.log('Change Default Password API error response:', error.response.data);
-      
-      // Return the exact error response format from the server
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),
@@ -54,7 +50,6 @@ const ChangeDefaultPasswordMutation = async (
       };
     }
 
-    // Fallback for non-Axios errors
     return {
       isSuccess: false,
       statusCode: "500",

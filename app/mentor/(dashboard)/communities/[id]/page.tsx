@@ -169,7 +169,6 @@ export default function CommunityDetailPage({ params }: PageProps) {
   ];
 
   const handlePublish = () => {
-    console.log("Publishing post:", postContent);
     setPostContent("");
   };
 

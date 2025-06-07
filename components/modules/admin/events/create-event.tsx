@@ -112,9 +112,6 @@ export function CreateEventDialog({
       endTime: finalEndTime,
     };
 
-    console.log("Submitting event with data:", eventData);
-    console.log("Title field:", eventData.title);
-
     createEvent(eventData);
   };
 

@@ -37,10 +37,6 @@ const ForgotPasswordMutation = async (
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
-      // Log the error response for debugging
-      console.log('Forgot Password API error response:', error.response.data);
-      
-      // Return the error in the expected format
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),
@@ -49,8 +45,6 @@ const ForgotPasswordMutation = async (
         data: null,
       };
     }
-
-    // Fallback for non-Axios errors
     return {
       isSuccess: false,
       statusCode: "500",

@@ -40,21 +40,17 @@ export function ReviewStep({
   const router = useRouter();
 
   useEffect(() => {
-    // Fallback to cookie if userId prop is empty
     if (!userId) {
       const userIdFromCookie = Cookies.get("GUYVERSATION_USER_ID");
       if (userIdFromCookie) {
         setActualUserId(userIdFromCookie);
-        console.log("Using user ID from cookie:", userIdFromCookie);
       } else {
         toast.error("User ID not found. Please log in again.");
         console.error("No user ID found in cookie");
       }
     } else {
-      console.log("Using provided user ID:", userId);
     }
 
-    // Generate image preview if profileImage is a File
     if (profileData.profileImage instanceof File) {
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -71,18 +67,15 @@ export function ReviewStep({
   const { mutate: updateProfile, isPending } = useMutation({
     mutationFn: () => UpdateProfileMutation({ userId: actualUserId, profileData }),
     onSuccess: (response) => {
-      console.log("Profile update response:", response);
       setApiResponse(response);
 
       if (response.isSuccess) {
-        // Store user name information in cookies
         Cookies.set("GUYVERSATION_USER_FIRSTNAME", profileData.firstName);
         Cookies.set("GUYVERSATION_USER_LASTNAME", profileData.lastName);
 
         toast.success(response.message || "Profile updated successfully!");
         setIsSubmitted(true);
 
-        // Store profile completion status in cookie
         Cookies.set("GUYVERSATION_PROFILE_COMPLETED", "true");
 
         setTimeout(() => {
@@ -110,8 +103,6 @@ export function ReviewStep({
       toast.warning("First name and last name are required.");
       return;
     }
-    
-    console.log("Submitting profile...");
     updateProfile();
   };
 

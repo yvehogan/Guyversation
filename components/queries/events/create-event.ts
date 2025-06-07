@@ -61,7 +61,6 @@ export const CreateEventMutation = async (
     formData.append('Location', eventData.location || "");
 
     for (const pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
     }
     
     const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || '';
@@ -73,8 +72,6 @@ export const CreateEventMutation = async (
         'Authorization': `Bearer ${token}`
       }
     });
-
-    console.log('Event creation response:', response.data);
 
     return {
       isSuccess: true,

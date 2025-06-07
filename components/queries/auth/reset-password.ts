@@ -36,8 +36,6 @@ const ResetPasswordMutation = async (
     };
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
-      console.log('Reset Password API error response:', error.response.data);
-      
       return {
         isSuccess: false,
         statusCode: error.response.status.toString(),

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -9,12 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Plus, MoreVertical, Edit, Trash2 } from "lucide-react";
 import { CreateCommunityDialog } from "@/components/modules/admin/community/create-community-dialog";
 import { DeleteCommunityDialog } from "@/components/modules/admin/community/delete-community-dialog";
@@ -31,6 +25,7 @@ export default function CommunityPage() {
   const [updateCommunityOpen, setUpdateCommunityOpen] = useState(false);
   const [selectedCommunity, setSelectedCommunity] = useState<Community | null>(null);
   const [sortBy, setSortBy] = useState("size");
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -63,6 +58,19 @@ export default function CommunityPage() {
       ? "bg-primary-200 text-primary-300 whitespace-nowrap" 
       : "bg-[#C8202012] text-warning-200 border-none whitespace-nowrap";
   };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (openDropdownId && !((event.target as HTMLElement).closest('.community-dropdown-container'))) {
+        setOpenDropdownId(null);
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openDropdownId]);
 
   return (
     <>
@@ -142,6 +150,8 @@ export default function CommunityPage() {
                               <AvatarImage
                                 src="https://github.com/shadcn.png"
                                 alt="profile image"
+                                width={28}
+                                height={28}
                                 className="rounded-full"
                               />
                               <AvatarFallback>CN</AvatarFallback>
@@ -150,6 +160,8 @@ export default function CommunityPage() {
                               <AvatarImage
                                 src="https://github.com/shadcn.png"
                                 alt="profile image"
+                                width={28}
+                                height={28}
                                 className="rounded-full"
                               />
                               <AvatarFallback>CN</AvatarFallback>
@@ -158,6 +170,8 @@ export default function CommunityPage() {
                               <AvatarImage
                                 src="https://github.com/shadcn.png"
                                 alt="profile image"
+                                width={28}
+                                height={28}
                                 className="rounded-full"
                               />
                               <AvatarFallback>CN</AvatarFallback>
@@ -169,30 +183,47 @@ export default function CommunityPage() {
                           </span>
                         </div>
 
-                        <div className="relative">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem 
-                                className="cursor-pointer text-primary-400"
-                                onClick={() => handleEditCommunity(community)}
-                              >
-                                <Edit className="mr-2 h-4 w-4 text-primary-400" />
-                                Edit details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                className="cursor-pointer text-warning-200"
-                                onClick={() => handleDeleteCommunity(community)}
-                              >
-                                <Trash2 className="mr-2 h-4 w-4 text-warning-200" />
-                                Delete Community
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                        <div className="relative community-dropdown-container">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 hover:bg-neutral-100 transition-colors"
+                            onClick={() => {
+                              setOpenDropdownId(prev => prev === community.id ? null : community.id);
+                            }}
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                            <span className="sr-only">Open menu</span>
+                          </Button>
+                          
+                          {openDropdownId === community.id && (
+                            <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white z-[1000]">
+                              <div className="py-1" role="menu" aria-orientation="vertical">
+                                <button
+                                  className="w-full text-left px-4 py-2 text-sm text-primary-400 hover:bg-gray-100 flex items-center"
+                                  role="menuitem"
+                                  onClick={() => {
+                                    handleEditCommunity(community);
+                                    setOpenDropdownId(null);
+                                  }}
+                                >
+                                  <Edit className="mr-2 h-4 w-4 text-primary-400" />
+                                  Edit details
+                                </button>
+                                <button
+                                  className="w-full text-left px-4 py-2 text-sm text-warning-200 hover:bg-red-50 flex items-center"
+                                  role="menuitem"
+                                  onClick={() => {
+                                    handleDeleteCommunity(community);
+                                    setOpenDropdownId(null);
+                                  }}
+                                >
+                                  <Trash2 className="mr-2 h-4 w-4 text-warning-200" />
+                                  Delete Community
+                                </button>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
