@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+
 import { UserDetails } from "@/components/queries/users/get-user-details";
 import ProfileHeader from "./user-profile-dialog/profile-header";
 import ProfileTab from "./user-profile-dialog/profile-tab";
@@ -24,18 +25,8 @@ export function UserProfileDialog({
   const [activeTab, setActiveTab] = useState("profile");
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="sm:max-w-[550px] flex flex-col overflow-y-auto max-h-[85vh] w-[90vw]"
-        style={{
-          position: "absolute",
-          top: "95%",
-          left: "98%",
-          transform: "translate(-50%, -50%)",
-          margin: "20px 0",
-          maxHeight: "calc(100vh - 40px)"
-        }}
-      >
+    <Sheet open={open} onOpenChange={onOpenChange}>
+          <SheetContent className="right-0 mt-5 mr-8 h-auto max-h-[90vh] w-[90%] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md">
         <div className="pb-6">
           <ProfileHeader user={user} />
 
@@ -100,7 +91,7 @@ export function UserProfileDialog({
           {activeTab === "review" && <ReviewTab />}
           {activeTab === "events" && <EventsTab open={open} />}
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

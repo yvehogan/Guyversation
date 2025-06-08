@@ -8,19 +8,26 @@ export interface GetCommunitiesProps {
   search?: string;
 }
 
+export enum PrivacyEnums {
+  Open = 1,
+  Closed = 2,
+}
+
+export enum AudienceEnums {
+  Everyone = 0,
+  Mentees = 1,
+  Mentors = 2,
+}
+
 export interface Community {
   id: string;
   name: string;
   description: string;
   bannerUrl: string | null;
-  privacy: 'Open' | 'Closed';
-  audience: 'Everyone' | 'Mentees' | 'Mentors';
-  rules: string;
-  limit: number;
+  privacy: number;
+  audience: number;
+  createdDate: string;
   memberCount: number;
-  createdAt: string;
-  createdBy: string;
-  isJoined?: boolean;
 }
 
 export interface GetCommunitiesResponse {
@@ -35,7 +42,10 @@ export interface GetCommunitiesResponse {
     hasNext: boolean;
     hasPrevious: boolean;
   } | null;
-  data: Community[];
+  data: {
+    totalCommunityCount: number;
+    communities: Community[];
+  };
 }
 
 const GetCommunitiesQuery = async (
@@ -55,19 +65,24 @@ const GetCommunitiesQuery = async (
         statusCode: error.response.status.toString(),
         message: error.response.data?.message || 'An error occurred.',
         metaData: null,
-        data: [],
+        data: {
+          totalCommunityCount: 0,
+          communities: [],
+        },
       };
     }
 
     const errorMessage =
-      // (error as any)?.response?.data?.message || 'An unexpected error occurred.';
       ((error as unknown) as { response?: { data?: { message?: string } } })?.response?.data?.message || "An unexpected error occurred.";
     return {
       isSuccess: false,
       statusCode: '500',
       message: errorMessage,
       metaData: null,
-      data: [],
+      data: {
+        totalCommunityCount: 0,
+        communities: [],
+      },
     };
   }
 };

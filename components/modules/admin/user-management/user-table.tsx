@@ -204,7 +204,7 @@ export function UsersTable({
                               setOpenDropdownId(null);
                             }}
                           >
-                   s         Revoke access
+                          Revoke access
                           </button>
                         </div>
                       </div>

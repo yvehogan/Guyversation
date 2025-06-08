@@ -106,7 +106,7 @@ export function CreateCommunityDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl rounded-[30px]">
+      <DialogContent className="sm:max-w-3xl rounded-[30px] max-h-[85vh] md:max-h-[95vh] overflow-y-auto">
         <DialogHeader className="border-b border-grey-500 pb-4">
           <DialogTitle className="text-4xl font-medium">
             Create Community
@@ -120,6 +120,8 @@ export function CreateCommunityDialog({
                 <Image
                   src={URL.createObjectURL(banner)}
                   alt="Banner preview"
+                  width={200}
+                  height={200}
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (

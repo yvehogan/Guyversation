@@ -3,7 +3,6 @@
 import { AddUserDialog } from "@/components/modules/admin/user-management/add-user-dialog";
 import { ConfirmAddUserDialog, SuccessAddUserDialog } from "@/components/modules/admin/user-management/confirm-and-add-user-dialog";
 import { FilterTabs } from "@/components/modules/admin/user-management/filter-tabs";
-// import { ConfirmRevokeAccessDialog, SuccessRevokeAccessDialog } from "@/components/modules/admin/user-management/request-access-dialog";
 import { ConfirmRequestDialog, SuccessRequestDialog } from "@/components/modules/admin/user-management/request-dialog";
 import { RequestsTable } from "@/components/modules/admin/user-management/requests-table";
 import { TabNavigation } from "@/components/modules/admin/user-management/tab-navigation";

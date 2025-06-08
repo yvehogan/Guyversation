@@ -16,7 +16,7 @@ import { UpdateCommunityDialog } from "@/components/modules/admin/community/upda
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { GetCommunitiesQuery, Community } from "@/components/queries/communities/get-communities";
+import { GetCommunitiesQuery, Community, PrivacyEnums } from "@/components/queries/communities/get-communities";
 import Image from "next/image";
 
 export default function CommunityPage() {
@@ -35,8 +35,8 @@ export default function CommunityPage() {
     }),
   });
 
-  const communities = data?.data || [];
-  const totalCount = data?.metaData?.totalCount || 0;
+  const communities = data?.data?.communities || [];
+  const totalCount = data?.data?.totalCommunityCount || 0;
 
   const handleCreateCommunity = () => {
     setCreateCommunityOpen(false);
@@ -53,8 +53,8 @@ export default function CommunityPage() {
     setUpdateCommunityOpen(true);
   };
 
-  const getBadgeStyles = (privacy: string) => {
-    return privacy === "Open" 
+  const getBadgeStyles = (privacy: number) => {
+    return privacy === PrivacyEnums.Open
       ? "bg-primary-200 text-primary-300 whitespace-nowrap" 
       : "bg-[#C8202012] text-warning-200 border-none whitespace-nowrap";
   };
@@ -74,7 +74,7 @@ export default function CommunityPage() {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto pb-16 mt-4 md:mt-8 px-4 md:px-0">
+      <div className="h-screen flex-1 overflow-y-auto pb-16 mt-4 md:mt-8 px-4 md:px-0">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h1 className="text-2xl md:text-4xl font-medium">Communities</h1>
           <Button
@@ -115,13 +115,16 @@ export default function CommunityPage() {
             {communities.map((community) => (
               <Card key={community.id} className="p-3 sm:p-4 border-none shadow-sm">
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0 relative w-full sm:w-16 h-32 sm:h-16 rounded-md overflow-hidden">
                     <Image
                       src="/banner.png"
-                      width={200}
-                      height={100}
                       alt={community.name}
-                      className="w-full sm:w-16 h-32 sm:h-16 rounded-md object-cover"
+                      fill
+                      sizes="(max-width: 640px) 100vw, 64px"
+                      className="rounded-md object-cover"
+                      style={{ objectFit: 'cover' }}
+                      quality={80}
+                      priority={true}
                     />
                   </div>
                   <div className="flex-1">
@@ -132,10 +135,10 @@ export default function CommunityPage() {
                             {community.name}
                           </h3>
                           <Badge
-                            variant={community.privacy === "Open" ? "default" : "secondary"}
+                            variant={community.privacy === PrivacyEnums.Open ? "default" : "secondary"}
                             className={getBadgeStyles(community.privacy)}
                           >
-                            {community.privacy}
+                            {community.privacy === PrivacyEnums.Open ? "Open" : "Closed"}
                           </Badge>
                         </div>
                         <p className="text-gray-500 text-sm mt-1 line-clamp-2 sm:line-clamp-1">
@@ -146,16 +149,6 @@ export default function CommunityPage() {
                       <div className="flex flex-row sm:flex-col md:flex-row justify-between sm:justify-end items-center sm:items-end md:items-center gap-2 sm:gap-4">
                         <div className="flex items-center gap-2">
                           <div className="flex -space-x-2">
-                            <Avatar className="h-6 w-6 sm:h-7 sm:w-7 border-2 border-white">
-                              <AvatarImage
-                                src="https://github.com/shadcn.png"
-                                alt="profile image"
-                                width={28}
-                                height={28}
-                                className="rounded-full"
-                              />
-                              <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
                             <Avatar className="h-6 w-6 sm:h-7 sm:w-7 border-2 border-white">
                               <AvatarImage
                                 src="https://github.com/shadcn.png"

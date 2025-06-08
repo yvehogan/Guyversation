@@ -137,7 +137,7 @@ export function ReviewStep({
 
       <div className="space-y-6">
         {/* Profile Header */}
-        <div className="flex items-center space-x-6 pb-6 border-b border-gray-100">
+        <div className="flex flex-col md:flex-row items-center space-x-6 pb-6 border-b border-gray-100">
           <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100">
             {imagePreview ? (
               <Image
@@ -290,7 +290,6 @@ export function ReviewStep({
         )}
       </div>
 
-      {/* Show API response for debugging */}
       {isSubmitted && apiResponse && (
         <div className="mt-4 p-4 bg-gray-50 rounded-md overflow-auto max-h-60">
           <h4 className="font-medium mb-2">Submission Result:</h4>
@@ -300,10 +299,10 @@ export function ReviewStep({
         </div>
       )}
 
-      <div className="flex justify-between items-center mt-8">
+      <div className="flex flex-col md:flex-row justify-between items-center mt-8">
         <button
           onClick={onPrevious}
-          className="flex items-center gap-2 border-none text-primary-400"
+          className="flex items-center gap-2 border-none text-primary-400 mb-3 md:mb-0"
           disabled={isPending || isSubmitted}
         >
           <ChevronLeft className="h-4 w-4" /> Previous

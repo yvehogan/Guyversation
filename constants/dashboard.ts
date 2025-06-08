@@ -17,9 +17,9 @@
     { label: "Dashboard", href: "/mentor", icon: MdDashboard },
     { label: "Mentor", href: "/mentor/mentors", icon: IoPerson },
     { label: "Communities", href: "/mentor/communities", icon: IoIosPeople },
-    { label: "Notifications", href: "/mentor/notifications", icon: IoNotifications },
+    // { label: "Notifications", href: "/mentor/notifications", icon: IoNotifications },
     { label: "Events", href: "/mentor/events", icon: MdEvent },
-    { label: "Settings", href: "/mentor/settings", icon: IoSettingsSharp },
+    // { label: "Settings", href: "/mentor/settings", icon: IoSettingsSharp },
   ];
 
   export const ADMIN_DASHBOARD_LINKS = [

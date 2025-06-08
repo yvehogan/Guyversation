@@ -6,11 +6,11 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 type RequestItem = {
   id: string;
@@ -44,8 +44,8 @@ export function RequestProfileDialog({
   onDecline,
 }: RequestProfileDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
         className="sm:max-w-[450px] flex flex-col overflow-y-auto w-full"
         style={{
           height: "calc(100vh - 2rem)",
@@ -58,7 +58,7 @@ export function RequestProfileDialog({
           margin: 0,
         }}
       >
-        <DialogHeader className="relative border-b">
+        <SheetHeader className="relative border-b">
           <div className="flex items-center gap-4 mb-6">
             <Avatar className="h-20 w-20">
               <AvatarImage
@@ -69,7 +69,7 @@ export function RequestProfileDialog({
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div>
-              <DialogTitle className="text-4xl">{request.name}</DialogTitle>
+              <SheetTitle className="text-4xl">{request.name}</SheetTitle>
               <Badge variant="outline" className="mt-1">
                 Mentee
               </Badge>
@@ -84,7 +84,7 @@ export function RequestProfileDialog({
               <div className="w-12 h-[1px] bg-primary-400 mt-1"></div>
             </div>
           </div>
-        </DialogHeader>
+        </SheetHeader>
         <div className="mt-4 space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -153,7 +153,7 @@ export function RequestProfileDialog({
             Accept Request
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

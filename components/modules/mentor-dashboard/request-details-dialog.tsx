@@ -6,11 +6,11 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 type RequestItem = {
   id: string;
@@ -44,17 +44,9 @@ export function RequestDetailsDialog({
   onDecline,
 }: RequestDetailsDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="sm:max-w-[450px] overflow-y-auto"
-        style={{
-          transform: "translateX(100%)",
-          marginTop: "0vh",
-          marginBottom: "5vh",
-          height: "97vh",
-        }}
-      >
-        <DialogHeader className="relative border-b">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="right-0 mt-5 mr-8 h-auto max-h-[90vh] w-[90%] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md">
+        <SheetHeader className="relative border-b">
           <div className="flex items-center gap-4">
             <Avatar className="h-20 w-20">
               <AvatarImage
@@ -65,7 +57,7 @@ export function RequestDetailsDialog({
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div>
-              <DialogTitle className="text-4xl">{request.name}</DialogTitle>
+              <SheetTitle className="text-2xl  md:text-4xl">{request.name}</SheetTitle>
               <Badge variant="outline" className="mt-1">
                 Mentee
               </Badge>
@@ -80,7 +72,7 @@ export function RequestDetailsDialog({
               <div className="w-12 h-[1px] bg-primary-400 mt-1"></div>
             </div>
           </div>
-        </DialogHeader>
+        </SheetHeader>
         <div className="mt-4 space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -149,7 +141,7 @@ export function RequestDetailsDialog({
             Accept Request
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

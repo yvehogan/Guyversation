@@ -117,7 +117,7 @@ export function CreateEventDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl rounded-[30px]">
+      <DialogContent className="sm:max-w-3xl rounded-[30px] max-h-[85vh] md:max-h-[95vh] overflow-y-auto">
         <DialogHeader className="border-b border-grey-500 pb-4">
           <DialogTitle className="text-4xl font-medium">
             Create Event
@@ -154,73 +154,71 @@ export function CreateEventDialog({
               className="mt-1 h-full min-h-[150px]"
             />
           </div>
-          <div className="flex flex-col justify-between gap-4">
-            <div className="gap-7 mt-3">
-              <div>
-                <Label htmlFor="category">Category</Label>
-                <Select value={eventCategory} onValueChange={setEventCategory}>
-                  <SelectTrigger id="category" className="mt-1 w-full">
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="workshop">Workshop</SelectItem>
-                    <SelectItem value="webinar">Webinar</SelectItem>
-                    <SelectItem value="FiresideChat">Fireside chat</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="flex flex-col justify-between gap-4 col-span-2 sm:col-span-1">
+            <div className="w-full mt-3">
+              <Label htmlFor="category">Category</Label>
+              <Select value={eventCategory} onValueChange={setEventCategory}>
+                <SelectTrigger id="category" className="mt-1 w-full">
+                  <SelectValue placeholder="Select Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="workshop">Workshop</SelectItem>
+                  <SelectItem value="webinar">Webinar</SelectItem>
+                  <SelectItem value="FiresideChat">Fireside chat</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="col-span-2">
+            <div className="w-full">
               <Label className="font-medium">Start Date & Time</Label>
-              <div className="grid grid-cols-2 gap-4 mt-1">
-                <div className="relative">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1 w-full">
+                <div className="relative w-full">
                   <Input
                     id="start-date"
                     type="date"
                     placeholder="Start Date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 w-full"
                   />
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
-                <div className="relative">
+                <div className="relative w-full">
                   <Input
                     id="start-time"
                     type="time"
                     placeholder="Start Time"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 w-full"
                   />
                   <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
               </div>
             </div>
 
-            <div className="col-span-2">
+            <div className="w-full">
               <Label className="font-medium">End Date & Time</Label>
-              <div className="grid grid-cols-2 gap-4 mt-1">
-                <div className="relative">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1 w-full">
+                <div className="relative w-full">
                   <Input
                     id="end-date"
                     type="date"
                     placeholder="End Date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 w-full"
                   />
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
-                <div className="relative">
+                <div className="relative w-full">
                   <Input
                     id="end-time"
                     type="time"
                     placeholder="End Time"
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 w-full"
                   />
                   <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>

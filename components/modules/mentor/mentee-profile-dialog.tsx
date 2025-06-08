@@ -6,11 +6,11 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 type MenteeItem = {
   id: string;
@@ -43,21 +43,9 @@ export function MenteeProfileDialog({
   onSendMessage,
 }: MenteeProfileDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="sm:max-w-[450px] flex flex-col overflow-y-auto w-full"
-        style={{
-          height: "calc(100vh - 2rem)",
-          maxHeight: "100vh",
-          width: "100vw",
-          top: "98%",
-          left: "98%",
-          transform: "translate(-50%, -50%)",
-          position: "fixed",
-          margin: 0,
-        }}
-      >
-        <DialogHeader className="relative border-b pb-10">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="right-0 mt-5 mr-8 h-auto max-h-[90vh] w-[90%] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md">
+        <SheetHeader className="relative border-b pb-10">
           <div className="flex items-center gap-4">
             <Avatar className="h-20 w-20">
               <AvatarImage
@@ -68,7 +56,9 @@ export function MenteeProfileDialog({
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div>
-              <DialogTitle className="text-4xl">{mentee.name}</DialogTitle>
+              <SheetTitle className="text-2xl md:text-4xl">
+                {mentee.name}
+              </SheetTitle>
               <Badge variant="outline" className="mt-1">
                 Mentee
               </Badge>
@@ -83,7 +73,7 @@ export function MenteeProfileDialog({
               <div className="w-12 h-[1px] bg-primary-400 mt-1"></div>
             </div>
           </div>
-        </DialogHeader>
+        </SheetHeader>
         <div className="mt-4 space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -145,7 +135,7 @@ export function MenteeProfileDialog({
             Send a message
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

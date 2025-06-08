@@ -11,6 +11,7 @@ import { LoginMutation, LoginProps, LoginResponse } from "@/components/queries/a
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import Cookies from "js-cookie";
+import { GetPersonalDetailsQuery } from "@/components/queries/users/get-personal-details";
 
 export function LoginForm() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export function LoginForm() {
 
   const { mutate: login, isPending } = useMutation({
     mutationFn: (values: LoginProps) => LoginMutation(values),
-    onSuccess: (response: LoginResponse) => {
+    onSuccess: async (response: LoginResponse) => {
       if (response.isSuccess) {
         Cookies.set("GUYVERSATION_USER_ID", response.data?.userId || "");
         Cookies.set("GUYVERSATION_ACCESS_TOKEN", response.data?.accessToken || "", { expires: 7 });
@@ -34,8 +35,17 @@ export function LoginForm() {
         if (userRole === "Admin") {
           router.push("/admin/dashboard");
         } else {
-          // router.push("/mentor");
-          router.push("/profile-setup");
+          try {
+            const userDetails = await GetPersonalDetailsQuery();
+            if (userDetails.isSuccess && userDetails.data?.hasUpdatedProfile) {
+              router.push("/mentor");
+            } else {
+              router.push("/profile-setup");
+            }
+          } catch (error) {
+            console.error("Error fetching user profile:", error);
+            router.push("/profile-setup");
+          }
         }
       } else {
         toast.dismiss();

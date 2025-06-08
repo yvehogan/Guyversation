@@ -22,21 +22,16 @@ export const SidebarUser = () => {
     setIsLoggingOut(true);
     
     try {
-      // Clear all auth cookies
       Cookies.remove("GUYVERSATION_ACCESS_TOKEN");
       Cookies.remove("GUYVERSATION_USER_ID");
       Cookies.remove("GUYVERSATION_USER_TYPE");
       
-      // Close the dialog
       setOpen(false);
       
-      // Show success message
       toast.success("Logged out successfully");
       
-      // Determine where to redirect based on current path
       const isAdmin = window.location.pathname.includes('/admin');
       
-      // Redirect to appropriate login page
       if (isAdmin) {
         router.push("/admin");
       } else {

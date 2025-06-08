@@ -10,14 +10,11 @@ export default function EventsTab({ open }: EventsTabProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch events when component mounts or when dialog is opened
   useEffect(() => {
     if (open) {
       fetchEvents();
     }
   }, [open]);
-
-  // Function to fetch events using the standalone query
   const fetchEvents = async () => {
     try {
       setLoading(true);
@@ -42,7 +39,6 @@ export default function EventsTab({ open }: EventsTabProps) {
     }
   };
 
-  // Format date and time
   const formatDateTime = (date: string, time: string) => {
     const eventDate = new Date(`${date.split("T")[0]}T${time}`);
     return eventDate.toLocaleString("en-US", {

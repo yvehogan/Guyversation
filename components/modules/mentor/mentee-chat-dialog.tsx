@@ -7,7 +7,8 @@ import { ChevronLeft, Smile, Paperclip, Send } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+
 import { Input } from "@/components/ui/input"
 
 interface Mentee {
@@ -70,8 +71,8 @@ export function MenteeChatDialog({ mentee, open, onOpenChange }: MenteeChatDialo
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] p-0 h-[600px] flex flex-col">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="sm:max-w-[500px] p-0 h-[600px] flex flex-col">
         <div className="flex items-center gap-3 p-4 border-b">
           <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="h-8 w-8">
             <ChevronLeft className="h-4 w-4" />
@@ -126,7 +127,7 @@ export function MenteeChatDialog({ mentee, open, onOpenChange }: MenteeChatDialo
             <Send className="h-5 w-5" />
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   )
 }

@@ -40,7 +40,6 @@ export function ConfirmAddUserDialog({
       onOpenChange(false);
       
       if (response.isSuccess) {
-        // Support both callback patterns
         if (onSuccess) onSuccess();
         if (onConfirm) onConfirm();
       } else {

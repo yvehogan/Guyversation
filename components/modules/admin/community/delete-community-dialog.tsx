@@ -38,7 +38,6 @@ export function DeleteCommunityDialog({
       if (response.isSuccess) {
         toast.success(response.message || "Community deleted successfully");
 
-        // Invalidate and refetch communities queries
         queryClient.invalidateQueries({ queryKey: ["admin-communities"] });
         queryClient.invalidateQueries({ queryKey: ["communities"] });
 

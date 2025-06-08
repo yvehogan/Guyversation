@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,7 +43,8 @@ export function UpdateCommunityDialog({
 }: UpdateCommunityDialogProps) {
   const [communityName, setCommunityName] = useState("");
   const [communityDescription, setCommunityDescription] = useState("");
-  const [targetAudience, setTargetAudience] = useState<CommunityAudience>("Everyone");
+  const [targetAudience, setTargetAudience] =
+    useState<CommunityAudience>("Everyone");
   const [privacy, setPrivacy] = useState<CommunityPrivacy>("Open");
   const [groupLimit, setGroupLimit] = useState("");
   const [banner, setBanner] = useState<File | null>(null);
@@ -55,10 +56,10 @@ export function UpdateCommunityDialog({
     if (community && open) {
       setCommunityName(community.name || "");
       setCommunityDescription(community.description || "");
-      setTargetAudience((community.audience || "Everyone") as CommunityAudience);
+      setTargetAudience(
+        (community.audience || "Everyone") as CommunityAudience
+      );
       setPrivacy((community.privacy || "Open") as CommunityPrivacy);
-      setGroupLimit(community.limit?.toString() || "100");
-      setRules(community.rules || "");
       setPreviewUrl(community.bannerUrl);
       setBanner(null);
     }
@@ -74,14 +75,15 @@ export function UpdateCommunityDialog({
 
   const queryClient = useQueryClient();
   const { mutate: updateCommunity, isPending } = useMutation({
-    mutationFn: (values: UpdateCommunityProps) => UpdateCommunityMutation(values),
+    mutationFn: (values: UpdateCommunityProps) =>
+      UpdateCommunityMutation(values),
     onSuccess: (response) => {
       if (response.isSuccess) {
         toast.success(response.message || "Community updated successfully!");
-        
+
         queryClient.invalidateQueries({ queryKey: ["admin-communities"] });
         queryClient.invalidateQueries({ queryKey: ["communities"] });
-        
+
         onOpenChange(false);
       } else {
         toast.error(response.message || "Failed to update community.");
@@ -122,13 +124,13 @@ export function UpdateCommunityDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl rounded-[30px]">
-        <DialogHeader className="border-b border-grey-500 pb-4">
-          <DialogTitle className="text-4xl font-medium">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="right-0 mt-5 mr-8 h-auto max-h-[90vh] w-[90%] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md">
+        <SheetHeader className="border-b border-grey-500 pb-4">
+          <SheetTitle className="text-2xl md:text-4xl font-medium">
             Update Community
-          </DialogTitle>
-        </DialogHeader>
+          </SheetTitle>
+        </SheetHeader>
 
         <div className="mt-6 mb-4 flex justify-center">
           <label htmlFor="banner-upload" className="relative cursor-pointer">
@@ -179,7 +181,9 @@ export function UpdateCommunityDialog({
             <Label htmlFor="target-audience">Target Audience</Label>
             <Select
               value={targetAudience}
-              onValueChange={(value) => setTargetAudience(value as CommunityAudience)}
+              onValueChange={(value) =>
+                setTargetAudience(value as CommunityAudience)
+              }
             >
               <SelectTrigger id="target-audience" className="mt-1 w-full">
                 <SelectValue placeholder="Select Target audience" />
@@ -263,7 +267,7 @@ export function UpdateCommunityDialog({
             {isPending ? "Updating..." : "Update Community"}
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

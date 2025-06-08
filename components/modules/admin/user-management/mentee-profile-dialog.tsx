@@ -8,11 +8,11 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { useState } from "react";
 
 type RequestItem = {
@@ -65,17 +65,9 @@ export function RequestProfileDialog({
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent
-          className="sm:max-w-[550px] overflow-y-auto"
-          style={{
-            transform: "translateX(77%)",
-            marginTop: "0vh",
-            marginBottom: "5vh",
-            height: "97vh",
-          }}
-        >
-          <DialogHeader className="relative border-b pb-10">
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent className="right-0 mt-5 mr-8 h-auto max-h-[90vh] w-[90%] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md">
+          <SheetHeader className="relative border-b pb-10">
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20">
                 <AvatarImage
@@ -86,7 +78,7 @@ export function RequestProfileDialog({
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div>
-                <DialogTitle className="text-4xl">{request.name}</DialogTitle>
+                <SheetTitle className="text-4xl">{request.name}</SheetTitle>
                 <Badge variant="outline" className="mt-1">
                   Mentee
                 </Badge>
@@ -98,19 +90,19 @@ export function RequestProfileDialog({
                 <span className="text-primary-400 bg-white px-2 relative z-10">
                   Profile
                 </span>
-                
+
                 <div className="w-12 h-[1px] bg-primary-400 mt-1"></div>
               </div>
             </div>
-          </DialogHeader>
+          </SheetHeader>
           <div className="space-y-8">
             <div>
               <h3 className="text-base font-medium mb-2">About</h3>
               <p className="text-black font-light">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam
-                nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam
-                erat volutpat. Ut wisi enim adLorem ipsum dolor sit amet,
-                consectetur adipiscing elit, sed diam nonummy nibh euismod
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+                aliquam erat volutpat. Ut wisi enim adLorem ipsum dolor sit
+                amet, consectetur adipiscing elit, sed diam nonummy nibh euismod
                 tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi
                 enim adLorem ipsum dolor sit amet, consectetur adipiscing
               </p>
@@ -181,26 +173,26 @@ export function RequestProfileDialog({
           <div className="mt-6 flex justify-between gap-4">
             <Button
               variant="outline"
-              size='lg'
+              size="lg"
               className="flex-1 border-warning-200 text-warning-200 hover:bg-red-50 hover:text-red-600"
               onClick={onDecline}
             >
               Decline request
             </Button>
-            <Button size='lg' className="flex-1" onClick={handleAcceptClick}>
+            <Button size="lg" className="flex-1" onClick={handleAcceptClick}>
               Accept Request
             </Button>
           </div>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
 
       {/* Mentorship Confirmation Dialog */}
-      <ConfirmRequestDialog 
+      <ConfirmRequestDialog
         open={isConfirmDialogOpen}
         onOpenChange={setIsConfirmDialogOpen}
-        onConfirm={handleConfirmAccept} 
-        email={request.email || ""} 
-        role={"Mentee"} 
+        onConfirm={handleConfirmAccept}
+        email={request.email || ""}
+        role={"Mentee"}
       />
 
       {/* Mentorship Success Dialog */}
