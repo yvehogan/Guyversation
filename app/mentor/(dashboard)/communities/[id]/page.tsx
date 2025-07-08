@@ -6,57 +6,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CommunityEvent } from "@/components/modules/communities/community-event";
-
-const communitiesData = {
-  "1": {
-    id: "1",
-    name: "Mind Matters",
-    description:
-      "Talking about what's going on inside — because real strength begins within.",
-    image: "/placeholder.svg?height=80&width=80",
-  },
-  "2": {
-    id: "2",
-    name: "Ask a Mentor",
-    description:
-      "For mentees to anonymously ask questions and get answers from verified mentors.",
-    image: "/placeholder.svg?height=80&width=80",
-  },
-  "3": {
-    id: "3",
-    name: "Manhood & Identity",
-    description:
-      "Open conversations about what it means to be a man in today's world.",
-    image: "/placeholder.svg?height=80&width=80",
-  },
-  "4": {
-    id: "4",
-    name: "Manhood & Identity",
-    description:
-      "Open conversations about what it means to be a man in today's world.",
-    image: "/placeholder.svg?height=80&width=80",
-  },
-  "5": {
-    id: "5",
-    name: "Mind Matters",
-    description:
-      "Talk about emotions, anxiety, confidence, or anything weighing on your mind.",
-    image: "/placeholder.svg?height=80&width=80",
-  },
-  "6": {
-    id: "6",
-    name: "Mind Matters",
-    description:
-      "Talk about emotions, anxiety, confidence, or anything weighing on your mind.",
-    image: "/placeholder.svg?height=80&width=80",
-  },
-};
+import { GetCommunitiesQuery, AudienceEnums } from "@/components/queries/mentor/get-communities";
 
 interface Community {
   id: string;
   name: string;
   description: string;
-  image: string;
+  bannerUrl: string | null;
+  privacy: number;
+  audience: number;
+  createdDate: string;
+  memberCount: number;
 }
 
 // Change back to a regular type for client components
@@ -82,8 +42,16 @@ export default function CommunityDetailPage({ params }: PageProps) {
           ? await (params.id as unknown as Promise<string>)
           : params.id;
 
-      const foundCommunity =
-        communitiesData[communityId as keyof typeof communitiesData];
+      // Fetch all mentor communities (or ideally, fetch by id if endpoint supports)
+      const response = await GetCommunitiesQuery({
+        audience: "Mentors",
+        // Optionally add pagination/search if needed
+      });
+
+      // Find the community by id
+      const foundCommunity = response.data.communities.find(
+        (c) => c.id === communityId
+      );
 
       if (foundCommunity) {
         setCommunity(foundCommunity);
@@ -92,7 +60,11 @@ export default function CommunityDetailPage({ params }: PageProps) {
           id: communityId,
           name: "Community Not Found",
           description: "This community could not be found.",
-          image: "/placeholder.svg?height=80&width=80",
+          bannerUrl: null,
+          privacy: 0,
+          audience: 0,
+          createdDate: "",
+          memberCount: 0,
         });
       }
       setLoading(false);
@@ -174,7 +146,7 @@ export default function CommunityDetailPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div className=" p-6">
         <div className="flex items-center justify-center h-64">
           <p className="text-lg">Loading community...</p>
         </div>
@@ -183,10 +155,18 @@ export default function CommunityDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="">
       <div className="mt-6">
         <h1 className="text-4xl font-medium mb-2">{community?.name}</h1>
         <p className="text-neutral-200">{community?.description}</p>
+        {/* Optionally show banner */}
+        {community?.bannerUrl && (
+          <img
+            src={community.bannerUrl}
+            alt={community.name}
+            className="rounded-lg my-4 max-h-60 object-cover"
+          />
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mt-5">

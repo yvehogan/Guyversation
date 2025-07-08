@@ -30,13 +30,7 @@ export const SidebarUser = () => {
       
       toast.success("Logged out successfully");
       
-      const isAdmin = window.location.pathname.includes('/admin');
-      
-      if (isAdmin) {
-        router.push("/admin");
-      } else {
-        router.push("/");
-      }
+      router.push("/");
     } catch (error) {
       console.error("Error during logout:", error);
       toast.error("An error occurred during logout");

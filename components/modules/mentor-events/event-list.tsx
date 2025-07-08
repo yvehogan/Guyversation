@@ -6,11 +6,11 @@ import { PiMapPinFill } from "react-icons/pi";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GetEventsQuery } from "@/components/queries/events/get-events";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
 
 type EventType = "all" | "workshop" | "webinar" | "fireside";
 
 export default function EventsList() {
-  const [createEventOpen, setCreateEventOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<EventType>("all");
   const queryClient = useQueryClient();
 
@@ -24,11 +24,6 @@ export default function EventsList() {
       return response.data || [];
     }
   });
-
-  const handleCreateEvent = () => {
-    setCreateEventOpen(false);
-    queryClient.invalidateQueries({ queryKey: ['events'] });
-  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -58,10 +53,11 @@ export default function EventsList() {
 
   return (
     <>
+      {isLoading && <LoadingOverlay text="Loading events..." />}
+    
       <div className="flex-1 overflow-y-auto pb-16 mt-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl md:text-4xl font-medium mb-4">Events</h1>
-
         </div>
 
         <div className="bg-white rounded-[30px] p-4 h-[calc(100%-50px)] overflow-y-auto mb-8">

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import { Providers } from "@/components/ClientProviders";
+import { ActivityProvider } from "@/contexts/ActivityContext";
+import { ActivityTracker } from "@/components/activity/ActivityTracker";
 
 const instrument = localFont({
   src: [
@@ -49,7 +51,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${instrument.variable} antialiased`}>
         <Providers>
-          {children}
+          <ActivityProvider warningTime={10} logoutTime={15}>
+            <ActivityTracker />
+            {children}
+          </ActivityProvider>
         </Providers>
       </body>
     </html>
