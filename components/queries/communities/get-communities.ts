@@ -52,11 +52,25 @@ const GetCommunitiesQuery = async (
   params?: GetCommunitiesProps
 ): Promise<GetCommunitiesResponse> => {
   try {
-    const response = await axios.get<GetCommunitiesResponse>(
-      endpoints().communities.list,
-      { params }
-    );
-
+    const queryParams = new URLSearchParams();
+    
+    if (params?.page) {
+      queryParams.append('PageNumber', params.page.toString());
+    }
+    if (params?.pageSize) {
+      queryParams.append('PageSize', params.pageSize.toString());
+    }
+    if (params?.search) {
+      queryParams.append('SearchKey', params.search);
+    }
+    
+    const url = endpoints().communities.list;
+    const queryString = queryParams.toString();
+    const fullUrl = `${url}${queryString ? `?${queryString}` : ''}`;
+    
+    const response = await axios.get<GetCommunitiesResponse>(fullUrl);
+    
+    
     return response.data;
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {

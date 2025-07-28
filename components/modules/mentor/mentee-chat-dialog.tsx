@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input"
 interface Mentee {
     name: string;
     avatar?: string;
-    // Add other properties as needed
   }
 
 interface MenteeChatDialogProps {
@@ -23,7 +22,6 @@ interface MenteeChatDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
-// Define message interface
 interface Message {
     id: string;
     sender: "mentor" | "mentee";

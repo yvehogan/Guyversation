@@ -7,12 +7,15 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GetEventsQuery } from "@/components/queries/events/get-events";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoadingOverlay } from "@/components/ui/loading-overlay";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 type EventType = "all" | "workshop" | "webinar" | "fireside";
 
 export default function EventsList() {
   const [activeTab, setActiveTab] = useState<EventType>("all");
   const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['events'],
@@ -51,10 +54,36 @@ export default function EventsList() {
         return typeMap[event.eventType] === activeTab;
       });
 
+  const handleViewDetails = (event: any) => {
+    setSelectedEvent(event);
+    setOpen(true);
+  };
+
+  const handleDialogChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) setSelectedEvent(null);
+  };
+
   return (
     <>
       {isLoading && <LoadingOverlay text="Loading events..." />}
     
+      {/* Dialog for event details */}
+      <Dialog open={open} onOpenChange={handleDialogChange}>
+        <DialogContent className="sm:max-w-lg max-h-[500px] overflow-y-auto">
+          {selectedEvent && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedEvent.title}</DialogTitle>
+                <DialogDescription>
+                  {selectedEvent.description}
+                </DialogDescription>
+              </DialogHeader>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <div className="flex-1 overflow-y-auto pb-16 mt-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl md:text-4xl font-medium mb-4">Events</h1>
@@ -143,7 +172,11 @@ export default function EventsList() {
                       </div>
 
                       <div className="flex flex-col md:flex-row gap-2 md:items-center">
-                        <Button variant="link" className="text-primary-400">
+                        <Button
+                          variant="link"
+                          className="text-primary-400"
+                          onClick={() => handleViewDetails(event)}
+                        >
                           View details
                         </Button>
                         <Button size="lg" className="">

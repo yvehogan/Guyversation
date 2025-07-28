@@ -74,7 +74,7 @@ export default function ProfileTab({ user }: ProfileTabProps) {
             user.credentials.map(credential => (
               <a
                 key={credential.id}
-                href={credential.value.startsWith('http') ? credential.value : `https://${credential.value}`}
+                href={credential?.value?.startsWith('http') ? credential.value : `https://${credential.value}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-3 py-2 rounded-full text-sm border border-primary-400 text-black bg-primary-200 flex items-center max-w-full overflow-hidden"
@@ -96,7 +96,7 @@ export default function ProfileTab({ user }: ProfileTabProps) {
             user.socialMedia.map(social => (
               <a 
                 key={social.id}
-                href={social.url.startsWith('http') ? social.url : `https://${social.url}`}
+                href={social?.url?.startsWith('http') ? social.url : `https://${social.url}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex gap-1 items-center mr-4"

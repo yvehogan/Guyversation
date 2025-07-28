@@ -54,7 +54,6 @@ export function CreateEventDialog({
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
 
-  // Create mutation for API call
   const { mutate: createEvent, isPending } = useMutation({
     mutationFn: (data: CreateEventProps) => CreateEventMutation(data),
     onSuccess: (response) => {
@@ -98,8 +97,10 @@ export function CreateEventDialog({
       return;
     }
 
-    const finalEndDate = endDate || startDate;
-    const finalEndTime = endTime || startTime;
+    if (!endDate || !endTime) {
+      toast.warning("Please enter an end date and time");
+      return;
+    }
 
     const eventData: CreateEventProps = {
       title: eventTitle.trim(),
@@ -108,8 +109,8 @@ export function CreateEventDialog({
       location: eventLocation || "",
       startDate: startDate,
       startTime: startTime,
-      endDate: finalEndDate,
-      endTime: finalEndTime,
+      endDate: endDate,
+      endTime: endTime,
     };
 
     createEvent(eventData);

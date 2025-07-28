@@ -35,6 +35,13 @@ export const endpoints = () => {
       language: `/utilities/languages`,
       expertises: `/utilities/expertises`,
       channels: `/utilities/channels`,
+    },
+    mentees: {
+      list: `/mentormenteerelations/my-mentees?Status=Pending`,
+      acceptMentee: `/mentormenteerelations/accept-mentee`,
+      rejectMentee: `mentormenteerelations/reject-mentee`,
+      details: (menteeId: string) => `/mentees/${menteeId}`,
+      requests: `/mentees/requests`,
     }
   };
 };

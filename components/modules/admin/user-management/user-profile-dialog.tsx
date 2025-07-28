@@ -26,7 +26,7 @@ export function UserProfileDialog({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-          <SheetContent className="right-0 mt-5 mr-8 h-auto max-h-[90vh] w-[90%] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md">
+          <SheetContent className="right-0 mt-3 mr-5 h-auto max-h-[97vh] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md">
         <div className="pb-6">
           <ProfileHeader user={user} />
 

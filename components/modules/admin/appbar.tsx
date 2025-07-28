@@ -5,14 +5,74 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { usePathname } from "next/navigation"
 import { getUserInfo, getDisplayName } from "@/lib/user-utils"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 export function Appbar() {
   const pathname = usePathname()
   const isDashboardPage = pathname === "/admin/dashboard"
+  
   const [userName, setUserName] = useState("User")
   const [userRole, setUserRole] = useState("")
   const [userInitials, setUserInitials] = useState("U")
+  const [searchTerm, setSearchTerm] = useState("")
+  const previousPathnameRef = useRef<string | null>(null);
+  
+  const getCurrentContext = () => {
+    if (!pathname) return null;
+    if (pathname.includes("/user-management")) return "users"
+    if (pathname.includes("/community")) return "communities"
+    if (pathname.includes("/event-management")) return "events"
+    return null
+  }
+  
+  const getPlaceholderText = () => {
+    const context = getCurrentContext()
+    if (context === "users") return "Search users..."
+    if (context === "communities") return "Search communities..."
+    if (context === "events") return "Search events..."
+    return "Search..."
+  }
+  
+  const handleSearch = (value: string) => {
+    const context = getCurrentContext();
+    if (context) {
+      if (value) {
+        localStorage.setItem(`search-${context}`, value);
+      } else {
+        localStorage.removeItem(`search-${context}`);
+      }
+    }
+    setSearchTerm(value);
+  }
+  
+  useEffect(() => {
+    const currentContext = getCurrentContext();
+    const previousPathname = previousPathnameRef.current;
+    
+    if (previousPathname && previousPathname !== pathname) {
+      const getPreviousContext = (path: string) => {
+        if (path.includes("/user-management")) return "users";
+        if (path.includes("/community")) return "communities";
+        if (path.includes("/event-management")) return "events";
+        return null;
+      };
+      
+      const previousContext = getPreviousContext(previousPathname);
+      
+      if (previousContext && previousContext !== currentContext) {
+        localStorage.removeItem(`search-${previousContext}`);
+      }
+    }
+    
+    if (currentContext) {
+      const savedSearch = localStorage.getItem(`search-${currentContext}`) || "";
+      setSearchTerm(savedSearch);
+    } else {
+      setSearchTerm("");
+    }
+    
+    previousPathnameRef.current = pathname;
+  }, [pathname]);
   
   useEffect(() => {
     const userInfo = getUserInfo();
@@ -33,6 +93,9 @@ export function Appbar() {
     }
   }, []);
   
+  // Update the condition to show search - exclude dashboard page
+  const shouldShowSearch = getCurrentContext() !== null && !isDashboardPage;
+  
   return (
     <header className={`w-full px-4 sm:px-6 md:px-10 mt-7 mb-4 ${
       isDashboardPage ? 'h-auto' : 'h-auto md:h-10'
@@ -44,26 +107,7 @@ export function Appbar() {
             <p className="text-neutral-200 mt-2">Let&apos;s see what&apos;s on your plate today.</p>
           </div>
           
-          <div className="w-full md:hidden mt-4">
-            <div className="relative">
-              <Search className="absolute left-4 top-4 h-4 w-4 text-muted-foreground" />
-              <Input 
-                type="search" 
-                placeholder="Search" 
-                className="w-full rounded-full pl-10 bg-white"
-              />
-            </div>
-          </div>
-          
           <div className="hidden md:flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-4 top-4 h-4 w-4 text-muted-foreground" />
-              <Input 
-                type="search" 
-                placeholder="Search" 
-                className={`w-full min-w-[200px] rounded-full pl-10 bg-white md:w-[300px]`}
-              />
-            </div>
             <div className="hidden md:flex items-center gap-2">
               <Avatar>
                 <AvatarImage src="" alt="profile image" />
@@ -80,14 +124,18 @@ export function Appbar() {
       
       {!isDashboardPage && (
         <div className="flex items-center gap-4 w-full justify-between">
-          <div className="relative">
-            <Search className="absolute left-4 top-4 h-4 w-4 text-muted-foreground" />
-            <Input 
-              type="search" 
-              placeholder="Search" 
-              className="w-full min-w-[200px] rounded-full pl-10 bg-white md:w-[500px]"
-            />
-          </div>
+          {shouldShowSearch && (
+            <div className="relative">
+              <Search className="absolute left-4 top-4 h-4 w-4 text-muted-foreground" />
+              <Input 
+                type="search" 
+                placeholder={getPlaceholderText()}
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="w-full min-w-[200px] rounded-full pl-10 bg-white md:w-[500px]"
+              />
+            </div>
+          )}
           <div className="flex items-center gap-2">
             <Avatar>
               <AvatarImage src="" alt="profile image" />

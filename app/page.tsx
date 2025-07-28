@@ -14,7 +14,7 @@ export default function Home() {
             height={50}
             className="h-8 w-auto sm:h-10"
           />
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* <div className="flex items-center gap-2 sm:gap-3">
             <span className="text-xs sm:text-sm text-neutral-100 whitespace-nowrap">
               Don&apos;t Have An Account?
             </span>
@@ -24,7 +24,7 @@ export default function Home() {
             >
               Sign Up
             </Link>
-          </div>
+          </div> */}
         </header>
         <div className="flex flex-1 items-center justify-center mt-4 sm:mt-0">
           <div className="w-full max-w-xs sm:max-w-sm md:max-w-md">

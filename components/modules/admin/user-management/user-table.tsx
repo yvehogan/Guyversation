@@ -18,7 +18,7 @@ export interface UserInterface {
 
 interface UsersTableProps {
   users: UserInterface[];
-  onViewProfile: (user: UserDetails) => void; // Changed to accept UserDetails
+  onViewProfile: (user: UserDetails) => void;
   onRevokeAccess: (user: UserInterface) => void;
 }
 

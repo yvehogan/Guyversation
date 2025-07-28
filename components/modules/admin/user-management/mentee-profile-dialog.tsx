@@ -66,7 +66,7 @@ export function RequestProfileDialog({
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="right-0 mt-5 mr-8 h-auto max-h-[90vh] w-[90%] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md">
+        <SheetContent className="right-0 mt-5 mr-8 h-auto max-h-[95vh] w-[90%] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md">
           <SheetHeader className="relative border-b pb-10">
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20">

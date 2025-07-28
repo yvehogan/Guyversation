@@ -20,10 +20,22 @@ export interface GetEventsResponse {
   statusCode: string;
   message: string;
   data: EventInterface[] | null;
-  metaData: any;
+  metaData: {
+    totalCount: number;
+    pageSize: number;
+    currentPage: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+  } | null;
 }
 
-export const GetEventsQuery = async (): Promise<GetEventsResponse> => {
+export const GetEventsQuery = async (
+  eventType?: string,
+  page: number = 1,
+  pageSize: number = 10,
+  search?: string
+): Promise<GetEventsResponse> => {
   try {
     const token = Cookies.get("GUYVERSATION_ACCESS_TOKEN");
     if (!token) {
@@ -38,7 +50,22 @@ export const GetEventsQuery = async (): Promise<GetEventsResponse> => {
 
     const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || '';
     const endpoint = endpoints().events.list;
-    const url = `${baseUrl}${endpoint}`;
+    
+    const queryParams = new URLSearchParams();
+    queryParams.append('PageNumber', page.toString());
+    queryParams.append('PageSize', pageSize.toString());
+    
+    if (eventType) {
+      queryParams.append('eventType', eventType);
+    }
+    
+    if (search) {
+      queryParams.append('SearchKey', search);
+    }
+    
+    const queryString = queryParams.toString();
+    const url = `${baseUrl}${endpoint}${queryString ? `?${queryString}` : ''}`;
+    
     
     const response = await axiosDefault.get(url, {
       headers: {

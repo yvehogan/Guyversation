@@ -162,15 +162,15 @@ export function MenteesList({ onViewProfile }: MenteesListProps) {
         </div>
       </div>
       <div className="overflow-y-auto flex-1">
-        <table className="min-w-full table-fixed">
+        <table className="min-w-full table-fixed text-neutral-100">
           <tbody>
             {mentees.map((mentee, index) => (
               <tr
                 key={mentee.id}
                 className="border-b border-gray-200 hover:bg-gray-50"
               >
-                <td className="py-6 px-4 w-16 text-gray-500">{index + 1}</td>
-                <td className="py-6 px-4 w-1/3">
+                <td className="py-4 px-4 w-8">{index + 1}</td>
+                <td className="py-4 px-4 w-1/3">
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarImage
@@ -182,14 +182,16 @@ export function MenteesList({ onViewProfile }: MenteesListProps) {
                     <span className="font-medium">{mentee.name}</span>
                   </div>
                 </td>
-                <td className="py-6 px-4 w-16 text-right">{mentee.age}</td>
-                <td className="py-6 px-4 w-1/4">{mentee.location}</td>
-                <td className="py-6 px-4 w-1/6">{mentee.time}</td>
-                <td className="py-6 px-4 w-1/6 text-right">
+                <td className="py-4 px-4 w-16 text-right">{mentee.age}</td>
+                <td className="py-4 px-4 w-1/4">{mentee.location}</td>
+                <td className="py-4 px-4 w-1/6">{mentee.time}</td>
+                <td className="py-4 px-4 w-1/6 text-right">
                   <Button
                     variant="outline"
-                    className=""
+                    size="sm"
                     onClick={() => onViewProfile(mentee)}
+                    className="py-5 px-3"
+
                   >
                     View Profile
                   </Button>

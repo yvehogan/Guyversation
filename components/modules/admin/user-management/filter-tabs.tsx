@@ -1,5 +1,3 @@
-import { ArrowUpDown } from "lucide-react";
-
 interface FilterTabsProps {
   filters: string[];
   activeFilter: string;
@@ -26,10 +24,6 @@ export function FilterTabs({
           {filter}
         </button>
       ))}
-      <button className="ml-auto text-primary-400 flex items-center">
-        <ArrowUpDown className="h-4 w-4 mr-2" />
-        Sort
-      </button>
     </div>
   );
 }

@@ -4,6 +4,8 @@ import localFont from "next/font/local";
 import { Providers } from "@/components/ClientProviders";
 import { ActivityProvider } from "@/contexts/ActivityContext";
 import { ActivityTracker } from "@/components/activity/ActivityTracker";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const instrument = localFont({
   src: [
@@ -56,6 +58,7 @@ export default function RootLayout({
             {children}
           </ActivityProvider>
         </Providers>
+        <ToastContainer position="top-right" autoClose={5000} />
       </body>
     </html>
   );
