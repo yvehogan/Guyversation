@@ -45,7 +45,7 @@ export function MenteeProfileDialog({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent 
-      className="right-0 mt-5 mr-8 h-auto max-h-[95vh] w-[90%] overflow-scroll rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md"
+        className="right-0 mt-3 mr-5 h-auto max-h-[97vh] w-[95%] overflow-hidden rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md flex flex-col"
       >
         <SheetHeader className="relative border-b pb-10">
           <div className="flex items-center gap-4">
@@ -76,32 +76,32 @@ export function MenteeProfileDialog({
             </div>
           </div>
         </SheetHeader>
-        <div className="mt-4 space-y-6">
+        <div className="flex-1 overflow-y-auto mt-4 space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h3 className="font-medium text-base">Age</h3>
-              <p className="font-light">{mentee.age}</p>
+              <p className="font-light">{mentee?.age}</p>
             </div>
             <div>
               <h3 className="font-medium text-base">Location</h3>
-              <p className="font-light">{mentee.location}</p>
+              <p className="font-light">{mentee?.location}</p>
             </div>
           </div>
 
           <div>
             <h3 className="font-medium text-base">Goal</h3>
-            <p className="font-light mt-1">{mentee.goal}</p>
+            <p className="font-light mt-1">{mentee?.goal}</p>
           </div>
 
           <div>
             <h3 className="font-medium text-base">Career Path</h3>
-            <p className="font-light mt-1">{mentee.careerPath}</p>
+            <p className="font-light mt-1">{mentee?.careerPath}</p>
           </div>
 
           <div>
             <h3 className="font-medium">Interest(s)</h3>
             <div className="mt-2 flex flex-wrap gap-2">
-              {mentee.interests.map((interest) => (
+              {mentee?.interests?.map((interest) => (
                 <Badge
                   key={interest}
                   variant="secondary"
@@ -116,23 +116,22 @@ export function MenteeProfileDialog({
           <div>
             <h3 className="font-medium">Socials</h3>
             <div className="mt-2 flex gap-2 items-center">
-              {mentee.socials.twitter && (
+              {mentee?.socials?.twitter && (
                 <div className="flex items-center gap-2">
                   <BsTwitterX className="h-5 w-5 bg-primary-400 text-white p-1 rounded-md" />
-                  <span className="font-light">{mentee.socials.twitter}</span>
+                  <span className="font-light">{mentee?.socials?.twitter}</span>
                 </div>
               )}
-              {mentee.socials.linkedin && (
+              {mentee?.socials?.linkedin && (
                 <div className="flex items-center gap-2">
                   <FaLinkedinIn className="h-5 w-5 bg-primary-400 text-white p-1 rounded-md" />
-                  <span className="font-light">{mentee.socials.linkedin}</span>
+                  <span className="font-light">{mentee?.socials?.linkedin}</span>
                 </div>
               )}
             </div>
           </div>
         </div>
-
-        <div className="mt-6">
+        <div className="absolute bottom-8 left-0 right-0 bg-white p-6">
           <Button variant="outline" className="w-full" onClick={onSendMessage}>
             Send a message
           </Button>

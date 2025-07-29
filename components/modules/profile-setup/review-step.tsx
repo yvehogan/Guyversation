@@ -290,15 +290,6 @@ export function ReviewStep({
         )}
       </div>
 
-      {isSubmitted && apiResponse && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-md overflow-auto max-h-60">
-          <h4 className="font-medium mb-2">Submission Result:</h4>
-          <pre className="text-xs">
-            {JSON.stringify(apiResponse.data, null, 2)}
-          </pre>
-        </div>
-      )}
-
       <div className="flex flex-col md:flex-row justify-between items-center mt-8">
         <button
           onClick={onPrevious}

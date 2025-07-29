@@ -51,7 +51,7 @@ export function ModerationStep({
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <h2 className="text-xl font-medium">Do you want to be a moderator in a channel?</h2>
+        <h2 className="text-xl font-medium">Do you want to be a moderator in a community?</h2>
         <RadioGroup
           value={profileData.isModerator ? "yes" : "no"}
           onValueChange={handleModeratorChange}
@@ -70,7 +70,7 @@ export function ModerationStep({
 
       {profileData.isModerator && (
         <div className="space-y-4">
-          <h2 className="text-xl font-medium">Channels</h2>
+          <h2 className="text-xl font-medium">Communities</h2>
           <Select onValueChange={handleChannelChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select Channel" />

@@ -81,7 +81,7 @@ export function RequestResultDialog({
               Request declined
             </DialogTitle>
             <DialogDescription className="mt-2 text-base">
-              You declined to have
+              You declined to have{""}
               <span className="font-medium">{request.name}</span> as a mentee.
             </DialogDescription>
           </>

@@ -1,5 +1,4 @@
 "use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MenteeRequest } from "@/components/queries/mentor/get-mentee-requests";
@@ -15,14 +14,14 @@ export function RequestsList({
 }: RequestsListProps) {
   if (requests.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12">
+      <div className="flex flex-col h-[300px] min-h-[300px] max-h-[300px] items-center justify-center py-12">
         <p className="text-lg text-gray-500">No pending mentee requests</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full whitespace-nowrap">
+    <div className="flex flex-col h-[500px] min-h-[500px] max-h-[500px] whitespace-nowrap">
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full">
           <div className="overflow-hidden">

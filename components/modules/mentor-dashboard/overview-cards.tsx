@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import Image from "next/image"
+import Link from "next/link"
 
 export function OverviewCards() {
   return (
@@ -39,8 +40,10 @@ export function OverviewCards() {
         <CardContent className="pt-0 pb-3 relative z-10">
           <div className="flex items-center justify-between">
             <p className="text-3xl font-bold">7</p>
-            <Button variant="ghost" size='xs' className="text-xs">
+            <Button variant="ghost" size='xs' className="text-xs" asChild>
+              <Link href="/mentor/communities">
               View all
+              </Link>
             </Button>
           </div>
         </CardContent>
@@ -62,8 +65,10 @@ export function OverviewCards() {
         <CardContent className="pt-0 pb-3 relative z-10">
           <div className="flex items-center justify-between">
             <p className="text-3xl font-bold">12</p>
-            <Button variant="ghost" size='xs' className="text-xs">
+            <Button variant="ghost" size='xs' className="text-xs" asChild>
+              <Link href="/mentor/mentors">
               View all
+              </Link>
             </Button>
           </div>
         </CardContent>

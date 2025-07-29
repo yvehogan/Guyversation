@@ -38,6 +38,7 @@ export const endpoints = () => {
     },
     mentees: {
       list: `/mentormenteerelations/my-mentees?Status=Pending`,
+      mentees: `/mentormenteerelations/my-mentees?Status=Accepted`,
       acceptMentee: `/mentormenteerelations/accept-mentee`,
       rejectMentee: `mentormenteerelations/reject-mentee`,
       details: (menteeId: string) => `/mentees/${menteeId}`,

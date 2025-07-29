@@ -77,11 +77,6 @@ export function RequestProfileDialog({
               </div>
             </div>
 
-            <div>
-              <h3 className="font-medium text-base">Request Date</h3>
-              <p className="font-light mt-1">{formattedDate}</p>
-            </div>
-
             {request.goal && (
               <div>
                 <h3 className="font-medium text-base">Goal</h3>
@@ -134,7 +129,6 @@ export function RequestProfileDialog({
             )}
           </div>
         </div>
-
         <div className="absolute bottom-8 left-0 right-0 bg-white p-6 flex justify-between gap-4">
           <Button
             variant="outline"
@@ -150,6 +144,7 @@ export function RequestProfileDialog({
             onClick={() => onAccept(request.id)}
           >
             Accept Request
+
           </Button>
         </div>
       </SheetContent>

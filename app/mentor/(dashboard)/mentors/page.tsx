@@ -1,5 +1,4 @@
 "use client"
-
 import { MenteeChatDialog } from "@/components/modules/mentor/mentee-chat-dialog"
 import { MenteeProfileDialog } from "@/components/modules/mentor/mentee-profile-dialog"
 import { MenteesList } from "@/components/modules/mentor/mentees-list"
@@ -15,6 +14,25 @@ import { LoadingOverlay } from "@/components/ui/loading-overlay"
 import { toast } from "react-toastify"
 import { AcceptRequestDialog } from "@/components/modules/mentor-dashboard/accept-request-dialog"
 import { RequestResultDialog } from "@/components/modules/mentor-dashboard/request-result-dialog"
+import { DeclineRequestDialog } from "@/components/modules/mentor-dashboard/decline-request-dialog"
+import { DeclineReasonDialog } from "@/components/modules/mentor-dashboard/decline-reason-dialog"
+import { AcceptedMentee } from "@/components/queries/mentor/get-mentees-list"
+
+function mapAcceptedMenteeToMentee(mentee: AcceptedMentee): Mentee {
+  return {
+    id: mentee.id,
+    name: mentee.name,
+    email: mentee.email,
+    age: mentee.age ?? 0,
+    location: mentee.location ?? "",
+    avatar: mentee.avatar ?? "",
+    goal: mentee.goal ?? "",
+    careerPath: mentee.careerPath ?? "",
+    interests: mentee.interests ?? [],
+    socials: mentee.socials ?? {},
+    time: mentee.time ?? "",
+  };
+}
 
 export default function MentorPage() {
   const [activeTab, setActiveTab] = useState<"mentees" | "requests">("mentees")
@@ -25,9 +43,12 @@ export default function MentorPage() {
   const [showMenteeProfile, setShowMenteeProfile] = useState(false)
   const [showMenteeChat, setShowMenteeChat] = useState(false)
   const [showRequestProfile, setShowRequestProfile] = useState(false)
-  const [showAcceptDialog, setShowAcceptDialog] = useState(false);
-  const [showResultDialog, setShowResultDialog] = useState(false);
-  const [resultType, setResultType] = useState<"accepted" | "declined">("accepted");
+  const [showAcceptDialog, setShowAcceptDialog] = useState(false)
+  const [showResultDialog, setShowResultDialog] = useState(false)
+  const [resultType, setResultType] = useState<"accepted" | "declined">("accepted")
+  const [showDeclineDialog, setShowDeclineDialog] = useState(false)
+  const [showDeclineReasonDialog, setShowDeclineReasonDialog] = useState(false)
+  const [declineReason, setDeclineReason] = useState("")
 
   useEffect(() => {
     if (activeTab === "requests") {
@@ -52,15 +73,15 @@ export default function MentorPage() {
     }
   }
 
-  const handleViewMenteeProfile = (mentee: Mentee) => {
-    setSelectedMentee(mentee)
-    setShowMenteeProfile(true)
-  }
+  const handleViewMenteeProfile = (mentee: AcceptedMentee) => {
+    setSelectedMentee(mapAcceptedMenteeToMentee(mentee));
+    setShowMenteeProfile(true);
+  };
 
-  const handleChatWithMentee = (mentee: Mentee) => {
-    setSelectedMentee(mentee)
-    setShowMenteeChat(true)
-  }
+  const handleChatWithMentee = (mentee: AcceptedMentee) => {
+    setSelectedMentee(mapAcceptedMenteeToMentee(mentee));
+    setShowMenteeChat(true);
+  };
 
   const handleViewRequest = (request: MenteeRequest) => {
     setSelectedRequest(request)
@@ -68,7 +89,6 @@ export default function MentorPage() {
   }
 
   const handleAcceptRequest = async (id: string) => {
-    // Show accept confirmation dialog
     if (!selectedRequest) return;
     
     setShowRequestProfile(false);
@@ -89,7 +109,7 @@ export default function MentorPage() {
       if (response.isSuccess) {
         setResultType("accepted");
         setShowResultDialog(true);
-        await fetchMenteeRequests(); // Refresh the list
+        await fetchMenteeRequests();
       } else {
         toast.error(response.message || "Failed to accept mentee request");
       }
@@ -101,20 +121,30 @@ export default function MentorPage() {
   };
 
   const handleDeclineRequest = async (id: string) => {
-    if (!selectedRequest) return;
-    
     setShowRequestProfile(false);
+    setShowDeclineDialog(true);
+  };
+
+  const handleConfirmDecline = () => {
+    setShowDeclineDialog(false);
+    setShowDeclineReasonDialog(true);
+  };
+
+  const handleSubmitDeclineReason = async () => {
+    if (!selectedRequest) return;
+    setShowDeclineReasonDialog(false);
     setLoading(true);
-    
+
     try {
       const response = await RejectMenteeQuery({
-        menteeUserId: selectedRequest.menteeUserId
+        menteeUserId: selectedRequest.menteeUserId,
+        reason: declineReason,
       });
-      
+
       if (response.isSuccess) {
         setResultType("declined");
         setShowResultDialog(true);
-        await fetchMenteeRequests(); // Refresh the list
+        await fetchMenteeRequests();
       } else {
         toast.error(response.message || "Failed to decline mentee request");
       }
@@ -122,8 +152,9 @@ export default function MentorPage() {
       toast.error("Failed to decline request");
     } finally {
       setLoading(false);
+      setDeclineReason("");
     }
-  }
+  };
 
   const handleCloseResultDialog = () => {
     setShowResultDialog(false);
@@ -141,7 +172,10 @@ export default function MentorPage() {
 
       <div className="mt-6 bg-white rounded-2xl overflow-hidden">
         {activeTab === "mentees" ? (
-          <MenteesList onViewProfile={handleViewMenteeProfile} onChatWithMentee={handleChatWithMentee} />
+          <MenteesList
+            onViewProfile={handleViewMenteeProfile}
+            onChatWithMentee={handleChatWithMentee}
+          />
         ) : (
           <RequestsList 
             requests={menteeRequests}
@@ -178,16 +212,42 @@ export default function MentorPage() {
             onAccept={handleAcceptRequest}
             onDecline={handleDeclineRequest}
           />
-          
+
+          <DeclineRequestDialog
+            request={{
+              id: selectedRequest.id,
+              name: selectedRequest.name,
+              age: selectedRequest.menteeAge ?? 0,
+              location: selectedRequest.menteeLocation ?? "",
+              time: "",
+              avatar: selectedRequest.menteeAvatarUrl ?? "",
+              goal: selectedRequest.goal ?? "",
+              careerPath: selectedRequest.careerPath ?? "",
+              interests: selectedRequest.interests ?? [],
+              socials: selectedRequest.socials ?? {},
+            }}
+            open={showDeclineDialog}
+            onOpenChange={setShowDeclineDialog}
+            onConfirm={handleConfirmDecline}
+          />
+
+          <DeclineReasonDialog
+            open={showDeclineReasonDialog}
+            onOpenChange={setShowDeclineReasonDialog}
+            reason={declineReason}
+            onReasonChange={setDeclineReason}
+            onSubmit={handleSubmitDeclineReason}
+          />
+
           <AcceptRequestDialog
-            request={selectedRequest as any} // Cast to expected type
+            request={selectedRequest as any}
             open={showAcceptDialog}
             onOpenChange={setShowAcceptDialog}
             onConfirm={handleConfirmAccept}
           />
-          
+
           <RequestResultDialog
-            request={selectedRequest as any} // Cast to expected type
+            request={selectedRequest as any}
             type={resultType}
             open={showResultDialog}
             onOpenChange={setShowResultDialog}

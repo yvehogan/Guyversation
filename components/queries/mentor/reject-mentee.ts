@@ -4,6 +4,7 @@ import axiosDefault from "axios";
 
 export interface RejectMenteeRequest {
   menteeUserId: string;
+  reason: string;
 }
 
 export interface RejectMenteeResponse {

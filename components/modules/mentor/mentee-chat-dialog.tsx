@@ -70,7 +70,9 @@ export function MenteeChatDialog({ mentee, open, onOpenChange }: MenteeChatDialo
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[500px] p-0 h-[600px] flex flex-col">
+      <SheetContent 
+        className="right-0 mt-3 mr-5 h-auto max-h-[97vh] w-[95%] overflow-hidden rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md flex flex-col"
+      >
         <div className="flex items-center gap-3 p-4 border-b">
           <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="h-8 w-8">
             <ChevronLeft className="h-4 w-4" />
