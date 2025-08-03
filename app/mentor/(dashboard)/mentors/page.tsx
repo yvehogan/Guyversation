@@ -9,7 +9,7 @@ import { MenteeRequest, GetMenteeRequestsQuery } from "@/components/queries/ment
 import { AcceptMenteeQuery } from "@/components/queries/mentor/accept-mentee"
 import { RejectMenteeQuery } from "@/components/queries/mentor/reject-mentee"
 import { Mentee } from "@/types"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { LoadingOverlay } from "@/components/ui/loading-overlay"
 import { toast } from "react-toastify"
 import { AcceptRequestDialog } from "@/components/modules/mentor-dashboard/accept-request-dialog"
@@ -17,6 +17,7 @@ import { RequestResultDialog } from "@/components/modules/mentor-dashboard/reque
 import { DeclineRequestDialog } from "@/components/modules/mentor-dashboard/decline-request-dialog"
 import { DeclineReasonDialog } from "@/components/modules/mentor-dashboard/decline-reason-dialog"
 import { AcceptedMentee } from "@/components/queries/mentor/get-mentees-list"
+import { Pagination } from "@/components/ui/pagination"
 
 function mapAcceptedMenteeToMentee(mentee: AcceptedMentee): Mentee {
   return {
@@ -49,20 +50,80 @@ export default function MentorPage() {
   const [showDeclineDialog, setShowDeclineDialog] = useState(false)
   const [showDeclineReasonDialog, setShowDeclineReasonDialog] = useState(false)
   const [declineReason, setDeclineReason] = useState("")
+  
+  const [search, setSearch] = useState("")
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [paginationMetadata, setPaginationMetadata] = useState({
+    totalCount: 0,
+    pageSize: pageSize,
+    currentPage: currentPage,
+    totalPages: 1,
+    hasNext: false,
+    hasPrevious: false
+  })
+
+  // Listen for search updates from dashboard header
+  useEffect(() => {
+    const getSearchKey = () => {
+      return activeTab === "mentees" 
+        ? "search-mentor-mentees" 
+        : "search-mentor-requests";
+    };
+
+    const checkForSearchUpdates = () => {
+      const searchKey = getSearchKey();
+      const savedSearch = localStorage.getItem(searchKey) || "";
+      if (savedSearch !== search) {
+        setSearch(savedSearch);
+        // Reset to first page when search changes
+        if (currentPage !== 1) {
+          setCurrentPage(1);
+        } else {
+          // If we're already on page 1, force refresh
+          if (activeTab === "requests") {
+            fetchMenteeRequests();
+          }
+        }
+      }
+    };
+    
+    checkForSearchUpdates();
+    
+    const interval = setInterval(checkForSearchUpdates, 500);
+    
+    return () => {
+      clearInterval(interval);
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [activeTab, search, currentPage]);
 
   useEffect(() => {
     if (activeTab === "requests") {
       fetchMenteeRequests()
     }
+    setCurrentPage(1)
+    setSearch("") // Reset search when tab changes
   }, [activeTab])
 
   const fetchMenteeRequests = async () => {
     setLoading(true)
     try {
-      const response = await GetMenteeRequestsQuery()
+      const response = await GetMenteeRequestsQuery({
+        pageNumber: currentPage,
+        pageSize: pageSize,
+        searchKey: search && search.trim() !== "" ? search : undefined
+      })
       
       if (response.isSuccess && response.data.mentees) {
         setMenteeRequests(response.data.mentees)
+        if (response.metaData) {
+          setPaginationMetadata(response.metaData)
+        }
       } else {
         toast.error(response.message || "Failed to fetch mentee requests")
       }
@@ -71,6 +132,11 @@ export default function MentorPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleViewMenteeProfile = (mentee: AcceptedMentee) => {
@@ -172,15 +238,40 @@ export default function MentorPage() {
 
       <div className="mt-6 bg-white rounded-2xl overflow-hidden">
         {activeTab === "mentees" ? (
-          <MenteesList
-            onViewProfile={handleViewMenteeProfile}
-            onChatWithMentee={handleChatWithMentee}
-          />
+          <>
+            <MenteesList
+              onViewProfile={handleViewMenteeProfile}
+              onChatWithMentee={handleChatWithMentee}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              onPageChange={handlePageChange}
+              setPaginationMetadata={setPaginationMetadata}
+              searchTerm={search}
+            />
+            {paginationMetadata.totalCount > 0 && (
+              <div className="p-4 border-t">
+                <Pagination 
+                  metadata={paginationMetadata}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
+          </>
         ) : (
-          <RequestsList 
-            requests={menteeRequests}
-            onViewRequest={handleViewRequest} 
-          />
+          <>
+            <RequestsList 
+              requests={menteeRequests}
+              onViewRequest={handleViewRequest} 
+            />
+            {paginationMetadata.totalCount > 0 && (
+              <div className="p-4 border-t">
+                <Pagination 
+                  metadata={paginationMetadata}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
 

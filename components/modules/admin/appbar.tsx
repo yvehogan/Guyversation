@@ -93,7 +93,6 @@ export function Appbar() {
     }
   }, []);
   
-  // Update the condition to show search - exclude dashboard page
   const shouldShowSearch = getCurrentContext() !== null && !isDashboardPage;
   
   return (

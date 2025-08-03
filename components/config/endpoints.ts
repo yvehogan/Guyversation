@@ -1,3 +1,5 @@
+import { register } from "module";
+
 export const endpoints = () => {
   const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || '';
   
@@ -24,12 +26,13 @@ export const endpoints = () => {
       detail: (communityId: string) => `/communities/${communityId}`,
       update: (communityId: string) => `/communities/${communityId}`,
       delete: (communityId: string) => `/communities/${communityId}`,
-      join: (communityId: string) => `/communities/${communityId}/join`,
+      join: (id: string) => `/communities/${id}/join`,
       leave: (communityId: string) => `/communities/${communityId}/leave`,
     },
     events: {
       create: `/events`,
       list: `/events`,
+      register: (id: string) => `/events/${id}/register`,
     },
     utilities: {
       language: `/utilities/languages`,

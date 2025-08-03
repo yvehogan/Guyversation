@@ -19,7 +19,6 @@ interface Community {
   memberCount: number;
 }
 
-// Change back to a regular type for client components
 type PageProps = {
   params: {
     id: string;
@@ -36,21 +35,17 @@ export default function CommunityDetailPage({ params }: PageProps) {
     const fetchCommunity = async () => {
       setLoading(true);
 
-      // If params is a Promise in Next.js 15, handle it here
       const communityId =
         typeof params.id === "object" && "then" in params.id
           ? await (params.id as unknown as Promise<string>)
           : params.id;
 
-      // Fetch all mentor communities (or ideally, fetch by id if endpoint supports)
       const response = await GetCommunitiesQuery({
         audience: "Mentors",
-        // Optionally add pagination/search if needed
       });
 
-      // Find the community by id
       const foundCommunity = response.data.communities.find(
-        (c) => c.id === communityId
+        (c:any) => c.id === communityId
       );
 
       if (foundCommunity) {

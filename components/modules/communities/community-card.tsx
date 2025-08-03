@@ -6,6 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { toast } from "react-toastify"
+import { JoinCommunityMutation } from "@/components/queries/communities/join-community"
 
 interface CommunityCardProps {
   community: {
@@ -23,18 +25,34 @@ interface CommunityCardProps {
 export function CommunityCard({ community }: CommunityCardProps) {
   const [joined, setJoined] = useState(community.joined)
   const [requestSent, setRequestSent] = useState(community.requestSent)
+  const [loading, setLoading] = useState(false)
 
-  const handleJoinCommunity = () => {
-    if (community.status === "open") {
-      setJoined(true)
-    } else {
-      setRequestSent(true)
+  const handleJoinCommunity = async () => {
+    try {
+      setLoading(true);
+      const response = await JoinCommunityMutation(community.id);
+      
+      if (response.isSuccess) {
+        toast.success(response.message || "Successfully joined community");
+        
+        if (community.status === "open") {
+          setJoined(true);
+        } else {
+          setRequestSent(true);
+        }
+      } else {
+        toast.error(response.message || "Failed to join community");
+      }
+    } catch (error) {
+      toast.error("An error occurred while joining the community");
+      console.error("Join community error:", error);
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div className="flex flex-col md:flex-row justify-between gap-4 items-center bg-white p-5 rounded-lg w-full">
-      {/* Community Image - First Column */}
       <div className="flex gap-5 items-center">
         <Link href={`/dashboard/communities/${community.id}`}>
           <div className="h-16 w-16 rounded-lg overflow-hidden">
@@ -71,14 +89,6 @@ export function CommunityCard({ community }: CommunityCardProps) {
       {/* Actions - Third Column */}
       <div className="flex flex- items-end gap-10">
         <div className="flex items-center whitespace-nowrap">
-          <div className="flex -space-x-2 mr-2">
-            {[1, 2, 3].map((i) => (
-              <Avatar key={i} className="border-2 border-white h-8 w-8">
-                <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt="Participant" />
-                <AvatarFallback>P</AvatarFallback>
-              </Avatar>
-            ))}
-          </div>
           <span className="text-sm text-gray-600">{community.participants} participants</span>
         </div>
 
@@ -87,24 +97,17 @@ export function CommunityCard({ community }: CommunityCardProps) {
             Joined
           </Button>
         ) : requestSent ? (
-          <Button variant="outline" className="rounded-full w-32" disabled>
-            Request Sent!
-          </Button>
-        ) : community.status === "closed" ? (
-          <Button
-            variant="outline"
-            className="rounded-full w-32"
-            onClick={handleJoinCommunity}
-          >
-            Request Access
+          <Button variant="outline" className="rounded-full w-40" disabled>
+            Pending Approval
           </Button>
         ) : (
           <Button
             variant="outline"
-            className="rounded-full w-32"
+            className="rounded-full w-36"
             onClick={handleJoinCommunity}
+            disabled={loading}
           >
-            Join Community
+            {loading ? "Joining..." : "Join Community"}
           </Button>
         )}
       </div>

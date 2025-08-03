@@ -4,8 +4,9 @@ import axiosDefault from 'axios';
 
 export interface GetCommunitiesProps {
   page?: number;
+  pageNumber: number;
   pageSize?: number;
-  search?: string;
+  searchKey?: string;
   audience?: string;
 }
 
@@ -38,6 +39,7 @@ export interface GetCommunitiesResponse {
   metaData: {
     totalCount: number;
     pageSize: number;
+    pageNumber: number;
     currentPage: number;
     totalPages: number;
     hasNext: boolean;
@@ -49,17 +51,39 @@ export interface GetCommunitiesResponse {
   };
 }
 
-// To fetch mentor communities, pass { audience: AudienceEnums.Mentors }
-const GetCommunitiesQuery = async (
-  params?: GetCommunitiesProps
-): Promise<GetCommunitiesResponse> => {
-  try {
-    // Ensure audience is included in params if provided
-    const response = await axios.get<GetCommunitiesResponse>(
-      endpoints().communities.list,
-      { params }
-    );
+interface GetCommunitiesParams {
+  audience?: string | AudienceEnums;
+  pageNumber?: number;
+  pageSize?: number;
+  searchKey?: string;
+}
 
+export const GetCommunitiesQuery = async (params?: GetCommunitiesParams): Promise<any> => {
+  try {
+    const queryParams = new URLSearchParams();
+    
+    if (params?.audience) {
+      queryParams.append('Audience', params.audience.toString());
+    }
+    
+    if (params?.pageNumber) {
+      queryParams.append('PageNumber', params.pageNumber.toString());
+    }
+    
+    if (params?.pageSize) {
+      queryParams.append('PageSize', params.pageSize.toString());
+    }
+    
+    if (params?.searchKey && params.searchKey.trim() !== '') {
+      console.log("Adding search key to query:", params.searchKey);
+      queryParams.append('SearchKey', params.searchKey.trim());
+    } else {
+    }
+    
+    const url = `${endpoints().communities.list}?${queryParams.toString()}`;
+    console.log("Request URL:", url);
+    
+    const response = await axios.get<GetCommunitiesResponse>(url);
     return response.data;
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
@@ -89,5 +113,3 @@ const GetCommunitiesQuery = async (
     };
   }
 };
-
-export { GetCommunitiesQuery };

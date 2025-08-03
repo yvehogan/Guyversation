@@ -9,23 +9,45 @@ import { LoadingOverlay } from "@/components/ui/loading-overlay";
 interface MenteesListProps {
   onViewProfile: (mentee: AcceptedMentee) => void;
   onChatWithMentee: (mentee: AcceptedMentee) => void;
+  currentPage: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  setPaginationMetadata: (metadata: any) => void;
+  searchTerm?: string;
 }
 
-export function MenteesList({ onViewProfile, onChatWithMentee }: MenteesListProps) {
+export function MenteesList({ 
+  onViewProfile, 
+  onChatWithMentee, 
+  currentPage,
+  pageSize,
+  onPageChange,
+  setPaginationMetadata,
+  searchTerm = ""
+}: MenteesListProps) {
   const [mentees, setMentees] = useState<AcceptedMentee[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMentees = async () => {
       setLoading(true);
-      const response = await GetAcceptedMenteesQuery();
+      const response = await GetAcceptedMenteesQuery({
+        pageNumber: currentPage,
+        pageSize: pageSize,
+        searchKey: searchTerm && searchTerm.trim() !== "" ? searchTerm : undefined
+      });
+      
       if (response.isSuccess && response.data.mentees) {
         setMentees(response.data.mentees);
+        
+        if (response.metaData) {
+          setPaginationMetadata(response.metaData);
+        }
       }
       setLoading(false);
     };
     fetchMentees();
-  }, []);
+  }, [currentPage, pageSize, setPaginationMetadata, searchTerm]);
 
   if (loading) {
     return (

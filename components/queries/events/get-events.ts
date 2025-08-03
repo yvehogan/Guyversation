@@ -32,9 +32,9 @@ export interface GetEventsResponse {
 
 export const GetEventsQuery = async (
   eventType?: string,
-  page: number = 1,
+  pageNumber: number = 1,
   pageSize: number = 10,
-  search?: string
+  searchKey?: string
 ): Promise<GetEventsResponse> => {
   try {
     const token = Cookies.get("GUYVERSATION_ACCESS_TOKEN");
@@ -52,20 +52,25 @@ export const GetEventsQuery = async (
     const endpoint = endpoints().events.list;
     
     const queryParams = new URLSearchParams();
-    queryParams.append('PageNumber', page.toString());
-    queryParams.append('PageSize', pageSize.toString());
     
-    if (eventType) {
-      queryParams.append('eventType', eventType);
+    if (pageNumber) {
+      queryParams.append('PageNumber', pageNumber.toString());
     }
     
-    if (search) {
-      queryParams.append('SearchKey', search);
+    if (pageSize) {
+      queryParams.append('PageSize', pageSize.toString());
+    }
+    
+    if (eventType) {
+      queryParams.append('EventType', eventType.toString());
+    }
+    
+    if (searchKey && searchKey.trim() !== '') {
+      queryParams.append('SearchKey', searchKey.trim());
     }
     
     const queryString = queryParams.toString();
     const url = `${baseUrl}${endpoint}${queryString ? `?${queryString}` : ''}`;
-    
     
     const response = await axiosDefault.get(url, {
       headers: {
@@ -84,7 +89,6 @@ export const GetEventsQuery = async (
     console.error('Error fetching events:', error);
     
     if (axiosDefault.isAxiosError(error) && error.response) {
-      console.error('API Error Response:', error.response.data);
       
       return {
         isSuccess: false,
