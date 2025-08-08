@@ -221,7 +221,7 @@ export default function EventManagementPage() {
                           </div>
                         </div>
                         </div>
-                        <div className="flex flex-col md:flex-row gap-2 md:items-center max-w-[150px]">
+                        <div className="flex flex-col md:flex-row gap-2 md:items-center w-full md:max-w-[150px]">
                           <Button 
                             variant="outline" 
                             className="text-primary-400"

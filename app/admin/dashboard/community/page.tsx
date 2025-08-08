@@ -127,7 +127,7 @@ export default function CommunityPage() {
 
   return (
     <>
-      <div className="h-screen flex-1 pb-16 mt-4 md:mt-8 px-4 md:px-0">
+      <div className="h-full flex-1 mt-4 md:mt-8 px-4 md:px-0 ">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h1 className="text-2xl md:text-4xl font-medium">Communities</h1>
           <Button
@@ -272,7 +272,7 @@ export default function CommunityPage() {
               <Pagination 
                 metadata={paginationMetadata}
                 onPageChange={handlePageChange}
-                className="mt-6 pb-16"
+                className="mt-6 pb-38 w-full"
               />
             )}
           </>

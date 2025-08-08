@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import Cookies from 'js-cookie';
 
 const baseURL = process.env.NEXT_PUBLIC_SERVER_URL;
-const refreshEndpoint = '/auth/refreshtoken';
+const refreshEndpoint = '/auth/refresh-token';
 
 let isRefreshing = false;
 let failedQueue: any[] = [];
@@ -51,7 +51,6 @@ const createInstance = () => {
             typeof window !== 'undefined' &&
             !['/', '/admin', '/login'].includes(window.location.pathname)
           ) {
-            // Redirect based on user type
             const userType = Cookies.get('GUYVERSATION_USER_TYPE');
             const isAdmin = userType === 'Admin' || window.location.pathname.includes('/admin');
             window.location.href = isAdmin ? '/admin' : '/';

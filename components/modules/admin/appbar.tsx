@@ -101,13 +101,13 @@ export function Appbar() {
     }`}>
       {isDashboardPage && (
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-10">
-          <div className="flex flex-col">
+          <div className="flex flex-col text-center md:text-left">
             <h1 className="text-2xl md:text-4xl font-medium tracking-tight">Welcome back, {userName}!</h1>
             <p className="text-neutral-200 mt-2">Let&apos;s see what&apos;s on your plate today.</p>
           </div>
           
-          <div className="hidden md:flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-2">
+          {/* <div className=" md:flex items-center gap-4">
+            <div className=" md:flex items-center gap-2">
               <Avatar>
                 <AvatarImage src="" alt="profile image" />
                 <AvatarFallback>{userInitials}</AvatarFallback>
@@ -117,21 +117,21 @@ export function Appbar() {
                 <p className="text-xs text-neutral-200">{userRole}</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
       
       {!isDashboardPage && (
-        <div className="flex items-center gap-4 w-full justify-between">
+        <div className="flex flex-col-reverse md:flex-row items-center gap-4 w-full justify-between">
           {shouldShowSearch && (
-            <div className="relative">
+            <div className="relative w-full md:w-auto">
               <Search className="absolute left-4 top-4 h-4 w-4 text-muted-foreground" />
               <Input 
                 type="search" 
                 placeholder={getPlaceholderText()}
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
-                className="w-full min-w-[200px] rounded-full pl-10 bg-white md:w-[500px]"
+                className="w-full rounded-full pl-10 bg-white md:w-[500px] min-w-0"
               />
             </div>
           )}
@@ -140,7 +140,7 @@ export function Appbar() {
               <AvatarImage src="" alt="profile image" />
               <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
-            <div className="hidden md:block">
+            <div className=" md:block">
               <p className="text-base font-medium">{userName}</p>
               <p className="text-xs text-neutral-200">{userRole}</p>
             </div>
