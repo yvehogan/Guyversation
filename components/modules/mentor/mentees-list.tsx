@@ -18,10 +18,8 @@ interface MenteesListProps {
 
 export function MenteesList({ 
   onViewProfile, 
-  onChatWithMentee, 
   currentPage,
   pageSize,
-  onPageChange,
   setPaginationMetadata,
   searchTerm = ""
 }: MenteesListProps) {
@@ -64,27 +62,19 @@ export function MenteesList({
   }
 
   return (
-    <div className="flex flex-col h-[550px] min-h-[550px] max-h-[550px] whitespace-nowrap overflow-y-auto">
-      <div className="overflow-x-auto">
-        <div className="inline-block min-w-full">
-          <div className="overflow-hidden">
-            <table className="min-w-full table-fixed">
-              <thead className="bg-neutral-100 text-white">
-                <tr>
-                  <th className="py-4 px-4 w-8 text-left font-medium"></th>
-                  <th className="py-4 px-4 w-1/3 text-left font-medium">Name</th>
-                  <th className="py-4 px-4 w-16 text-right font-medium">Age</th>
-                  <th className="py-4 px-4 w-1/4 text-left font-medium">Location</th>
-                  <th className="py-4 px-4 w-1/6 text-left font-medium">Email</th>
-                  <th className="py-4 px-4 w-1/6 text-left font-medium">Action</th>
-                </tr>
-              </thead>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div className="overflow-y-auto flex-1 px-3">
+    <div className="flex flex-col h-[550px] min-h-[550px] max-h-[550px] overflow-hidden">
+      <div className="overflow-x-auto overflow-y-auto flex-1">
         <table className="min-w-full table-fixed text-neutral-100">
+          <thead className="bg-neutral-100 text-white sticky top-0 z-10">
+            <tr>
+              <th className="py-4 px-4 w-8 text-left font-medium"></th>
+              <th className="py-4 px-4 w-1/3 text-left font-medium">Name</th>
+              <th className="py-4 px-4 w-16 text-right font-medium">Age</th>
+              <th className="py-4 px-4 w-1/4 text-left font-medium">Location</th>
+              <th className="py-4 px-4 w-1/6 text-left font-medium">Email</th>
+              <th className="py-4 px-4 w-1/6 text-left font-medium">Action</th>
+            </tr>
+          </thead>
           <tbody>
             {mentees.map((mentee, index) => (
               <tr

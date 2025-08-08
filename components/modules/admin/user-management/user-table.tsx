@@ -99,11 +99,11 @@ export function UsersTable({
 
       <div
         ref={tableRef}
-        className="overflow-x-auto w-full scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-neutral-300"
+        className="overflow-x-auto overflow-y-auto max-h-[600px] w-full scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-neutral-300"
         onScroll={handleScroll}
       >
         <table className="w-full min-w-[800px] bg-white">
-          <thead className="bg-neutral-100 text-white">
+          <thead className="bg-neutral-100 text-white sticky top-0 z-10">
             <tr>
               <th className="py-4 px-4 text-left w-12">#</th>
               <th className="py-4 px-4 text-left">Name</th>
@@ -115,7 +115,7 @@ export function UsersTable({
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <tr key={user.id} className="border-b">
+              <tr key={user.id} className={`${index !== users.length - 1 ? 'border-b border-gray-200' : ''}`}>
                 <td className="py-4 px-4">{index + 1}</td>
                 <td className="py-4 px-4">
                   <div className="flex items-center gap-3">

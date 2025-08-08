@@ -244,7 +244,6 @@ export function MenteeChatDialog({ mentee, open, onOpenChange }: MenteeChatDialo
             allEmojis.push(String.fromCodePoint(code))
           })
         } else if (typeof range === 'object' && 'start' in range && 'end' in range) {
-          // Handle range of emojis
           for (let i = range.start; i <= range.end; i++) {
             try {
               const emoji = String.fromCodePoint(i)
@@ -270,7 +269,7 @@ export function MenteeChatDialog({ mentee, open, onOpenChange }: MenteeChatDialo
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent 
-        className="right-0 mt-3 mr-5 h-auto max-h-[97vh] w-[95%] overflow-hidden rounded-lg border-0 py-4 sm:max-w-md flex flex-col"
+        className="right-0 mt-3 mr-3 md:mr-5 h-auto max-h-[97vh] w-[95%] overflow-hidden rounded-lg border-0 py-4 sm:max-w-md flex flex-col"
       >
         <div className="flex items-center gap-3 p-4 border-b">
           <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="h-8 w-8">

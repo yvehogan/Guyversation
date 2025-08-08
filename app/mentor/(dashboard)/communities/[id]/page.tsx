@@ -169,7 +169,7 @@ export default function CommunityDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full h-[100vh]">
       <div className="mt-3 mb-3">
         <div className="flex items-center gap-4 mb-4">
           <button
@@ -255,10 +255,10 @@ export default function CommunityDetailPage({ params }: PageProps) {
                         <Heart className={`h-5 w-5 ${post.isLikedByCurrentUser ? "fill-current" : ""}`} />
                         <span>{post.likesCount} Likes</span>
                       </button>
-                      <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
+                      {/* <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
                         <MessageSquare className="h-5 w-5" />
                         <span>{post.commentsCount} Comments</span>
-                      </button>
+                      </button> */}
                       <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
                         <Share2 className="h-5 w-5" />
                         <span>{post.sharesCount} Shares</span>

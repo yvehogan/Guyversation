@@ -14,44 +14,26 @@ export function RequestsList({
 }: RequestsListProps) {
   if (requests.length === 0) {
     return (
-      <div className="flex flex-col h-[300px] min-h-[300px] max-h-[300px] items-center justify-center py-12">
+      <div className="flex flex-col. w-full md:h-[300px] min-h-[300px] max-h-[300px] items-center justify-center py-12">
         <p className="text-lg text-gray-500">No pending mentee requests</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-[500px] min-h-[500px] max-h-[500px] whitespace-nowrap">
-      <div className="overflow-x-auto">
-        <div className="inline-block min-w-full">
-          <div className="overflow-hidden">
-            <table className="min-w-full table-fixed">
-              <thead className="bg-neutral-100 text-white">
-                <tr>
-                  <th className="py-4 px-4 w-8 text-left font-medium"></th>
-                  <th className="py-4 px-4 w-1/3 text-left font-medium">
-                    Name
-                  </th>
-                  <th className="py-4 px-4 w-16 text-right font-medium">
-                    Age
-                  </th>
-                  <th className="py-4 px-4 w-1/4 text-left font-medium">
-                    Location
-                  </th>
-                  <th className="py-4 px-4 w-1/6 text-left font-medium">
-                    Date
-                  </th>
-                  <th className="py-4 px-4 w-1/6 text-left font-medium">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div className="overflow-y-auto flex-1">
+    <div className="flex flex-col h-[500px] min-h-[500px] max-h-[500px] overflow-hidden">
+      <div className="overflow-x-auto overflow-y-auto flex-1">
         <table className="min-w-full table-fixed text-neutral-100">
+          <thead className="bg-neutral-100 text-white sticky top-0 z-10">
+            <tr>
+              <th className="py-4 px-4 w-8 text-left font-medium"></th>
+              <th className="py-4 px-4 w-1/3 text-left font-medium">Name</th>
+              <th className="py-4 px-4 w-16 text-right font-medium">Age</th>
+              <th className="py-4 px-4 w-1/4 text-left font-medium">Location</th>
+              <th className="py-4 px-4 w-1/6 text-left font-medium">Date</th>
+              <th className="py-4 px-4 w-1/6 text-left font-medium">Action</th>
+            </tr>
+          </thead>
           <tbody>
             {requests.map((request, index) => (
               <tr

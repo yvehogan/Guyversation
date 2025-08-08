@@ -231,10 +231,10 @@ export default function MentorPage() {
 
   return (
     <div className="container mx-auto py-2 h-full">
-      <h1 className="text-4xl font-medium mb-4 border-b border-grey-300 pb-6">Mentor</h1>
+      <h1 className="text-4xl font-medium mb-4 border-b border-grey-300 pb-6 pt-4">Mentor</h1>
       <MentorTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <div className="mt-6 bg-white rounded-2xl overflow-hidden">
+      <div className="mt-6 bg-white rounded-2xl overflow-hidden h-[90vh]">
         {activeTab === "mentees" ? (
           <>
             <MenteesList

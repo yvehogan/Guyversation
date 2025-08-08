@@ -109,7 +109,7 @@ export function Appbar() {
     <header className={`flex flex-col md:flex-row w-full items-center gap-x-10 px-5 md:px-10 mt-4 md:mt-7 mb-3 md:mb-5 ${
       isDashboardPage ? 'justify-between' : 'justify-between'
     } ${
-      isCommunitiesPage ? 'h-16 md:h-10' : 'h-20 md:h-20'
+      isCommunitiesPage ? 'h-20 md:h-10' : 'h-28 md:h-20'
     }`}>
       {isDashboardPage && (
         <div>
@@ -118,12 +118,12 @@ export function Appbar() {
         </div>
       )}
       
-      <div className={`flex items-center gap-4 ${
+      <div className={`flex flex-col-reverse md:flex-row items-end md:items-center gap-4 ${
         isCommunitiesPage ? "w-full justify-between" : 
         isDashboardPage ? "" : "w-full justify-between"
       }`}>
         {shouldShowSearch && (
-          <div className="relative">
+          <div className="relative w-full md:w-auto">
             <Search className="absolute left-4 top-4 h-4 w-4 text-muted-foreground" />
             <Input 
               type="search" 
@@ -136,12 +136,12 @@ export function Appbar() {
             />
           </div>
         )}
-        <div className="md:flex items-center gap-2 hidden">
+        <div className="flex items-center gap-2">
           <Avatar className="h-[40px] w-[40px]">
             <AvatarImage src="" alt="profile image" />
             <AvatarFallback>{userInitials}</AvatarFallback>
           </Avatar>
-          <div className="hidden md:block">
+          <div className="block">
             <p className="text-base font-medium">{userName}</p>
             <p className="text-xs text-neutral-200">{userRole}</p>
           </div>

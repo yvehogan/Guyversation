@@ -42,6 +42,9 @@ const instrument = localFont({
 export const metadata: Metadata = {
   title: "Guyversation - A safe space where boys connect with real male mentors",
   description: "A safe space where boys connect with real male mentors for guidance, growth, and honest conversations.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

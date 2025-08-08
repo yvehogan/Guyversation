@@ -70,7 +70,7 @@ export function MenteeProfileDialog({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
-        className="right-0 mt-3 mr-5 h-auto max-h-[97vh] w-[95%] overflow-hidden rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md flex flex-col"
+        className="right-0 mt-3 mr-3 md:mr-5 h-auto max-h-[97vh] w-[95%] overflow-hidden rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md flex flex-col"
       >
         <SheetHeader className="relative border-b pb-10">
           <div className="flex items-center gap-4">

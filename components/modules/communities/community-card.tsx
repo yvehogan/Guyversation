@@ -84,9 +84,8 @@ export function CommunityCard({ community }: CommunityCardProps) {
 
   return (
     <div className="flex flex-col md:flex-row justify-between gap-4 items-center bg-white p-5 rounded-lg w-full">
-      <div className="flex gap-5 items-center">
-        <Link href={`/dashboard/communities/${community.id}`}>
-          <div className="h-16 w-16 rounded-lg overflow-hidden">
+      <div className="flex w-full md:w-auto justify-between md:justify-start gap-5 items-center">
+          <div className="h-16 w-16 rounded-lg overflow-hidden flex-shrink-0">
             <Image
               src={community.image || "/placeholder.svg"}
               alt={community.name}
@@ -96,29 +95,28 @@ export function CommunityCard({ community }: CommunityCardProps) {
               className="h-full w-full object-cover"
             />
           </div>
-        </Link>
-      <div className="flex flex-col min-w-0">
-        <div className="flex items-center gap-2 mb-3">
-          <Link href={`/dashboard/communities/${community.id}`} className="text-xl font-medium hover:underline truncate">
-            {community.name}
-          </Link>
-          <Badge
-            variant={community.status === "open" ? "default" : "secondary"}
-            className={
-              community.status === "open"
-                ? "bg-primary-200 text-primary-300 whitespace-nowrap"
-                : "bg-[#C8202012] text-warning-200 border-none whitespace-nowrap"
-            }
-          >
-            {community.status === "open" ? "Open" : "Closed"}
-          </Badge>
+        <div className="flex flex-col min-w-0 flex-1 md:flex-initial">
+          <div className="flex items-center gap-2 mb-3">
+            <Link href={`/dashboard/communities/${community.id}`} className="text-xl font-medium hover:underline truncate">
+              {community.name}
+            </Link>
+            <Badge
+              variant={community.status === "open" ? "default" : "secondary"}
+              className={
+                community.status === "open"
+                  ? "bg-primary-200 text-primary-300 whitespace-nowrap"
+                  : "bg-[#C8202012] text-warning-200 border-none whitespace-nowrap"
+              }
+            >
+              {community.status === "open" ? "Open" : "Closed"}
+            </Badge>
+          </div>
+          <p className="text-neutral-200 text-xs line-clamp-2">{community.description}</p>
         </div>
-        <p className="text-neutral-200 text-xs line-clamp-2">{community.description}</p>
-      </div>
       </div>
 
       {/* Actions - Third Column */}
-      <div className="flex flex- items-end gap-10">
+      <div className="flex flex-r items-end gap-10 w-full md:w-auto justify-between md:justify-end">
         <div className="flex items-center whitespace-nowrap">
           <span className="text-sm text-gray-600">{community.participants} participants</span>
         </div>
