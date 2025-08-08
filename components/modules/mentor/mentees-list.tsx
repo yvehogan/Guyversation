@@ -71,25 +71,25 @@ export function MenteesList({
             <table className="min-w-full table-fixed">
               <thead className="bg-neutral-100 text-white">
                 <tr>
-                  <th className="py-4 px-6 md:px-4 w-16 text-left font-medium"></th>
-                  <th className="py-4 px-6 md:px-4 w-1/3 text-left font-medium">Name</th>
-                  <th className="py-4 px-6 md:px-4 w-16 text-right font-medium">Age</th>
-                  <th className="py-4 px-6 md:px-4 w-1/4 text-left font-medium">Location</th>
-                  <th className="py-4 px-6 md:px-4 w-1/6 text-left font-medium">Email</th>
-                  <th className="py-4 px-6 md:px-4 w-1/6 text-right font-medium"></th>
+                  <th className="py-4 px-4 w-8 text-left font-medium"></th>
+                  <th className="py-4 px-4 w-1/3 text-left font-medium">Name</th>
+                  <th className="py-4 px-4 w-16 text-right font-medium">Age</th>
+                  <th className="py-4 px-4 w-1/4 text-left font-medium">Location</th>
+                  <th className="py-4 px-4 w-1/6 text-left font-medium">Email</th>
+                  <th className="py-4 px-4 w-1/6 text-left font-medium">Action</th>
                 </tr>
               </thead>
             </table>
           </div>
         </div>
       </div>
-      <div className="overflow-y-auto flex-1">
+      <div className="overflow-y-auto flex-1 px-3">
         <table className="min-w-full table-fixed text-neutral-100">
           <tbody>
             {mentees.map((mentee, index) => (
               <tr
                 key={mentee.id}
-                className="border-b border-gray-200 hover:bg-gray-50"
+                className={`${index !== mentees.length - 1 ? 'border-b border-gray-200' : ''} hover:bg-gray-50`}
               >
                 <td className="py-4 px-4 w-8">{index + 1}</td>
                 <td className="py-4 px-4 w-1/3">
@@ -107,7 +107,7 @@ export function MenteesList({
                 <td className="py-4 px-4 w-16 text-right">{mentee.age ?? "N/A"}</td>
                 <td className="py-4 px-4 w-1/4">{mentee.location ?? "N/A"}</td>
                 <td className="py-4 px-4 w-1/6">{mentee.email ?? "N/A"}</td>
-                <td className="py-4 px-4 w-1/6 text-right">
+                <td className="py-4 px-4 w-1/6 text-left">
                   <Button
                     variant="outline"
                     size="sm"

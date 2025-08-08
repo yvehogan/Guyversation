@@ -35,7 +35,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="py-6 w-full flex flex-col h-screen ">
+    <div className="py- w-full flex flex-col h-screen ">
       <div className="flex flex-col lg:flex-row gap-8 flex-1">
         <div className="lg:w-[70%] space-y-4 flex flex-col">
           <h2 className="text-xl font-medium">Overview</h2>

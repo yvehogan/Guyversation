@@ -11,9 +11,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { StartChatQuery } from "@/components/queries/chat/start-chat";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 type MenteeItem = {
   id: string;
+  menteeUserId: string;
   name: string;
   age: number;
   location: string;
@@ -42,9 +46,30 @@ export function MenteeProfileDialog({
   onOpenChange,
   onSendMessage,
 }: MenteeProfileDialogProps) {
+  const [isStartingChat, setIsStartingChat] = useState(false);
+
+  const handleSendMessage = async () => {
+    setIsStartingChat(true);
+    try {
+      const response = await StartChatQuery({ peerUserId: mentee.menteeUserId });
+
+      if (response.isSuccess) {
+        onOpenChange(false);
+        onSendMessage();
+      } else {
+        toast.error(response.message || "Failed to start chat");
+      }
+    } catch (error) {
+      toast.error("Failed to start chat");
+      console.error("Chat initialization error:", error);
+    } finally {
+      setIsStartingChat(false);
+    }
+  };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent 
+      <SheetContent
         className="right-0 mt-3 mr-5 h-auto max-h-[97vh] w-[95%] overflow-hidden rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md flex flex-col"
       >
         <SheetHeader className="relative border-b pb-10">
@@ -132,8 +157,13 @@ export function MenteeProfileDialog({
           </div>
         </div>
         <div className="absolute bottom-8 left-0 right-0 bg-white p-6">
-          <Button variant="outline" className="w-full" onClick={onSendMessage}>
-            Send a message
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleSendMessage}
+            disabled={isStartingChat}
+          >
+            {isStartingChat ? "Loading..." : "Send a message"}
           </Button>
         </div>
       </SheetContent>

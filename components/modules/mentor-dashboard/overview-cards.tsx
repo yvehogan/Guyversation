@@ -6,7 +6,7 @@ import Link from "next/link"
 export function OverviewCards() {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <Card className="border-none text-white overflow-hidden relative h-36">
+      <Card className="border-none text-white overflow-hidden relative h-36 bg-secondary-500">
         <div className="absolute inset-0 z-0">
           <Image src="/svgs/card1.svg" height={200} width={200} alt="Background" className="w-full h-full object-cover" />
         </div>
@@ -24,7 +24,7 @@ export function OverviewCards() {
         </CardContent>
       </Card>
 
-      <Card className="border-none text-white overflow-hidden relative h-36">
+      <Card className="border-none text-white overflow-hidden relative h-36 bg-primary-300">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image src="/svgs/card2.svg" width={200} height={200} alt="Background" className="w-full h-full object-cover" />
@@ -49,7 +49,7 @@ export function OverviewCards() {
         </CardContent>
       </Card>
 
-      <Card className="border-none text-white overflow-hidden relative h-36">
+      <Card className="border-none text-white overflow-hidden relative h-36 bg-secondary-600">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image src="/svgs/card3.svg" width={200} height={200} alt="Background" className="w-full h-full object-cover" />

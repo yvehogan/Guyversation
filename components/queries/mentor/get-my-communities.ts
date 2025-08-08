@@ -2,25 +2,19 @@ import { endpoints } from "@/components/config/endpoints";
 import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
-export interface AcceptedMentee {
+export interface MyCommunity {
   id: string;
-  menteeUserId: string;
   name: string;
-  email: string;
-  age: number | null;
-  location: string | null;
-  avatar: string | null;
-  goal?: string;
-  time?: string;
-  careerPath?: string;
-  interests?: string[];
-  socials?: {
-    twitter?: string;
-    linkedin?: string;
-  };
+  description: string;
+  privacy: number;
+  memberCount: number;
+  bannerUrl: string | null;
+  createdDate: string;
+  isOwner?: boolean;
+  joinedDate?: string;
 }
 
-export interface GetAcceptedMenteesResponse {
+export interface GetMyCommunitiesResponse {
   isSuccess: boolean;
   statusCode: string;
   message: string;
@@ -33,17 +27,17 @@ export interface GetAcceptedMenteesResponse {
     hasPrevious: boolean;
   } | null;
   data: {
-    mentees: AcceptedMentee[];
+    communities: MyCommunity[];
   };
 }
 
-export interface GetAcceptedMenteesParams {
+export interface GetMyCommunitiesParams {
   pageNumber: number;
   pageSize: number;
   searchKey?: string;
 }
 
-export const GetAcceptedMenteesQuery = async (params: GetAcceptedMenteesParams): Promise<GetAcceptedMenteesResponse> => {
+export const GetMyCommunitiesQuery = async (params: GetMyCommunitiesParams): Promise<GetMyCommunitiesResponse> => {
   try {
     const queryParams = new URLSearchParams();
     
@@ -59,10 +53,9 @@ export const GetAcceptedMenteesQuery = async (params: GetAcceptedMenteesParams):
       queryParams.append('SearchKey', params.searchKey.trim());
     }
     
-    const baseEndpoint = endpoints().mentees.mentees.split('?')[0];
-    const url = `${baseEndpoint}?Status=Accepted&${queryParams.toString()}`;
+    const url = `${endpoints().communities.myCommunities}?${queryParams.toString()}`;
     
-    const response = await axios.get<GetAcceptedMenteesResponse>(url);
+    const response = await axios.get<GetMyCommunitiesResponse>(url);
     return response.data;
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
@@ -72,10 +65,11 @@ export const GetAcceptedMenteesQuery = async (params: GetAcceptedMenteesParams):
         message: error.response.data?.message || "An error occurred.",
         metaData: null,
         data: {
-          mentees: []
+          communities: []
         }
       };
     }
+    
     const errorMessage =
       ((error as unknown) as { response?: { data?: { message?: string } } })?.response?.data?.message || "An unexpected error occurred.";
     return {
@@ -84,7 +78,7 @@ export const GetAcceptedMenteesQuery = async (params: GetAcceptedMenteesParams):
       message: errorMessage,
       metaData: null,
       data: {
-        mentees: []
+        communities: []
       }
     };
   }

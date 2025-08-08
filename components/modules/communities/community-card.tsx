@@ -2,12 +2,12 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { toast } from "react-toastify"
 import { JoinCommunityMutation } from "@/components/queries/communities/join-community"
+import { useRouter } from "next/navigation"
 
 interface CommunityCardProps {
   community: {
@@ -23,6 +23,7 @@ interface CommunityCardProps {
 }
 
 export function CommunityCard({ community }: CommunityCardProps) {
+  const router = useRouter()
   const [joined, setJoined] = useState(community.joined)
   const [requestSent, setRequestSent] = useState(community.requestSent)
   const [loading, setLoading] = useState(false)
@@ -50,6 +51,36 @@ export function CommunityCard({ community }: CommunityCardProps) {
       setLoading(false);
     }
   }
+
+  const handleViewCommunity = () => {
+    router.push(`/mentor/communities/${community.id}`)
+  }
+
+  const getButtonContent = () => {
+    if (community.joined) {
+      return {
+        text: "View Community",
+        onClick: handleViewCommunity,
+        className: "border border-primary-400 text-primary-400 bg-white hover:bg-grey-50"
+      }
+    }
+    
+    if (community.requestSent) {
+      return {
+        text: "Request Sent",
+        onClick: () => {},
+        className: "bg-gray-300 text-gray-600 cursor-not-allowed"
+      }
+    }
+    
+    return {
+      text: community.status === "open" ? "Join" : "Request to Join",
+      onClick: handleJoinCommunity,
+      className: "border border-primary-400 text-primary-400 bg-white hover:bg-grey-50"
+    }
+  }
+
+  const buttonConfig = getButtonContent()
 
   return (
     <div className="flex flex-col md:flex-row justify-between gap-4 items-center bg-white p-5 rounded-lg w-full">
@@ -91,25 +122,13 @@ export function CommunityCard({ community }: CommunityCardProps) {
         <div className="flex items-center whitespace-nowrap">
           <span className="text-sm text-gray-600">{community.participants} participants</span>
         </div>
-
-        {joined ? (
-          <Button variant="outline" className="rounded-full w-28" disabled>
-            Joined
-          </Button>
-        ) : requestSent ? (
-          <Button variant="outline" className="rounded-full w-40" disabled>
-            Pending Approval
-          </Button>
-        ) : (
-          <Button
-            variant="outline"
-            className="rounded-full w-36"
-            onClick={handleJoinCommunity}
-            disabled={loading}
-          >
-            {loading ? "Joining..." : "Join Community"}
-          </Button>
-        )}
+        <Button
+          onClick={buttonConfig.onClick}
+          className={`px-6 py-2 rounded-full ${buttonConfig.className}`}
+          disabled={community.requestSent}
+        >
+          {buttonConfig.text}
+        </Button>
       </div>
     </div>
   )

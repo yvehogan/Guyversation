@@ -7,6 +7,7 @@ export interface CreateEventProps {
   title: string;
   description?: string;
   eventType?: string;
+  eventUrl?: string;
   startDate: string;
   startTime: string;
   endDate: string;
@@ -23,6 +24,7 @@ export interface CreateEventResponse {
     title: string;
     description?: string;
     eventType?: string;
+    eventUrl?: string;
     startDate: string;
     startTime: string;
     endDate: string;
@@ -59,24 +61,23 @@ export const CreateEventMutation = async (
     formData.append('EndDate', eventData.endDate);
     formData.append('EndTime', eventData.endTime);
     formData.append('Location', eventData.location || "");
+    formData.append('EventUrl', eventData.eventUrl || "");
 
-    for (const pair of formData.entries()) {
-    }
-    
     const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || '';
     const endpoint = endpoints().events.create;
     const url = `${baseUrl}${endpoint}`;
     
     const response = await axiosDefault.post(url, formData, {
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
       }
     });
+
 
     return {
       isSuccess: true,
       statusCode: "200",
-      message: "Event created successfully",
+      message: response.data?.message || "Event created successfully",
       data: response.data?.data || null,
       metaData: response.data?.metaData || null,
     };

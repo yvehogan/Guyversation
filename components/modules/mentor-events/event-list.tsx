@@ -135,7 +135,6 @@ export default function EventsList() {
       
       if (response.isSuccess) {
         toast.success(response.message || "Successfully registered for the event");
-        // Add to registered events set
         setRegisteredEvents(prev => new Set(prev).add(eventId));
       } else {
         toast.error(response.message || "Failed to register for the event");
@@ -168,8 +167,8 @@ export default function EventsList() {
         </DialogContent>
       </Dialog>
 
-      <div className="flex-1 overflow-y-auto pb-16 mt-8">
-        <div className="flex justify-between items-center mb-8">
+      <div className="flex-1 overflow-y-auto pb-16">
+        <div className="flex justify-between items-center">
           <h1 className="text-2xl md:text-4xl font-medium mb-4">Events</h1>
         </div>
 
@@ -283,7 +282,13 @@ export default function EventsList() {
                             <Button 
                               size="lg" 
                               className=""
-                              onClick={() => handleRegisterForEvent(event.id)}
+                              onClick={() => {
+                                if (event.eventUrl) {
+                                  window.open(event.eventUrl, '_blank');
+                                } else {
+                                  handleRegisterForEvent(event.id);
+                                }
+                              }}
                               disabled={isRegistering}
                             >
                               {isRegistering ? "Registering..." : "Register to attend"}

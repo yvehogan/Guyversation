@@ -22,6 +22,7 @@ import { Pagination } from "@/components/ui/pagination"
 function mapAcceptedMenteeToMentee(mentee: AcceptedMentee): Mentee {
   return {
     id: mentee.id,
+    menteeUserId: mentee.menteeUserId,
     name: mentee.name,
     email: mentee.email,
     age: mentee.age ?? 0,
@@ -65,7 +66,6 @@ export default function MentorPage() {
     hasPrevious: false
   })
 
-  // Listen for search updates from dashboard header
   useEffect(() => {
     const getSearchKey = () => {
       return activeTab === "mentees" 
@@ -78,11 +78,9 @@ export default function MentorPage() {
       const savedSearch = localStorage.getItem(searchKey) || "";
       if (savedSearch !== search) {
         setSearch(savedSearch);
-        // Reset to first page when search changes
         if (currentPage !== 1) {
           setCurrentPage(1);
         } else {
-          // If we're already on page 1, force refresh
           if (activeTab === "requests") {
             fetchMenteeRequests();
           }
@@ -107,7 +105,7 @@ export default function MentorPage() {
       fetchMenteeRequests()
     }
     setCurrentPage(1)
-    setSearch("") // Reset search when tab changes
+    setSearch("")
   }, [activeTab])
 
   const fetchMenteeRequests = async () => {
@@ -232,8 +230,8 @@ export default function MentorPage() {
   }
 
   return (
-    <div className="container mx-auto py-6 h-full">
-      <h1 className="text-4xl font-medium mb-4">Mentor</h1>
+    <div className="container mx-auto py-2 h-full">
+      <h1 className="text-4xl font-medium mb-4 border-b border-grey-300 pb-6">Mentor</h1>
       <MentorTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
       <div className="mt-6 bg-white rounded-2xl overflow-hidden">

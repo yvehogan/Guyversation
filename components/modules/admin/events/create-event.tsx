@@ -49,6 +49,7 @@ export function CreateEventDialog({
   const [eventDescription, setEventDescription] = useState("");
   const [eventLocation, setEventLocation] = useState("");
   const [eventCategory, setEventCategory] = useState("");
+  const [eventUrl, setEventUrl] = useState("");
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -80,6 +81,7 @@ export function CreateEventDialog({
     setEventDescription("");
     setEventLocation("");
     setEventCategory("");
+    setEventUrl("");
     setStartDate("");
     setStartTime("");
     setEndDate("");
@@ -107,6 +109,7 @@ export function CreateEventDialog({
       description: eventDescription || "",
       eventType: eventCategory || "General",
       location: eventLocation || "",
+      eventUrl: eventUrl || "",
       startDate: startDate,
       startTime: startTime,
       endDate: endDate,
@@ -168,6 +171,17 @@ export function CreateEventDialog({
                   <SelectItem value="FiresideChat">Fireside chat</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="event-url">Link to Register</Label>
+              <Input
+                id="event-url"
+                placeholder="https://example.com/register"
+                value={eventUrl}
+                onChange={(e) => setEventUrl(e.target.value)}
+                className="mt-1"
+              />
             </div>
 
             <div className="w-full">

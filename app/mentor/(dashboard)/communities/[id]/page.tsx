@@ -1,12 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Heart, MessageSquare, Share2, Send } from "lucide-react";
+import { Heart, MessageSquare, Share2, Send, ArrowLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CommunityEvent } from "@/components/modules/communities/community-event";
 import { GetCommunitiesQuery, AudienceEnums } from "@/components/queries/mentor/get-communities";
+import { GetCommunityPostsQuery, type CommunityPost } from "@/components/queries/communities/get-community-posts";
+import { CreateCommunityPostQuery } from "@/components/queries/communities/create-community-post";
+import { GetEventsQuery, type EventInterface } from "@/components/queries/events/get-events";
+import { useRouter } from "next/navigation";
 
 interface Community {
   id: string;
@@ -29,7 +33,15 @@ type PageProps = {
 export default function CommunityDetailPage({ params }: PageProps) {
   const [postContent, setPostContent] = useState("");
   const [community, setCommunity] = useState<Community | null>(null);
+  const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [events, setEvents] = useState<EventInterface[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCommunity = async () => {
@@ -50,6 +62,10 @@ export default function CommunityDetailPage({ params }: PageProps) {
 
       if (foundCommunity) {
         setCommunity(foundCommunity);
+        // Fetch posts for this community
+        await fetchCommunityPosts(communityId);
+        // Fetch events
+        await fetchEvents();
       } else {
         setCommunity({
           id: communityId,
@@ -68,75 +84,78 @@ export default function CommunityDetailPage({ params }: PageProps) {
     fetchCommunity();
   }, [params.id]);
 
-  const events = [
-    {
-      id: "1",
-      title: "How I healed from anger issues",
-      type: "Mentor Story Live",
-      date: "14, November 2023",
-      time: "7pm WAT",
-      day: "13",
-      month: "MON",
-      attendees: 245,
-      interested: false,
-    },
-    {
-      id: "2",
-      title: "How I healed from anger issues",
-      type: "Mentor Story Live",
-      date: "14, November 2023",
-      time: "7pm WAT",
-      day: "13",
-      month: "MON",
-      attendees: 245,
-      interested: false,
-    },
-    {
-      id: "3",
-      title: "How I healed from anger issues",
-      type: "Mentor Story Live",
-      date: "14, November 2023",
-      time: "7pm WAT",
-      day: "13",
-      month: "MON",
-      attendees: 245,
-      interested: false,
-    },
-  ];
+  const fetchCommunityPosts = async (communityId: string) => {
+    setPostsLoading(true);
+    try {
+      const response = await GetCommunityPostsQuery({
+        communityId,
+        pageNumber: currentPage,
+        pageSize: pageSize,
+      });
 
-  const posts = [
-    {
-      id: "1",
-      author: {
-        name: "Mentor Uche",
-        avatar: "/placeholder.svg?height=40&width=40",
-        time: "5 mins ago",
-      },
-      content:
-        "I battled low self-esteem for most of my teens. What helped? Surrounding myself with people who saw the best in me, even when I didn't. If you're reading this — I believe in you.",
-      likes: 187,
-      comments: 24,
-      shares: 3,
-      liked: false,
-    },
-    {
-      id: "2",
-      author: {
-        name: "Mentor Uche",
-        avatar: "/placeholder.svg?height=40&width=40",
-        time: "5 mins ago",
-      },
-      content:
-        "I battled low self-esteem for most of my teens. What helped? Surrounding myself with people who saw the best in me, even when I didn't. If you're reading this — I believe in you.",
-      likes: 187,
-      comments: 24,
-      shares: 3,
-      liked: false,
-    },
-  ];
+      if (response.isSuccess && response.data) {
+        setPosts(response.data as CommunityPost[]); // Cast response.data as CommunityPost array
+      }
+    } catch (error) {
+      console.error("Error fetching community posts:", error);
+    } finally {
+      setPostsLoading(false);
+    }
+  };
 
-  const handlePublish = () => {
-    setPostContent("");
+  const fetchEvents = async () => {
+    setEventsLoading(true);
+    try {
+      const response = await GetEventsQuery(undefined, 1, 10);
+      if (response.isSuccess && response.data) {
+        setEvents(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    } finally {
+      setEventsLoading(false);
+    }
+  };
+
+  const handlePublish = async () => {
+    if (!postContent.trim() || !community?.id) return;
+    
+    setIsPublishing(true);
+    try {
+      const response = await CreateCommunityPostQuery({
+        communityId: community.id,
+        content: postContent.trim(),
+      });
+      
+      if (response.isSuccess) {
+        setPostContent("");
+        // Refresh posts after successful creation
+        await fetchCommunityPosts(community.id);
+      } else {
+        console.error("Failed to create post:", response.message);
+        // You might want to show a toast or error message here
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+    } finally {
+      setIsPublishing(false);
+    }
+  };
+
+  const formatPostTime = (dateString: string) => {
+    const date = new Date(dateString + (dateString.endsWith('Z') ? '' : 'Z'));
+    const now = new Date();
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes} mins ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hours ago`;
+    if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)} days ago`;
+    return date.toLocaleDateString();
+  };
+
+  const handleBackClick = () => {
+    router.push('/mentor/communities');
   };
 
   if (loading) {
@@ -150,22 +169,23 @@ export default function CommunityDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="">
-      <div className="mt-6">
+    <div className="w-full">
+      <div className="mt-3 mb-3">
+        <div className="flex items-center gap-4 mb-4">
+          <button
+            onClick={handleBackClick}
+            className="flex items-center gap-2 hover:text-neutral-600 cursor-pointer"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </button>
+        </div>
         <h1 className="text-4xl font-medium mb-2">{community?.name}</h1>
         <p className="text-neutral-200">{community?.description}</p>
-        {/* Optionally show banner */}
-        {community?.bannerUrl && (
-          <img
-            src={community.bannerUrl}
-            alt={community.name}
-            className="rounded-lg my-4 max-h-60 object-cover"
-          />
-        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mt-5">
-        <div className="md:col-span-3 space-y-4 rounded-lg max-h-[550px] overflow-y-auto pb-8 pr-2">
+      <div className="flex justify-between flex-col lg:flex-row gap-5">
+        <div className="w-full lg:w-[65%] space-y-4 rounded-lg max-h-[550px] overflow-y-auto pb-12 pr-2">
           {/* Create Post Section */}
           <div className="space-y-4 bg-white rounded-[30px] px-6 py-4">
             <h2 className="text-xl font-medium">Create Post</h2>
@@ -181,10 +201,10 @@ export default function CommunityDetailPage({ params }: PageProps) {
               <Button
                 onClick={handlePublish}
                 className=""
-                disabled={!postContent.trim()}
+                disabled={!postContent.trim() || isPublishing}
               >
                 <Send className="h-4 w-4 mr-2" />
-                Publish
+                {isPublishing ? "Publishing..." : "Publish"}
               </Button>
             </div>
           </div>
@@ -192,52 +212,66 @@ export default function CommunityDetailPage({ params }: PageProps) {
           {/* Posts Section */}
           <div className="">
             <div className="space-y-6">
-              {posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="space-y-4 bg-white rounded-[30px] px-6 py-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage
-                        src={post.author.avatar || "/placeholder.svg"}
-                        alt={post.author.name}
-                      />
-                      <AvatarFallback>{post.author.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">{post.author.name}</p>
-                      <p className="text-sm text-gray-500">
-                        {post.author.time}
-                      </p>
+              {postsLoading ? (
+                <div className="text-center py-10">
+                  <p className="text-gray-500">Loading posts...</p>
+                </div>
+              ) : !posts || posts.length === 0 ? (
+                <div className="text-center py-10">
+                  <p className="text-gray-500">No posts yet. Be the first to share something!</p>
+                </div>
+              ) : (
+                posts.map((post) => (
+                  <div
+                    key={post.id}
+                    className="space-y-4 bg-white rounded-[30px] px-6 py-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarImage
+                          src={post.author.avatarUrl || "/placeholder.svg"}
+                          alt={post.author.name}
+                        />
+                        <AvatarFallback>{post.author.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium">{post.author.name}</p>
+                        <p className="text-sm text-gray-500">
+                          {formatPostTime(post.createdDate)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-grey-200 rounded-lg p-4">
+                      <p>{post.content}</p>
+                    </div>
+
+                    <div className="flex justify-between items-center gap-6">
+                      <button 
+                        className={`flex items-center gap-1 hover:text-primary-300 ${
+                          post.isLikedByCurrentUser ? "text-red-500" : "text-neutral-100"
+                        }`}
+                      >
+                        <Heart className={`h-5 w-5 ${post.isLikedByCurrentUser ? "fill-current" : ""}`} />
+                        <span>{post.likesCount} Likes</span>
+                      </button>
+                      <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
+                        <MessageSquare className="h-5 w-5" />
+                        <span>{post.commentsCount} Comments</span>
+                      </button>
+                      <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
+                        <Share2 className="h-5 w-5" />
+                        <span>{post.sharesCount} Shares</span>
+                      </button>
                     </div>
                   </div>
-
-                  <div className="bg-grey-200 rounded-lg p-4">
-                    <p>{post.content}</p>
-                  </div>
-
-                  <div className="flex justify-between items-center gap-6">
-                    <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
-                      <Heart className="h-5 w-5" />
-                      <span>{post.likes} Likes</span>
-                    </button>
-                    <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
-                      <MessageSquare className="h-5 w-5" />
-                      <span>{post.comments} Comments</span>
-                    </button>
-                    <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
-                      <Share2 className="h-5 w-5" />
-                      <span>{post.shares} Shares</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>
 
-        <div className="md:col-span-2">
+        <div className="w-full lg:w-[35%]">
           {/* Upcoming Events Section */}
           <div className="">
             <div className="flex justify-start items-center mb-3">
@@ -249,10 +283,39 @@ export default function CommunityDetailPage({ params }: PageProps) {
               </Button>
             </div>
 
-            <div className="space-y-6 max-h-[500px] overflow-y-auto pb-8 bg-white py-8 px-4 rounded-[30px]">
-              {events.map((event) => (
-                <CommunityEvent key={event.id} event={event} />
-              ))}
+            <div className="space-y-6 max-h-[450px] overflow-y-auto pb-12 bg-white py-8 px-4 rounded-[30px]">
+              {eventsLoading ? (
+                <div className="text-center py-10">
+                  <p className="text-gray-500">Loading events...</p>
+                </div>
+              ) : events.length === 0 ? (
+                <div className="text-center py-10">
+                  <p className="text-gray-500">No upcoming events.</p>
+                </div>
+              ) : (
+                events.map((event) => (
+                  <CommunityEvent 
+                    key={event.id} 
+                    event={{
+                      id: event.id,
+                      title: event.title,
+                      type: "Event",
+                      date: new Date(event.startDate).toLocaleDateString('en-US', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric' 
+                      }),
+                      time: event.startTime,
+                      day: new Date(event.startDate).getDate().toString(),
+                      month: new Date(event.startDate).toLocaleDateString('en-US', { 
+                        weekday: 'short' 
+                      }).toUpperCase(),
+                      attendees: event.attendeeCount,
+                      interested: false,
+                    }} 
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>

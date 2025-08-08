@@ -9,9 +9,9 @@ interface MentorTabsProps {
 
 export function MentorTabs({ activeTab, onTabChange }: MentorTabsProps) {
   return (
-    <div className="inline-flex space-x-4 bg-white p-2 rounded-full">
+    <div className="inline-flex space-x-4 bg-white p-1 rounded-full">
       <button
-        className={`flex items-center gap-2 px-6 py-2 rounded-full text-base font-normal transition-colors cursor-pointer ${
+        className={`flex items-center gap-2 px-10 py-2.5 rounded-full text-base font-normal transition-colors cursor-pointer ${
           activeTab === "mentees" ? "bg-secondary-400 text-white" : "text-neutral-200 hover:bg-gray-50"
         }`}
         onClick={() => onTabChange("mentees")}
@@ -20,7 +20,7 @@ export function MentorTabs({ activeTab, onTabChange }: MentorTabsProps) {
         Mentees
       </button>
       <button
-        className={`flex items-center gap-2 px-6 py-2 rounded-full text-base font-normal transition-colors ${
+        className={`flex items-center gap-2 px-10 py-2 rounded-full text-base font-normal transition-colors ${
           activeTab === "requests" ? "bg-secondary-400 text-white" : "text-neutral-200 hover:bg-gray-50"
         }`}
         onClick={() => onTabChange("requests")}

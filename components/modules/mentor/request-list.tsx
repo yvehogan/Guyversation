@@ -28,23 +28,22 @@ export function RequestsList({
             <table className="min-w-full table-fixed">
               <thead className="bg-neutral-100 text-white">
                 <tr>
-                  <th className="py-4 px-3 md:px-2 w-12 text-left font-medium">
-                    {" "}
-                  </th>
-                  <th className="py-4 px-6 md:px-4 w-16 text-left font-medium"></th>
-                  <th className="py-4 px-6 md:px-4 w-1/3 text-left font-medium">
+                  <th className="py-4 px-4 w-8 text-left font-medium"></th>
+                  <th className="py-4 px-4 w-1/3 text-left font-medium">
                     Name
                   </th>
-                  <th className="py-4 px-6 md:px-4 w-16 text-left font-medium">
+                  <th className="py-4 px-4 w-16 text-right font-medium">
                     Age
                   </th>
-                  <th className="py-4 px-6 md:px-4 w-1/4 text-left font-medium">
+                  <th className="py-4 px-4 w-1/4 text-left font-medium">
                     Location
                   </th>
-                  <th className="py-4 px-6 md:px-4 w-1/6 text-left font-medium">
+                  <th className="py-4 px-4 w-1/6 text-left font-medium">
                     Date
                   </th>
-                  <th className="py-4 px-6 md:px-4 w-1/6 text-right font-medium"></th>
+                  <th className="py-4 px-4 w-1/6 text-left font-medium">
+                    Action
+                  </th>
                 </tr>
               </thead>
             </table>
@@ -55,30 +54,40 @@ export function RequestsList({
         <table className="min-w-full table-fixed text-neutral-100">
           <tbody>
             {requests.map((request, index) => (
-              <tr key={request.id} className="border-b hover:bg-gray-50">
-                <td className="py-6 px-4 w-8">{index + 1}</td>
-
+              <tr
+                key={request.id}
+                className={`${
+                  index !== requests.length - 1
+                    ? "border-b border-gray-200"
+                    : ""
+                } hover:bg-gray-50`}
+              >
+                <td className="py-4 px-4 w-8">{index + 1}</td>
                 <td className="py-4 px-4 w-1/3">
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarImage
-                        src={request.menteeAvatarUrl ||  "https://github.com/shadcn.png"}
+                        src={
+                          request.menteeAvatarUrl ||
+                          "https://github.com/shadcn.png"
+                        }
                         alt={request.name}
                       />
                       <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <span className="font-medium">{request.name}</span>
-
                   </div>
                 </td>
-                <td className="py-4 px-6 md:px-4 w-16">{request.menteeAge || "N/A"}</td>
-                <td className="py-4 px-6 md:px-4 w-1/4">
+                <td className="py-4 px-4 w-16 text-right">
+                  {request.menteeAge || "N/A"}
+                </td>
+                <td className="py-4 px-4 w-1/4">
                   {request.menteeLocation || "N/A"}
                 </td>
-                <td className="py-4 px-6 md:px-4 w-1/6">
+                <td className="py-4 px-4 w-1/6">
                   {new Date(request.createdDate).toLocaleDateString()}
                 </td>
-                <td className="py-4 text-right pr-4 h-7">
+                <td className="py-4 px-4 w-1/6 text-left">
                   <Button
                     variant="outline"
                     size="sm"

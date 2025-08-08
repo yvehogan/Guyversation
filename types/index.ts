@@ -1,10 +1,10 @@
 export type Mentee = {
     id: string
+    menteeUserId: string
     name: string
     email: string
     age: number
     location: string
-    time: string
     avatar: string
     goal: string
     careerPath: string
@@ -13,4 +13,5 @@ export type Mentee = {
       twitter?: string
       linkedin?: string
     }
+    time: string
   }

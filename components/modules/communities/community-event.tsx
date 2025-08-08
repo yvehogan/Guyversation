@@ -76,7 +76,7 @@ export function CommunityEvent({ event }: CommunityEventProps) {
   
   {/* Attendees at bottom */}
   <div className="flex items-center absolute -bottom-5 right-0 whitespace-nowrap">
-    <div className="flex -space-x-2 mr-2">
+    {/* <div className="flex -space-x-2 mr-2">
       {[1, 2, 3].map((i) => (
         <Avatar key={i} className="border-2 border-white h-6 w-6">
           <AvatarImage
@@ -86,7 +86,7 @@ export function CommunityEvent({ event }: CommunityEventProps) {
           <AvatarFallback>A</AvatarFallback>
         </Avatar>
       ))}
-    </div>
+    </div> */}
     <span className="text-xs text-gray-600">
       {event.attendees} attendees
     </span>

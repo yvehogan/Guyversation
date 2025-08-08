@@ -10,6 +10,7 @@ import { useEffect, useState, useRef } from "react"
 export function Appbar() {
   const pathname = usePathname()
   const isCommunitiesPage = pathname?.startsWith("/dashboard/communities")
+  const isDashboardPage = pathname === "/mentor" || pathname === "/mentor/"
   const [userName, setUserName] = useState("User")
   const [userRole, setUserRole] = useState("")
   const [userInitials, setUserInitials] = useState("U")
@@ -22,9 +23,7 @@ export function Appbar() {
     if (pathname?.includes("/communities")) return "mentor-communities"
     if (pathname?.includes("/events")) return "mentor-events"
     
-    // Add detection for mentors page with mentees/requests tabs
     if (pathname?.includes("/mentors")) {
-      // Check URL for active tab - default to mentees
       return pathname?.includes("requests") ? "mentor-requests" : "mentor-mentees"
     }
     
@@ -107,17 +106,22 @@ export function Appbar() {
   const shouldShowSearch = getCurrentContext() !== null;
 
   return (
-    <header className={`flex flex-col md:flex-row justify-between w-full items-center gap-x-10 px-5 md:px-10 mt-7 mb-5 ${
-      isCommunitiesPage ? 'h-24 md:h-10' : 'h-38 md:h-20'
+    <header className={`flex flex-col md:flex-row w-full items-center gap-x-10 px-5 md:px-10 mt-4 md:mt-7 mb-3 md:mb-5 ${
+      isDashboardPage ? 'justify-between' : 'justify-between'
+    } ${
+      isCommunitiesPage ? 'h-16 md:h-10' : 'h-20 md:h-20'
     }`}>
-      {!isCommunitiesPage && (
+      {isDashboardPage && (
         <div>
-          <h1 className="text-2xl md:text-4xl font-medium tracking-tight">Welcome back, {userName}!</h1>
-          <p className="text-neutral-200 mt-2">Let&apos;s see what&apos;s on your plate today.</p>
+          <h1 className="text-xl md:text-4xl font-medium tracking-tight">Welcome back, {userName}!</h1>
+          <p className="text-neutral-200 mt-1 md:mt-2 text-sm md:text-base">Let&apos;s see what&apos;s on your plate today.</p>
         </div>
       )}
       
-      <div className={`flex items-center gap-4 ${isCommunitiesPage ? "w-full justify-between" : ""}`}>
+      <div className={`flex items-center gap-4 ${
+        isCommunitiesPage ? "w-full justify-between" : 
+        isDashboardPage ? "" : "w-full justify-between"
+      }`}>
         {shouldShowSearch && (
           <div className="relative">
             <Search className="absolute left-4 top-4 h-4 w-4 text-muted-foreground" />
@@ -126,14 +130,14 @@ export function Appbar() {
               placeholder={getPlaceholderText()}
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
-              className={`w-full md:min-w-[200px] rounded-full pl-10 bg-white ${
-                isCommunitiesPage ? 'md:w-[500px]' : 'md:w-[300px]'
+              className={`w-full rounded-full pl-10 bg-white ${
+                isCommunitiesPage ? 'md:w-[500px]' : 'md:w-[400px]'
               }`}
             />
           </div>
         )}
         <div className="md:flex items-center gap-2 hidden">
-          <Avatar>
+          <Avatar className="h-[40px] w-[40px]">
             <AvatarImage src="" alt="profile image" />
             <AvatarFallback>{userInitials}</AvatarFallback>
           </Avatar>

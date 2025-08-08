@@ -2,13 +2,16 @@
 
 import { useState, useEffect, useRef } from "react"
 import { CommunityCard } from "@/components/modules/communities/community-card"
+import { CommunityTabNavigation } from "@/components/modules/communities/community-tab-navigation"
 import { GetCommunitiesQuery, AudienceEnums } from "@/components/queries/mentor/get-communities"
+import { GetMyCommunitiesQuery } from "@/components/queries/mentor/get-my-communities"
 import { LoadingOverlay } from "@/components/ui/loading-overlay"
 import { Pagination } from "@/components/ui/pagination"
 
 type SortOption = "Size" | "Name" | "Recent"
 
 export default function CommunitiesPage() {
+  const [activeTab, setActiveTab] = useState<"my-communities" | "all-communities">("my-communities")
   const [sortBy, setSortBy] = useState<SortOption>("Size")
   const [communities, setCommunities] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -73,17 +76,34 @@ export default function CommunitiesPage() {
     };
   }, [search]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+    setSearch("");
+    fetchCommunities();
+  }, [activeTab]);
+
   const fetchCommunities = async () => {
     setLoading(true);
     
     try {
-      console.log("Fetching communities with search:", search);
-      const response = await GetCommunitiesQuery({ 
-        audience: "Mentors",
-        pageNumber: currentPage,
-        pageSize: pageSize,
-        searchKey: search && search.trim() !== "" ? search : undefined
-      });
+      console.log("Fetching communities with search:", search, "tab:", activeTab);
+      
+      let response;
+      
+      if (activeTab === "my-communities") {
+        response = await GetMyCommunitiesQuery({ 
+          pageNumber: currentPage,
+          pageSize: pageSize,
+          searchKey: search && search.trim() !== "" ? search : undefined
+        });
+      } else {
+        response = await GetCommunitiesQuery({ 
+          audience: "Mentors",
+          pageNumber: currentPage,
+          pageSize: pageSize,
+          searchKey: search && search.trim() !== "" ? search : undefined
+        });
+      }
       
       setCommunities(
         response.data.communities.map((c: any) => ({
@@ -93,7 +113,7 @@ export default function CommunitiesPage() {
           status: c.privacy === 1 ? "open" : "closed",
           participants: c.memberCount,
           image: c.bannerUrl || "/banner.png",
-          joined: false,
+          joined: activeTab === "my-communities" ? true : false,
           requestSent: false,
         }))
       );
@@ -123,39 +143,51 @@ export default function CommunitiesPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const getTabTitle = () => {
+    return activeTab === "my-communities" ? "My Communities" : "All Communities";
+  };
+
   return (
-    <div className="relative w-full">
+    <div className="relative w-full min-h-screen">
       {/* Overlay loading state */}
       {loading && <LoadingOverlay text="Loading communities..." />}
 
-      <div className="py-6 flex flex-col h-full w-full px-0">
-        <h1 className="text-4xl font-medium mb-6">Communities</h1>
+      <div className="py-2 flex flex-col w-full px-0">
+        <h1 className="text-4xl font-medium mb- pb-6">Communities</h1>
         
-        <div className="flex justify-between items-center mb-5">
-          <p className="text-black text-sm">
-            We&apos;ve found <span className="font-medium">{paginationMetadata.totalCount}</span> communities for you
-          </p>
-        </div>
-
-        <div className="space-y-4 overflow-y-auto mb-12 h-full w-full">
+        <CommunityTabNavigation 
+          activeTab={activeTab} 
+          onTabChange={(tab) => setActiveTab(tab as "my-communities" | "all-communities")} 
+        />
+        
+        <div className="mt-6 w-full mb-10">
           {loading && communities.length === 0 ? (
             <div className="text-center py-10 text-lg">Loading communities...</div>
           ) : communities.length === 0 ? (
-            <div className="text-center py-10 text-lg">No communities found</div>
+            <div className="text-center py-10 text-lg">
+              {activeTab === "my-communities" 
+                ? "No communities found" 
+                : "You haven't joined any communities yet"
+              }
+            </div>
           ) : (
-            <>
-              {communities.map((community) => (
-                <CommunityCard key={community.id} community={community} />
-              ))}
+            <div className="space-y-6">
+              <div className="space-y-4">
+                {communities.map((community) => (
+                  <CommunityCard 
+                    key={community.id} 
+                    community={community} 
+                  />
+                ))}
+              </div>
               
-              {paginationMetadata.totalPages > 1 && (
+              <div className="flex justify-center mb-8">
                 <Pagination 
                   metadata={paginationMetadata}
                   onPageChange={handlePageChange}
-                  className="mt-6"
                 />
-              )}
-            </>
+              </div>
+            </div>
           )}
         </div>
       </div>

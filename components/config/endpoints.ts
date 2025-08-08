@@ -28,6 +28,13 @@ export const endpoints = () => {
       delete: (communityId: string) => `/communities/${communityId}`,
       join: (id: string) => `/communities/${id}/join`,
       leave: (communityId: string) => `/communities/${communityId}/leave`,
+      myCommunities: `/communities/my-communities`,
+      getPosts: (communityId: string) => `/communities/${communityId}/posts`,
+      createPost: (communityId: string) => `/communities/${communityId}/posts`,
+      updatePost: (postId: string) => `/communities/posts/${postId}`,
+      deletePost: (postId: string) => `/communities/posts/${postId}`,
+      likePost: (postId: string) => `/communities/posts/${postId}/like`,
+      
     },
     events: {
       create: `/events`,
@@ -46,6 +53,13 @@ export const endpoints = () => {
       rejectMentee: `mentormenteerelations/reject-mentee`,
       details: (menteeId: string) => `/mentees/${menteeId}`,
       requests: `/mentees/requests`,
+    },
+    chat: {
+      chats: `/chats`,
+      send_message: (chatId: string) => `/chats/${chatId}/messages`,
+      receive_message: (chatId: string) => `/chats/${chatId}/messages`,
     }
   };
 };
+
+

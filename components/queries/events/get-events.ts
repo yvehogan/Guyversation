@@ -11,6 +11,7 @@ export interface EventInterface {
   startTime: string;
   endDate: string;
   endTime: string;
+  eventUrl?: string;
   location: string;
   attendeeCount: number;
 }
