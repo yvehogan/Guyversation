@@ -2,25 +2,23 @@ import { endpoints } from "@/components/config/endpoints";
 import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
-export interface PersonalDetails {
-  id: string;
-  firstName: string;
-  lastName: string;
-  meetingLink?: string;
-  hasUpdatedProfile?: boolean;
+export interface MentorDashboardStats {
+  totalSessions: number;
+  totalCommunities: number;
+  totalMentees: number;
 }
 
-export interface GetPersonalDetailsResponse {
+export interface GetMentorDashboardResponse {
   isSuccess: boolean;
   statusCode: string;
   message: string;
-  data: PersonalDetails | null;
+  data: MentorDashboardStats | null;
 }
 
-export const GetPersonalDetailsQuery = async (): Promise<GetPersonalDetailsResponse> => {
+export const GetMentorDashboardQuery = async (): Promise<GetMentorDashboardResponse> => {
   try {
-    const url = endpoints().admin.personal_details;
-    const response = await axios.get<GetPersonalDetailsResponse>(url);
+    const url = endpoints().admin.mentor_dashboard;
+    const response = await axios.get<GetMentorDashboardResponse>(url);
     return response.data;
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {

@@ -17,6 +17,7 @@ export function AvailabilityStep({ profileData, updateProfileData, onNext, onPre
   const [selectedDays, setSelectedDays] = useState<string[]>([])
   const [timeFrom, setTimeFrom] = useState("09:00")
   const [timeTo, setTimeTo] = useState("16:00")
+  const [meetingLink, setMeetingLink] = useState("")
 
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
@@ -54,6 +55,7 @@ export function AvailabilityStep({ profileData, updateProfileData, onNext, onPre
         days: [...selectedDays],
         timeFrom,
         timeTo,
+        meetingLink,
       }
 
       updateProfileData({
@@ -61,6 +63,7 @@ export function AvailabilityStep({ profileData, updateProfileData, onNext, onPre
       })
 
       setSelectedDays([])
+      setMeetingLink("")
     }
   }
   
@@ -124,6 +127,17 @@ export function AvailabilityStep({ profileData, updateProfileData, onNext, onPre
             </Select>
           </div>
         </div>
+      </div>
+
+      <div className="space-y-4">
+        <h2 className="text-neutral-100 font-medium">Meeting Link</h2>
+        <input
+          type="text"
+          value={meetingLink}
+          onChange={e => setMeetingLink(e.target.value)}
+          placeholder="Paste your meeting link here"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+        />
       </div>
 
       <button

@@ -17,6 +17,8 @@ export const endpoints = () => {
       revoke_user_access: `/admin/revoke-user-access`,
       user_details: `/users`,
       personal_details: `/users/me`,
+      dashboard: `/dashboard/admin-statistics`,
+      mentor_dashboard: `/dashboard/mentor-statistics`,
     },
     communities: {
       create: `/communities`,
@@ -56,6 +58,9 @@ export const endpoints = () => {
       chats: `/chats`,
       send_message: (chatId: string) => `/chats/${chatId}/messages`,
       receive_message: (chatId: string) => `/chats/${chatId}/messages`,
+    },
+    mentor: {
+      my_sessions: `/mentorshipsessionmanagement/booked-sessions`
     }
   };
 };

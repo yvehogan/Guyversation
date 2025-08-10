@@ -9,7 +9,7 @@ import { AvailabilityStep } from "./availability-step"
 import { ReviewStep } from "./review-step"
 import Cookies from "js-cookie"
 import { useQuery } from "@tanstack/react-query"
-import { getLanguages, getExpertises, getChannels, UtilityItem } from "@/components/queries/utilities/get-utilities"
+import { getLanguages, getExpertises, getChannels } from "@/components/queries/utilities/get-utilities"
 
 export type SocialMediaEntry = {
   socialMediaType: string;

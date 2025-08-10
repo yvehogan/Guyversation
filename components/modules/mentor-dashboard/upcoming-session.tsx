@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MoreVertical, Radio } from "lucide-react";
-import { IoMdRefresh } from "react-icons/io";
-import { FaTimes } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { FaCalendar } from "react-icons/fa";
 import { FaClock } from "react-icons/fa6";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { GetUpcomingSessionsQuery, UpcomingSession } from "@/components/queries/mentor/get-upcoming-sessions";
+import { GetPersonalDetailsQuery } from "@/components/queries/users/get-personal-details";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,9 +84,24 @@ const sessionItems: SessionItem[] = [
 ];
 
 export function UpcomingSessions() {
+  const [sessions, setSessions] = useState<UpcomingSession[]>([]);
+  const [meetingLink, setMeetingLink] = useState<string>("");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
   const [journalReason, setJournalReason] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      const sessionRes = await GetUpcomingSessionsQuery();
+      if (sessionRes.isSuccess && sessionRes.data) {
+        setSessions(sessionRes.data);
+      }
+      const meRes = await GetPersonalDetailsQuery();
+      if (meRes.isSuccess && meRes.data?.meetingLink) {
+        setMeetingLink(meRes.data.meetingLink);
+      }
+    })();
+  }, []);
 
   const handleJournalSubmit = () => {
     setIsJournalOpen(false);
@@ -108,18 +123,29 @@ export function UpcomingSessions() {
     <div className="flex flex-col">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-xl font-medium">
-          Upcoming Sessions <span className="text-sm text-grey-500">(7)</span>
+          Upcoming Sessions{" "}
+          <span className="text-sm text-grey-500">({sessions.length})</span>
         </h3>
         <Button variant="link" className="text-primary-400 text-sm">
           See all
         </Button>
       </div>
       <Card className="flex- flex flex-col overflow-hidden">
-        <CardContent className=" h-screen md:max-h-[620px] overflow-y-auto pr-2 pt-2 pb-40 md:pb-24">
+        <CardContent className="h-screen md:max-h-[620px] overflow-y-auto pr-2 pt-2 pb-40 md:pb-24">
           <div className="space-y-6">
-            {sessionItems.map((item, index) => {
+            {sessions.map((item, index) => {
               const colorScheme =
                 radioColorSchemes[index % radioColorSchemes.length];
+              const sessionDate = new Date(item.sessionDate);
+              const dateStr = sessionDate.toLocaleDateString(undefined, {
+                weekday: "short",
+                day: "2-digit",
+                month: "short",
+              });
+              const timeStr = sessionDate.toLocaleTimeString(undefined, {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
               return (
                 <div key={item.id} className="relative">
                   <div className="flex items-start justify-between">
@@ -131,29 +157,34 @@ export function UpcomingSessions() {
                       </div>
                       <div>
                         <p className="font-medium text-neutral-100">
-                          Chat with {item.name}
+                          {item.title}
                         </p>
                         <div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground mb-2">
                           <div className="flex items-center gap-1">
                             <FaCalendar className="h-4 w-4 text-neutral-200" />
-                            <span className="text-xs">{item.date}</span>
+                            <span className="text-xs">{dateStr}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <FaClock className="h-4 w-4 text-neutral-200" />
-                            <span className="text-xs">{item.time}</span>
+                            <span className="text-xs">{timeStr}</span>
                           </div>
                         </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="mt-2 font-normal text-xs"
-                          onClick={() => setIsJournalOpen(true)}
+                        <a
+                          href={meetingLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
-                          Write a Journal
-                        </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mt-2 font-normal text-xs"
+                          >
+                            Join meeting
+                          </Button>
+                        </a>
                       </div>
                     </div>
-                    <DropdownMenu
+                    {/* <DropdownMenu
                       open={activeDropdown === item.id}
                       onOpenChange={(open) =>
                         setActiveDropdown(open ? item.id : null)
@@ -178,7 +209,7 @@ export function UpcomingSessions() {
                           <span>Cancel Session</span>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu> */}
                   </div>
                 </div>
               );

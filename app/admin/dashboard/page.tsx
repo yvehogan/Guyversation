@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import { IoPersonOutline, IoEllipsisHorizontalCircle } from "react-icons/io5";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -9,30 +11,44 @@ import {
   CalendarDays,
   CalendarClock,
 } from "lucide-react";
+import { GetAdminDashboardQuery, AdminDashboardStats } from "@/components/queries/admin/get-dashboard";
+import { stat } from "fs";
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState<AdminDashboardStats | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const response = await GetAdminDashboardQuery();
+      if (response.isSuccess && response.data) {
+        setStats(response.data);
+      }
+    })();
+  }, []);
+
+
   const userStats = [
     {
       title: "Users",
-      value: 127,
+      value: stats?.totalUsers ?? 0,
       icon: IoPersonOutline,
       color: "text-secondary-400 bg-secondary-100",
     },
     {
       title: "Mentors",
-      value: 48,
+      value: stats?.totalMentors ?? 0,
       icon: IoPersonOutline,
       color: "text-primary-400 bg-primary-200",
     },
     {
       title: "Mentees",
-      value: 79,
+      value: stats?.totalMentees ?? 0,
       icon: IoPersonOutline,
       color: "text-secondary-500 bg-secondary-800",
     },
     {
       title: "Pending verification",
-      value: 32,
+      value: stats?.pendingVerification ?? 0,
       icon: IoEllipsisHorizontalCircle,
       color: "text-secondary-600 bg-[#CE40821A]",
     },
@@ -41,25 +57,25 @@ export default function DashboardPage() {
   const mentorshipStats = [
     {
       title: "Sessions requested",
-      value: 56,
+      value: stats?.totalBookedSessions ?? 0,
       icon: Network,
       color: "text-secondary-400 bg-secondary-100",
     },
     {
       title: "Sessions accepted",
-      value: 41,
+      value: stats?.sessionsAccepted ?? 0,
       icon: ExternalLink,
       color: "text-primary-400 bg-primary-200",
     },
     {
       title: "Sessions rejected",
-      value: 8,
+      value: stats?.totalCancelledSessions ?? 0,
       icon: FileBox,
       color: "text-secondary-500 bg-secondary-800",
     },
     {
       title: "Sessions completed",
-      value: 52,
+      value: stats?.totalCompletedSessions ?? 0,
       icon: CircleCheck,
       color: "text-secondary-600 bg-[#CE40821A]",
     },
@@ -68,25 +84,25 @@ export default function DashboardPage() {
   const communityStats = [
     {
       title: "Communities",
-      value: 33,
+      value: stats?.totalCommunities ?? 0,
       icon: Network,
       color: "text-secondary-400 bg-secondary-100",
     },
     {
       title: "Open communities",
-      value: 21,
+      value: stats?.totalOpenCommunities ?? 0,
       icon: ExternalLink,
       color: "text-primary-400 bg-primary-200",
     },
     {
       title: "Closed communities",
-      value: 12,
+      value: stats?.totalClosedCommunities ?? 0,
       icon: FileBox,
       color: "text-secondary-500 bg-secondary-800",
     },
     {
       title: "Pending request",
-      value: 17,
+      value: stats?.pendingRequest ?? 0,
       icon: Network,
       color: "text-secondary-600 bg-[#CE40821A]",
     },
@@ -95,19 +111,19 @@ export default function DashboardPage() {
   const eventStats = [
     {
       title: "Events posted",
-      value: 23,
+      value: stats?.totalEvents ?? 0,
       icon: Calendar,
       color: "text-secondary-400 bg-secondary-100",
     },
     {
       title: "Number of past events",
-      value: 12,
+      value: stats?.totalPastEvents ?? 0,
       icon: CalendarDays,
       color: "text-primary-400 bg-primary-200",
     },
     {
       title: "Upcoming events",
-      value: 11,
+      value: stats?.totalUpcomingEvents ?? 0,
       icon: CalendarClock,
       color: "text-secondary-500 bg-secondary-800",
     },
