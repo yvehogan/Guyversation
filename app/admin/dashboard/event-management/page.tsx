@@ -153,7 +153,7 @@ export default function EventManagementPage() {
               <TabsTrigger value="webinar" className="">
                 Webinar
               </TabsTrigger>
-              <TabsTrigger value="fireside" className="">
+              <TabsTrigger value="FiresideChat" className="">
                 Fireside chat
               </TabsTrigger>
             </TabsList>
