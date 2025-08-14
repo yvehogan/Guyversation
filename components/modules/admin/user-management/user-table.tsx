@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { ConfirmRevokeAccessDialog, SuccessRevokeAccessDialog } from "./revoke-access-dialog";
 import { RevokeUserAccessMutation } from "@/components/queries/admin/revoke-user-access";
 import { GetUserDetailsQuery, UserDetails } from "@/components/queries/users/get-user-details";
+import { toast } from "react-toastify";
 
 export interface UserInterface {
   id: string;
@@ -239,12 +240,15 @@ export function UsersTable({
               });
               
               if (!response.isSuccess) {
-                throw new Error(response.message || 'Failed to revoke access');
+                toast.error(response.message || 'Failed to revoke access');
+                return;
               }
               setRevokedUser(userToRevoke);
               onRevokeAccess(userToRevoke);
               setShowSuccess(true);
             } catch (error) {
+              // Fallback error
+              toast.error('Error revoking access');
               console.error('Error revoking access:', error);
             } finally {
               setIsRevoking(false);

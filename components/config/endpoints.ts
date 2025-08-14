@@ -13,6 +13,7 @@ export const endpoints = () => {
     admin: {
       invite_user: `/admin/invite-user`,
       users: `/users`,
+      delete_user: (id: string) => `/users/${id}`,
       revoke_user_access: `/admin/revoke-user-access`,
       user_details: `/users`,
       personal_details: `/users/me`,

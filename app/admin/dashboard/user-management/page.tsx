@@ -4,7 +4,6 @@ import { AddUserDialog } from "@/components/modules/admin/user-management/add-us
 import { ConfirmAddUserDialog, SuccessAddUserDialog } from "@/components/modules/admin/user-management/confirm-and-add-user-dialog";
 import { FilterTabs } from "@/components/modules/admin/user-management/filter-tabs";
 import { ConfirmRequestDialog, SuccessRequestDialog } from "@/components/modules/admin/user-management/request-dialog";
-// import { RequestsTable } from "@/components/modules/admin/user-management/requests-table";
 import { UserManagementHeader } from "@/components/modules/admin/user-management/user-header";
 import { UserProfileDialog } from "@/components/modules/admin/user-management/user-profile-dialog";
 import { UserInterface, UsersTable } from "@/components/modules/admin/user-management/user-table";
@@ -31,7 +30,6 @@ export default function UserManagementPage() {
   const [email, setEmail] = useState("");
   const [userRole, setUserRole] = useState("");
   
-  // const [activeTab, setActiveTab] = useState("all-users");
   const [activeFilter, setActiveFilter] = useState<"All Users" | "Anonymous" | "Mentee" | "Mentor">("All Users");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
@@ -41,30 +39,24 @@ export default function UserManagementPage() {
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const queryClient = useQueryClient();
   
-  // Get search term from localStorage and handle updates with debounce
   useEffect(() => {
     const checkForSearchUpdates = () => {
       const savedSearch = localStorage.getItem("search-users") || "";
       if (savedSearch !== search) {
         setSearch(savedSearch);
         
-        // Clear previous timeout to avoid multiple rapid API calls
         if (searchTimeoutRef.current) {
           clearTimeout(searchTimeoutRef.current);
         }
         
-        // Set a new timeout to delay the API call slightly
         searchTimeoutRef.current = setTimeout(() => {
-          // Force a refetch with the new search term
           queryClient.invalidateQueries({ queryKey: ["users", activeFilter, currentPage, pageSize] });
         }, 300);
       }
     };
-    
-    // Check immediately on mount
     checkForSearchUpdates();
     
-    // Set up an interval to periodically check for search changes
+
     const interval = setInterval(checkForSearchUpdates, 500);
     
     return () => {
@@ -75,7 +67,7 @@ export default function UserManagementPage() {
     };
   }, [search, activeFilter, currentPage, pageSize, queryClient]);
 
-  // Log search changes for debugging
+
   useEffect(() => {
     console.log("User search term changed to:", search);
   }, [search]);
@@ -122,7 +114,7 @@ export default function UserManagementPage() {
     firstName: user.firstName,
     lastName: user.lastName,
     userTypeName: user.userTypeName,
-    status: "Active",
+    status: user.status,
     image: user.profilePictureUrl ?? undefined,
     email: user.email,
   })) ?? [];
