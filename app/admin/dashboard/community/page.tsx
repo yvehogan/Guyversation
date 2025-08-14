@@ -158,7 +158,7 @@ export default function CommunityPage() {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-shrink-0 relative w-full sm:w-16 h-32 sm:h-16 rounded-md overflow-hidden">
                       <Image
-                        src="/banner.png"
+                        src={community.bannerUrl && community.bannerUrl.trim() !== "" ? community.bannerUrl : "/banner.png"}
                         alt={community.name}
                         fill
                         sizes="(max-width: 640px) 100vw, 64px"

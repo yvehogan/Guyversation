@@ -91,9 +91,6 @@ export default function EventsTab({ open }: EventsTabProps) {
                 {event.attendeeCount}{" "}
                 {event.attendeeCount === 1 ? "attendee" : "attendees"}
               </span>
-              <button className="text-xs bg-primary-400 text-white px-3 py-1 rounded-full">
-                View Details
-              </button>
             </div>
           </div>
         ))}

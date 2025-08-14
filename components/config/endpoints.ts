@@ -18,6 +18,7 @@ export const endpoints = () => {
       personal_details: `/users/me`,
       dashboard: `/dashboard/admin-statistics`,
       mentor_dashboard: `/dashboard/mentor-statistics`,
+      review: (id:string) => `/users/${id}/reviews`
     },
     communities: {
       create: `/communities`,
@@ -32,8 +33,8 @@ export const endpoints = () => {
       createPost: (communityId: string) => `/communities/${communityId}/posts`,
       updatePost: (postId: string) => `/communities/posts/${postId}`,
       deletePost: (postId: string) => `/communities/posts/${postId}`,
-      likePost: (postId: string) => `/communities/posts/${postId}/like`,
-      
+      likePost: (postId: string, id:string) => `/communities/${id}/posts/${postId}/like`,
+
     },
     events: {
       create: `/events`,
@@ -51,6 +52,7 @@ export const endpoints = () => {
       acceptMentee: `/mentormenteerelations/accept-mentee`,
       rejectMentee: `mentormenteerelations/reject-mentee`,
       details: (menteeId: string) => `/mentees/${menteeId}`,
+
       requests: `/mentees/requests`,
     },
     chat: {

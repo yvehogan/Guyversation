@@ -11,6 +11,7 @@ import { GetCommunityPostsQuery, type CommunityPost } from "@/components/queries
 import { CreateCommunityPostQuery } from "@/components/queries/communities/create-community-post";
 import { GetEventsQuery, type EventInterface } from "@/components/queries/events/get-events";
 import { useRouter } from "next/navigation";
+import { LikeCommunityPostMutation } from "@/components/queries/communities/like-community-post";
 
 interface Community {
   id: string;
@@ -142,6 +143,35 @@ export default function CommunityDetailPage({ params }: PageProps) {
     }
   };
 
+  const handleLikeToggle = async (postId: string, communityId: string, isLiked: boolean, index: number) => {
+    // Optimistically update UI
+    setPosts((prev) => {
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        isLikedByCurrentUser: !isLiked,
+        likesCount: updated[index].likesCount + (isLiked ? -1 : 1),
+      };
+      return updated;
+    });
+
+    // Call API
+    try {
+      await LikeCommunityPostMutation({ communityId, postId });
+    } catch (e) {
+      // Revert UI if API fails
+      setPosts((prev) => {
+        const updated = [...prev];
+        updated[index] = {
+          ...updated[index],
+          isLikedByCurrentUser: isLiked,
+          likesCount: updated[index].likesCount + (isLiked ? 1 : -1),
+        };
+        return updated;
+      });
+    }
+  };
+
   const formatPostTime = (dateString: string) => {
     const date = new Date(dateString + (dateString.endsWith('Z') ? '' : 'Z'));
     const now = new Date();
@@ -221,7 +251,7 @@ export default function CommunityDetailPage({ params }: PageProps) {
                   <p className="text-gray-500">No posts yet. Be the first to share something!</p>
                 </div>
               ) : (
-                posts.map((post) => (
+                posts.map((post, index) => (
                   <div
                     key={post.id}
                     className="space-y-4 bg-white rounded-[30px] px-6 py-4"
@@ -251,6 +281,8 @@ export default function CommunityDetailPage({ params }: PageProps) {
                         className={`flex items-center gap-1 hover:text-primary-300 ${
                           post.isLikedByCurrentUser ? "text-red-500" : "text-neutral-100"
                         }`}
+                        onClick={() => handleLikeToggle(post.id, community?.id || "", post.isLikedByCurrentUser, index)}
+                        disabled={isPublishing}
                       >
                         <Heart className={`h-5 w-5 ${post.isLikedByCurrentUser ? "fill-current" : ""}`} />
                         <span>{post.likesCount} Likes</span>
@@ -259,10 +291,10 @@ export default function CommunityDetailPage({ params }: PageProps) {
                         <MessageSquare className="h-5 w-5" />
                         <span>{post.commentsCount} Comments</span>
                       </button> */}
-                      <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
+                      {/* <button className="flex items-center gap-1 text-neutral-100 hover:text-primary-300">
                         <Share2 className="h-5 w-5" />
                         <span>{post.sharesCount} Shares</span>
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 ))

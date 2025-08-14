@@ -4,13 +4,16 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
 import { GetMentorDashboardQuery, MentorDashboardStats } from "@/components/queries/mentor/get-dashboard"
+import Cookies from "js-cookie"
 
 export function OverviewCards() {
   const [stats, setStats] = useState<MentorDashboardStats | null>(null)
 
   useEffect(() => {
+    const mentorId = Cookies.get("GUYVERSATION_USER_ID")
+    if (!mentorId) return;
     (async () => {
-      const response = await GetMentorDashboardQuery()
+      const response = await GetMentorDashboardQuery(mentorId)
       if (response.isSuccess && response.data) {
         setStats(response.data)
       }

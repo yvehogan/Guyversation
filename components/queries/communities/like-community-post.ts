@@ -2,26 +2,23 @@ import { endpoints } from "@/components/config/endpoints";
 import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
-export interface MentorDashboardStats {
-  totalSessions: number;
-  totalBookedSessions: number;
-  totalCancelledSessions: number;
-  totalCompletedSessions: number;
-  totalCommunities: number;
-  totalMentees: number;
-}
-
-export interface GetMentorDashboardResponse {
+export interface LikeCommunityPostResponse {
   isSuccess: boolean;
   statusCode: string;
   message: string;
-  data: MentorDashboardStats | null;
+  data: any;
 }
 
-export const GetMentorDashboardQuery = async (mentorId: string): Promise<GetMentorDashboardResponse> => {
+export const LikeCommunityPostMutation = async ({
+  communityId,
+  postId,
+}: {
+  communityId: string;
+  postId: string;
+}): Promise<LikeCommunityPostResponse> => {
   try {
-    const url = `${endpoints().admin.mentor_dashboard}?MentorId=${mentorId}`;
-    const response = await axios.get<GetMentorDashboardResponse>(url);
+    const url = endpoints().communities.likePost(postId, communityId);
+    const response = await axios.post<LikeCommunityPostResponse>(url);
     return response.data;
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {

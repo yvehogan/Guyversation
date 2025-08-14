@@ -2,26 +2,27 @@ import { endpoints } from "@/components/config/endpoints";
 import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
-export interface MentorDashboardStats {
-  totalSessions: number;
-  totalBookedSessions: number;
-  totalCancelledSessions: number;
-  totalCompletedSessions: number;
-  totalCommunities: number;
-  totalMentees: number;
+export interface MentorReview {
+  id: string;
+  reviewerName: string;
+  reviewerAvatarUrl: string | null;
+  reviewerLocation: string | null;
+  comment: string;
+  rating?: number;
+  createdDate?: string;
 }
 
-export interface GetMentorDashboardResponse {
+export interface GetMentorReviewsResponse {
   isSuccess: boolean;
   statusCode: string;
   message: string;
-  data: MentorDashboardStats | null;
+  data: MentorReview[];
 }
 
-export const GetMentorDashboardQuery = async (mentorId: string): Promise<GetMentorDashboardResponse> => {
+export const GetMentorReviewsQuery = async (mentorId: string): Promise<GetMentorReviewsResponse> => {
   try {
-    const url = `${endpoints().admin.mentor_dashboard}?MentorId=${mentorId}`;
-    const response = await axios.get<GetMentorDashboardResponse>(url);
+    const url = endpoints().admin.review(mentorId);
+    const response = await axios.get<GetMentorReviewsResponse>(url);
     return response.data;
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {
@@ -29,7 +30,7 @@ export const GetMentorDashboardQuery = async (mentorId: string): Promise<GetMent
         isSuccess: false,
         statusCode: error.response.status.toString(),
         message: error.response.data?.message || "An error occurred.",
-        data: null,
+        data: [],
       };
     }
     const errorMessage =
@@ -38,7 +39,7 @@ export const GetMentorDashboardQuery = async (mentorId: string): Promise<GetMent
       isSuccess: false,
       statusCode: "500",
       message: errorMessage,
-      data: null,
+      data: [],
     };
   }
 };

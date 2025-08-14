@@ -16,7 +16,7 @@ interface CommunityCardProps {
     description: string
     status: string
     participants: number
-    image: string
+    bannerUrl: string
     joined: boolean
     requestSent: boolean
   }
@@ -87,7 +87,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
       <div className="flex w-full md:w-auto justify-between md:justify-start gap-5 items-center">
           <div className="h-16 w-16 rounded-lg overflow-hidden flex-shrink-0">
             <Image
-              src={community.image || "/placeholder.svg"}
+              src={community.bannerUrl || "/placeholder.svg"}
               alt={community.name}
               height={64}
               width={64}
@@ -97,9 +97,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
           </div>
         <div className="flex flex-col min-w-0 flex-1 md:flex-initial">
           <div className="flex items-center gap-2 mb-3">
-            <Link href={`/dashboard/communities/${community.id}`} className="text-xl font-medium hover:underline truncate">
               {community.name}
-            </Link>
             <Badge
               variant={community.status === "open" ? "default" : "secondary"}
               className={
