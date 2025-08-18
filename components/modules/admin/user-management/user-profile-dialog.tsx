@@ -87,7 +87,7 @@ export function UserProfileDialog({
 
           {activeTab === "profile" && <ProfileTab user={user} />}
           {activeTab === "sessions" && <SessionsTab user={user} />}
-          {activeTab === "stats" && <StatsTab />}
+          {activeTab === "stats" && user?.id && <StatsTab mentorId={user.id} />}
           {activeTab === "review" && <ReviewTab />}
           {activeTab === "events" && <EventsTab open={open} />}
         </div>

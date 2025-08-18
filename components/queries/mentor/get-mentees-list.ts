@@ -41,27 +41,26 @@ export interface GetAcceptedMenteesParams {
   pageNumber: number;
   pageSize: number;
   searchKey?: string;
+  userId?: string;
 }
 
 export const GetAcceptedMenteesQuery = async (params: GetAcceptedMenteesParams): Promise<GetAcceptedMenteesResponse> => {
   try {
     const queryParams = new URLSearchParams();
-    
     if (params.pageNumber) {
       queryParams.append('PageNumber', params.pageNumber.toString());
     }
-    
     if (params.pageSize) {
       queryParams.append('PageSize', params.pageSize.toString());
     }
-    
     if (params.searchKey && params.searchKey.trim() !== '') {
       queryParams.append('SearchKey', params.searchKey.trim());
     }
-    
+    if (params.userId) {
+      queryParams.append('UserId', params.userId);
+    }
     const baseEndpoint = endpoints().mentees.mentees.split('?')[0];
     const url = `${baseEndpoint}?Status=Accepted&${queryParams.toString()}`;
-    
     const response = await axios.get<GetAcceptedMenteesResponse>(url);
     return response.data;
   } catch (error) {

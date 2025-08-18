@@ -6,10 +6,11 @@ import { FilterTabs } from "@/components/modules/admin/user-management/filter-ta
 import { ConfirmRequestDialog, SuccessRequestDialog } from "@/components/modules/admin/user-management/request-dialog";
 import { UserManagementHeader } from "@/components/modules/admin/user-management/user-header";
 import { UserProfileDialog } from "@/components/modules/admin/user-management/user-profile-dialog";
+import { ViewMenteeProfile } from "@/components/modules/admin/user-management/view-mentee-profile";
 import { UserInterface, UsersTable } from "@/components/modules/admin/user-management/user-table";
 import { useState, useEffect, useRef } from "react";
 import { GetUsersQuery, GetUsersResponse } from "@/components/queries/admin/get-users";
-import { UserDetails } from "@/components/queries/users/get-user-details";
+import { GetUserDetailsQuery, UserDetails } from "@/components/queries/users/get-user-details";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { Pagination } from "@/components/ui/pagination";
@@ -27,6 +28,7 @@ export default function UserManagementPage() {
   
   const [selectedUser, setSelectedUser] = useState<UserInterface | null>(null);
   const [viewingUser, setViewingUser] = useState<UserDetails | null>(null);
+  const [menteeProfile, setMenteeProfile] = useState<any | null>(null);
   const [email, setEmail] = useState("");
   const [userRole, setUserRole] = useState("");
   
@@ -141,8 +143,41 @@ export default function UserManagementPage() {
     setSuccessRevokeOpen(true);
   };
 
-  const handleViewProfile = (user: UserDetails) => {
-    setViewingUser(user);
+  const handleViewProfile = async (user: UserDetails) => {
+    const response = await GetUserDetailsQuery(user.id);
+    if (!response.isSuccess || !response.data) {
+      toast.error(response.message || "Failed to fetch user details.");
+      return;
+    }
+    if (response.data.userTypeName?.toLowerCase() === "mentee") {
+      const educations = Array.isArray((response.data as any).educations)
+        ? (response.data as any).educations
+        : [];
+      setMenteeProfile({
+        id: response.data.id,
+        menteeUserId: response.data.id,
+        name: `${response.data.firstName} ${response.data.lastName}`,
+        age: response.data.age ?? "-",
+        location: response.data.location ?? "-",
+        time: response.data.time ?? "-",
+        avatar: response.data.profilePictureUrl ?? "",
+        goal: response.data.goal ?? "",
+        careerPath: educations.length > 0
+          ? educations
+              .map((edu: any) => edu.fieldOfStudy)
+              .filter(Boolean)
+              .join(", ")
+          : "",
+        interests: Array.isArray(response.data.interests)
+          ? response.data.interests.map((i: any) => typeof i === "string" ? i : i.name || "")
+          : [],
+        socials: response.data.socials ?? {},
+      });
+      setViewingUser(null);
+    } else {
+      setViewingUser(response.data);
+      setMenteeProfile(null);
+    }
     setProfileOpen(true);
   };
 
@@ -238,25 +273,23 @@ export default function UserManagementPage() {
         onOpenChange={setSuccessAddOpen}
       />
 
-      {/* <ConfirmRevokeAccessDialog
-        open={confirmRevokeOpen}
-        onOpenChange={setConfirmRevokeOpen}
-        onConfirm={handleConfirmRevoke}
-      />
-
-      <SuccessRevokeAccessDialog
-        open={successRevokeOpen}
-        onOpenChange={setSuccessRevokeOpen}
-        user={selectedUser}
-      /> */}
-
-      <UserProfileDialog
-        open={profileOpen}
-        onOpenChange={setProfileOpen}
-        user={viewingUser}
-        isRequest={false}
-        onAcceptRequest={() => setConfirmRequestOpen(true)}
-      />
+      {menteeProfile ? (
+        <ViewMenteeProfile
+          mentee={menteeProfile}
+          open={profileOpen}
+          onOpenChange={setProfileOpen}
+          onAccept={() => {}}
+          onSendMessage={() => {}}
+        />
+      ) : (
+        <UserProfileDialog
+          open={profileOpen}
+          onOpenChange={setProfileOpen}
+          user={viewingUser}
+          isRequest={false}
+          onAcceptRequest={() => setConfirmRequestOpen(true)}
+        />
+      )}
 
       <ConfirmRequestDialog
         open={confirmRequestOpen}

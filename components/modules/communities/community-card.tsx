@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
@@ -17,6 +16,7 @@ interface CommunityCardProps {
     status: string
     participants: number
     bannerUrl: string
+    image: string
     joined: boolean
     requestSent: boolean
   }
@@ -82,12 +82,13 @@ export function CommunityCard({ community }: CommunityCardProps) {
 
   const buttonConfig = getButtonContent()
 
+
   return (
     <div className="flex flex-col md:flex-row justify-between gap-4 items-center bg-white p-5 rounded-lg w-full">
       <div className="flex w-full md:w-auto justify-between md:justify-start gap-5 items-center">
           <div className="h-16 w-16 rounded-lg overflow-hidden flex-shrink-0">
             <Image
-              src={community.bannerUrl || "/placeholder.svg"}
+              src={community.image && community.image !== "null" ? community.image : "/placeholder.svg"}
               alt={community.name}
               height={64}
               width={64}

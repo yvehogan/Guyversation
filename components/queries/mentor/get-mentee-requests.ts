@@ -40,29 +40,27 @@ export interface GetMenteeRequestsParams {
   pageNumber: number;
   pageSize: number;
   searchKey?: string;
+  userId?: string;
 }
 
-export const GetMenteeRequestsQuery = async (params: GetMenteeRequestsParams = { pageNumber: 1, pageSize: 25 }): Promise<GetMenteeRequestsResponse> => {
+export const GetMenteeRequestsQuery = async (params: GetMenteeRequestsParams): Promise<GetMenteeRequestsResponse> => {
   try {
     const queryParams = new URLSearchParams();
-    
     if (params.pageNumber) {
       queryParams.append('PageNumber', params.pageNumber.toString());
     }
-    
     if (params.pageSize) {
       queryParams.append('PageSize', params.pageSize.toString());
     }
-    
     if (params.searchKey && params.searchKey.trim() !== '') {
       queryParams.append('SearchKey', params.searchKey.trim());
     }
-    
+    if (params.userId) {
+      queryParams.append('UserId', params.userId);
+    }
     const baseEndpoint = endpoints().mentees.list.split('?')[0];
     const url = `${baseEndpoint}?Status=Pending&${queryParams.toString()}`;
-    
     const response = await axios.get<GetMenteeRequestsResponse>(url);
-
     return response.data;
   } catch (error) {
     if (axiosDefault.isAxiosError(error) && error.response) {

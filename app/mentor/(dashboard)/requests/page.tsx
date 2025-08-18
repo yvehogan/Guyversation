@@ -20,7 +20,11 @@ export default function MenteeRequestsPage() {
   const fetchMenteeRequests = async () => {
     setLoading(true);
     try {
-      const response = await GetMenteeRequestsQuery();
+      const response = await GetMenteeRequestsQuery({
+        pageNumber: 1,
+        pageSize: 1000,
+        userId: "",
+      });
       
       if (response.isSuccess && response.data.mentees) {
         setMenteeRequests(response.data.mentees);
@@ -41,7 +45,6 @@ export default function MenteeRequestsPage() {
 
   const handleAcceptRequest = async (id: string) => {
     setShowRequestProfile(false);
-    // Show loading state
     setLoading(true);
     
     try {

@@ -11,6 +11,14 @@ export interface UserDetailsResponse {
 }
 
 export interface UserDetails {
+  educations(educations: any): unknown;
+  age: string;
+  location: string;
+  time: string;
+  goal: string;
+  careerPath: string;
+  interests: never[];
+  socials: {};
   id: string;
   firstName: string;
   lastName: string;

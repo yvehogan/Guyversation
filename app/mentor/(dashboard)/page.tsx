@@ -13,7 +13,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchRequests = async () => {
-      const response = await GetMenteeRequestsQuery();
+      const response = await GetMenteeRequestsQuery({
+        pageNumber: 1,
+        pageSize: 1000,
+        userId: "",
+      });
       if (response.isSuccess && response.data.mentees) {
         setRequests(response.data.mentees);
       }

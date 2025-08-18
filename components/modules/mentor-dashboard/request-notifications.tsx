@@ -2,8 +2,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { MenteeRequest } from "@/components/queries/mentor/get-mentee-requests";
+import { GetMenteeRequestsQuery, MenteeRequest } from "@/components/queries/mentor/get-mentee-requests";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export interface RequestNotificationsProps {
   requests?: MenteeRequest[];
@@ -13,11 +14,27 @@ export interface RequestNotificationsProps {
 }
 
 export function RequestNotifications({
-  requests = [],
-  onViewRequest,
-  onAccept,
-  onDecline,
+  requests: _requests,
 }: RequestNotificationsProps) {
+  const [requests, setRequests] = useState<MenteeRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchRequests() {
+      setLoading(true);
+      const res = await GetMenteeRequestsQuery({
+        pageNumber: 1,
+        pageSize: 1000,
+        userId: "",
+      });
+      setRequests(res.data?.mentees || []);
+      setLoading(false);
+    }
+    fetchRequests();
+  }, []);
+
+  const hasRequests = Array.isArray(requests) && requests.length > 0;
+
   return (
     <div className="flex flex-col">
       <Card className="flex overflow-hidden flex-col">
@@ -35,7 +52,11 @@ export function RequestNotifications({
           </Button>
         </CardHeader>
         <CardContent className="h-[400px] min-h-[400px] overflow-y-auto pr-2 pt-2">
-          {requests.length === 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center h-full text-neutral-100">
+              Loading...
+            </div>
+          ) : !hasRequests ? (
             <div className="flex items-center justify-center h-full text-neutral-100">
               No requests available
             </div>
