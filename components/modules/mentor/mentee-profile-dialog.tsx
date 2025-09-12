@@ -1,8 +1,5 @@
 "use client";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { BsTwitterX } from "react-icons/bs";
-import { FaLinkedinIn } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,19 +14,24 @@ import { useState } from "react";
 
 type MenteeItem = {
   id: string;
-  menteeUserId: string;
-  name: string;
-  age: number;
+  menteeUserId?: string;
+  firstName: string;
+  lastName: string;
+  age: number | string;
   location: string;
-  time: string;
-  avatar: string;
-  goal: string;
-  careerPath: string;
-  interests: string[];
-  socials: {
-    twitter?: string;
-    linkedin?: string;
-  };
+  time?: string;
+  avatar?: string;
+  goal?: string;
+  careerPath?: string;
+  interests?: { id: string; name: string }[];
+  socialMedia?: {
+    id: string;
+    handle: string;
+    url?: string;
+    socialMediaType?: number;
+  }[];
+  educations?: { id: string; status: number; fieldOfStudy: string }[];
+  summary?: string;
 };
 
 interface MenteeProfileDialogProps {
@@ -51,7 +53,9 @@ export function MenteeProfileDialog({
   const handleSendMessage = async () => {
     setIsStartingChat(true);
     try {
-      const response = await StartChatQuery({ peerUserId: mentee.menteeUserId });
+      const response = await StartChatQuery({
+        peerUserId: mentee.menteeUserId || mentee.id,
+      });
 
       if (response.isSuccess) {
         onOpenChange(false);
@@ -69,9 +73,7 @@ export function MenteeProfileDialog({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        className="right-0 mt-3 mr-3 md:mr-5 h-auto max-h-[97vh] w-[95%] overflow-hidden rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md flex flex-col"
-      >
+      <SheetContent className="right-0 mt-3 mr-3 md:mr-5 h-auto max-h-[97vh] w-[95%] overflow-hidden rounded-lg border-0 p-0 px-6 py-4 sm:max-w-md flex flex-col">
         <SheetHeader className="relative border-b pb-10">
           <div className="flex items-center gap-4">
             <Avatar className="h-20 w-20">
@@ -83,8 +85,8 @@ export function MenteeProfileDialog({
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div>
-              <SheetTitle className="text-2xl md:text-4xl">
-                {mentee.name}
+              <SheetTitle className="text-2xl md:text-3xl">
+                {mentee.firstName} {mentee.lastName}
               </SheetTitle>
               <Badge variant="outline" className="mt-1">
                 Mentee
@@ -102,6 +104,12 @@ export function MenteeProfileDialog({
           </div>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto mt-4 space-y-6">
+          {mentee.summary && (
+            <div>
+              <h3 className="font-medium text-base">Summary</h3>
+              <p className="font-light mt-1">{mentee.summary}</p>
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h3 className="font-medium text-base">Age</h3>
@@ -119,40 +127,51 @@ export function MenteeProfileDialog({
           </div>
 
           <div>
-            <h3 className="font-medium text-base">Career Path</h3>
-            <p className="font-light mt-1">{mentee?.careerPath}</p>
+            {Array.isArray(mentee.educations) &&
+              mentee.educations.length > 0 && (
+                <div>
+                  <h3 className="font-medium text-base">Education</h3>
+                  <ul className="mt-1 list-disc">
+                    {mentee.educations.map((edu) => (
+                      <li key={edu.id} className="font-light">
+                        {edu.fieldOfStudy}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
           </div>
 
           <div>
             <h3 className="font-medium">Interest(s)</h3>
             <div className="mt-2 flex flex-wrap gap-2">
-              {mentee?.interests?.map((interest) => (
-                <Badge
-                  key={interest}
-                  variant="secondary"
-                  className="rounded-full"
-                >
-                  {interest}
-                </Badge>
-              ))}
+              {Array.isArray(mentee?.interests)
+                ? mentee.interests.map((interest: any) => (
+                    <Badge
+                      key={interest.id || interest.name}
+                      variant="secondary"
+                      className="rounded-full"
+                    >
+                      {interest.name || interest}
+                    </Badge>
+                  ))
+                : null}
             </div>
           </div>
 
           <div>
             <h3 className="font-medium">Socials</h3>
             <div className="mt-2 flex gap-2 items-center">
-              {mentee?.socials?.twitter && (
-                <div className="flex items-center gap-2">
-                  <BsTwitterX className="h-5 w-5 bg-primary-400 text-white p-1 rounded-md" />
-                  <span className="font-light">{mentee?.socials?.twitter}</span>
-                </div>
-              )}
-              {mentee?.socials?.linkedin && (
-                <div className="flex items-center gap-2">
-                  <FaLinkedinIn className="h-5 w-5 bg-primary-400 text-white p-1 rounded-md" />
-                  <span className="font-light">{mentee?.socials?.linkedin}</span>
-                </div>
-              )}
+              {Array.isArray(mentee?.socialMedia)
+                ? mentee.socialMedia.map((social: any) => (
+                    <div
+                      className="flex items-center gap-2"
+                      key={social.id || social.handle}
+                    >
+                      <span className="font-light">{social.handle}</span>
+                    </div>
+                  ))
+                : null}
             </div>
           </div>
         </div>

@@ -53,7 +53,7 @@ export const endpoints = () => {
       acceptMentee: `/mentormenteerelations/accept-mentee`,
       rejectMentee: `mentormenteerelations/reject-mentee`,
       details: (menteeId: string) => `/mentees/${menteeId}`,
-
+      profile_details: (menteeId: string) => `/users/${menteeId}`,
       requests: `/mentees/requests`,
     },
     chat: {

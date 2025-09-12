@@ -1,4 +1,6 @@
 export type Mentee = {
+    firstName: string
+    lastName: string
     id: string
     menteeUserId: string
     name: string

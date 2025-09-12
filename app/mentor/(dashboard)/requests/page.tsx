@@ -48,13 +48,7 @@ export default function MenteeRequestsPage() {
     setLoading(true);
     
     try {
-      // API call to accept request would go here
-      // For now, we'll just simulate it
-      
-      // Mock successful response
       toast.success("You've accepted the mentee request");
-      
-      // Refresh the list
       await fetchMenteeRequests();
     } catch (error) {
       toast.error("Failed to accept request");

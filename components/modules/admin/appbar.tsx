@@ -103,7 +103,7 @@ export function Appbar() {
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-10">
           <div className="flex flex-col text-center md:text-left">
             <h1 className="text-2xl md:text-4xl font-medium tracking-tight">Welcome back, {userName}!</h1>
-            <p className="text-neutral-200 mt-2">Let&apos;s see what&apos;s on your plate today.</p>
+            <p className="text-neutral-200 mt-2">{userRole === "Mentor" ? "Here's what your schedule looks like today" : "Let's see what the stats are today."}</p>
           </div>
           
           {/* <div className=" md:flex items-center gap-4">

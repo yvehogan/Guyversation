@@ -177,7 +177,7 @@ export function RequestProfileDialog({
               className="flex-1 border-warning-200 text-warning-200 hover:bg-red-50 hover:text-red-600"
               onClick={onDecline}
             >
-              Decline request
+              Decline requestbbbb
             </Button>
             <Button size="lg" className="flex-1" onClick={handleAcceptClick}>
               Accept Request

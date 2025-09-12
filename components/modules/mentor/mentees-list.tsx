@@ -5,9 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { AcceptedMentee, GetAcceptedMenteesQuery } from "@/components/queries/mentor/get-mentees-list";
 import { LoadingOverlay } from "@/components/ui/loading-overlay";
+import { GetMenteeDetailsQuery, MenteeDetails } from "@/components/queries/mentor/get-mentee-details";
 
 interface MenteesListProps {
-  onViewProfile: (mentee: AcceptedMentee) => void;
+  onViewProfile: (mentee: MenteeDetails | null) => void;
   onChatWithMentee: (mentee: AcceptedMentee) => void;
   currentPage: number;
   pageSize: number;
@@ -46,6 +47,15 @@ export function MenteesList({
     };
     fetchMentees();
   }, [currentPage, pageSize, setPaginationMetadata, searchTerm]);
+
+  const handleViewProfile = async (mentee: AcceptedMentee) => {
+    const details = await GetMenteeDetailsQuery(mentee.menteeUserId);
+    if (details.isSuccess) {
+      onViewProfile(details.data);
+    } else {
+      // handle error, e.g. toast.error(details.message)
+    }
+  };
 
   if (loading) {
     return (
@@ -94,14 +104,14 @@ export function MenteesList({
                     <span className="font-medium">{mentee.name}</span>
                   </div>
                 </td>
-                <td className="py-4 px-4 w-16 text-right">{mentee.age ?? "N/A"}</td>
-                <td className="py-4 px-4 w-1/4">{mentee.location ?? "N/A"}</td>
+                <td className="py-4 px-4 w-16 text-right">{mentee.menteeAge ?? "N/A"}</td>
+                <td className="py-4 px-4 w-1/4">{mentee.menteeLocation ?? "N/A"}</td>
                 <td className="py-4 px-4 w-1/6">{mentee.email ?? "N/A"}</td>
                 <td className="py-4 px-4 w-1/6 text-left">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onViewProfile(mentee)}
+                    onClick={() => handleViewProfile(mentee)}
                     className="py-5 px-3"
                   >
                     View Profile

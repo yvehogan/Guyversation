@@ -90,7 +90,8 @@ export function ActivityProvider({
     (window as any).__inactivityWarningTimer = setTimeout(
       () => {
         toast.warning(
-          "You will be logged out in 5 minutes due to inactivity"
+          "You will be logged out in 5 minutes due to inactivity",
+          { autoClose: 5000 },
         );
       },
       warningTime * 60 * 1000,

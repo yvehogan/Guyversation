@@ -3,12 +3,14 @@ import { axios } from "@/lib/axios";
 import axiosDefault from "axios";
 
 export interface AcceptedMentee {
+  firstName: string;
+  lastName: string;
   id: string;
   menteeUserId: string;
   name: string;
   email: string;
-  age: number | null;
-  location: string | null;
+  menteeAge: number | null;
+  menteeLocation: string | null;
   avatar: string | null;
   goal?: string;
   time?: string;

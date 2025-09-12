@@ -23,7 +23,7 @@ export function DeclineReasonDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogTitle className="text-center text-xl font-semibold">
-          Kindly share your reason for declining this request
+         Let us know why. Helps us match better next time
         </DialogTitle>
         <div className="mt-4">
           <Textarea

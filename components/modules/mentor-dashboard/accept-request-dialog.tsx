@@ -35,7 +35,7 @@ export function AcceptRequestDialog({
           />
 
         <DialogTitle className="text-xl font-semibold">
-          Are you sure you want to accept this request?
+          Are you sure you want to accept this mentorship request?
         </DialogTitle>
 
         <DialogFooter className="mt-6 flex justify-center gap-4 sm:justify-center">

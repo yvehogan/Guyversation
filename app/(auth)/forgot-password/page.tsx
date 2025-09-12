@@ -13,7 +13,7 @@ export default function ForgotPasswordPage() {
           height={50}
           className="h-10 w-auto"
         />
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <span className="text-sm text-neutral-100">
             Didn&apos;t get an email?
           </span>
@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
           >
             Resend Mail
           </Link>
-        </div>
+        </div> */}
       </header>
       <div className="flex flex-1 items-center justify-center">
         <div className="w-full max-w-md">

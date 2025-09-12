@@ -114,7 +114,7 @@ export function Appbar() {
       {isDashboardPage && (
         <div>
           <h1 className="text-xl md:text-4xl font-medium tracking-tight">Welcome back, {userName}!</h1>
-          <p className="text-neutral-200 mt-1 md:mt-2 text-sm md:text-base">Let&apos;s see what&apos;s on your plate today.</p>
+          <p className="text-neutral-200 mt-1 md:mt-2 text-sm md:text-base">Let&apos;s see what the stats are today.</p>
         </div>
       )}
       

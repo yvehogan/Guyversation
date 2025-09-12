@@ -49,7 +49,7 @@ export function RequestProfileDialog({
                 <AvatarFallback>{request.name ? request.name.charAt(0) : "M"}</AvatarFallback>
               </Avatar>
               <div>
-                <SheetTitle className="text-4xl">{request.name || "Unknown"}</SheetTitle>
+                <SheetTitle className="text-3xl">{request.name || "Unknown"}</SheetTitle>
                 <Badge variant="outline" className="mt-1">
                   Mentee
                 </Badge>
@@ -136,15 +136,14 @@ export function RequestProfileDialog({
             className="flex-1 border-grey-300 text-warning-200 hover:text-red-600"
             onClick={() => onDecline(request.id)}
           >
-            Decline request
+            Not a match this time.
           </Button>
           <Button 
             size='lg' 
             className="flex-1" 
             onClick={() => onAccept(request.id)}
           >
-            Accept Request
-
+            Let him in.
           </Button>
         </div>
       </SheetContent>
