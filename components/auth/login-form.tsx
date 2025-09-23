@@ -23,6 +23,17 @@ export function LoginForm() {
     mutationFn: (values: LoginProps) => LoginMutation(values),
     onSuccess: async (response: LoginResponse) => {
       if (response.isSuccess) {
+        if (response.message === "Email not confirmed. Please check your email for the OTP to complete login." ||
+            response.message === "Please verify your email address") {
+          sessionStorage.setItem("user_email", email);
+          
+          const isAdminPath = window.location.pathname.includes('/admin');
+          const redirectPath = isAdminPath ? "/admin/change-password" : "/change-password";
+          
+          router.push(redirectPath);
+          return;
+        }
+
         Cookies.set("GUYVERSATION_USER_ID", response.data?.userId || "");
         Cookies.set("GUYVERSATION_ACCESS_TOKEN", response.data?.accessToken || "", { expires: 7 });
         Cookies.set("GUYVERSATION_USER_EMAIL", email);
@@ -32,25 +43,32 @@ export function LoginForm() {
 
         toast.success(response.message);
 
-        if (userRole === "Admin") {
-          router.push("/admin/dashboard");
-        } else {
-          try {
-            const userDetails = await GetPersonalDetailsQuery();
-            if (userDetails.isSuccess && userDetails.data?.hasUpdatedProfile) {
-              router.push("/mentor");
-            } else {
+        setTimeout(() => {
+          if (userRole === "Admin") {
+            router.push("/admin/dashboard");
+          } else {
+            try {
+              GetPersonalDetailsQuery().then(userDetails => {
+                if (userDetails.isSuccess && userDetails.data?.hasUpdatedProfile) {
+                  router.push("/mentor");
+                } else {
+                  router.push("/profile-setup");
+                }
+              }).catch(error => {
+                console.error("Error fetching user profile:", error);
+                router.push("/profile-setup");
+              });
+            } catch (error) {
+              console.error("Error fetching user profile:", error);
               router.push("/profile-setup");
             }
-          } catch (error) {
-            console.error("Error fetching user profile:", error);
-            router.push("/profile-setup");
           }
-        }
+        }, 1500);
       } else {
         toast.dismiss();
 
-        if (response.message === "Please verify your email address") {
+        if (response.message === "Please verify your email address" || 
+            response.message === "Email not confirmed. Please check your email for the OTP to complete login.") {
           sessionStorage.setItem("user_email", email);
 
           const isAdminPath = window.location.pathname.includes('/admin');
