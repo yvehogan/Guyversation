@@ -128,7 +128,7 @@ export function ProfileSetup() {
 
         <div className="container mx-auto px-4 py-4 md:py-8">
           <div className="text-center mb-8">
-            <h1 className="text-2xl md:text-4xl font-medium text-neutral-100">Welcome to Guyversation</h1>
+            <h1 className="text-2xl md:text-4xl font-medium text-neutral-100">Welcome to MyGuy</h1>
             <p className="text-neutral-200">Let&apos;s set up your mentor profile</p>
           </div>
         </div>

@@ -30,7 +30,9 @@ export const SidebarUser = () => {
 
       toast.success("Logged out successfully");
 
-      router.push("/");
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
     } catch (error) {
       console.error("Error during logout:", error);
       toast.error("An error occurred during logout");

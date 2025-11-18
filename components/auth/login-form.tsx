@@ -41,29 +41,30 @@ export function LoginForm() {
         const userRole = response.data?.role || "";
         Cookies.set("GUYVERSATION_USER_TYPE", userRole);
 
-        toast.success(response.message);
-
-        setTimeout(() => {
-          if (userRole === "Admin") {
-            router.push("/admin/dashboard");
-          } else {
-            try {
-              GetPersonalDetailsQuery().then(userDetails => {
-                if (userDetails.isSuccess && userDetails.data?.hasUpdatedProfile) {
-                  router.push("/mentor");
-                } else {
+        toast.success(response.message, {
+          onClose: () => {
+            if (userRole === "Admin") {
+              router.push("/admin/dashboard");
+            } else {
+              try {
+                GetPersonalDetailsQuery().then(userDetails => {
+                  if (userDetails.isSuccess && userDetails.data?.hasUpdatedProfile) {
+                    router.push("/mentor");
+                  } else {
+                    router.push("/profile-setup");
+                  }
+                }).catch(error => {
+                  console.error("Error fetching user profile:", error);
                   router.push("/profile-setup");
-                }
-              }).catch(error => {
+                });
+              } catch (error) {
                 console.error("Error fetching user profile:", error);
                 router.push("/profile-setup");
-              });
-            } catch (error) {
-              console.error("Error fetching user profile:", error);
-              router.push("/profile-setup");
+              }
             }
-          }
-        }, 1500);
+          },
+          autoClose: 5000,
+        });
       } else {
         toast.dismiss();
 

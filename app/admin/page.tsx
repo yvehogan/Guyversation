@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col lg:flex-row">
+    <main className="flex h-screen flex-col lg:flex-row">
       <div className="flex flex-1 flex-col p-4 sm:p-6 md:p-8">
         <header className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 mb-6 sm:mb-0">
           <Image
@@ -32,10 +32,10 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="hidden w-full md:w-2/5 lg:w-1/2 md:flex p-3 sm:p-4 md:p-6">
+      <div className="hidden lg:w-1/2 lg:flex p-3 sm:p-4 md:p-6">
         <div className="bg-primary-200 rounded-tr-[30px] sm:rounded-tr-[45px] rounded-bl-[30px] sm:rounded-bl-[45px] flex-1 flex items-center justify-center overflow-hidden relative">
           <Image
-            src="/svgs/onboarding.svg"
+            src="/svgs/onboarding.png"
             alt="Hero Image"
             fill
             className="object-cover"
