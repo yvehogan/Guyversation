@@ -28,9 +28,8 @@ export const SidebarUser = () => {
 
       setOpen(false);
 
-      toast.success("Logged out successfully");
-
       setTimeout(() => {
+        toast.success("Logged out successfully");
         router.push("/");
       }, 1500);
     } catch (error) {
