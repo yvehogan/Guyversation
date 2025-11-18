@@ -29,7 +29,7 @@ export const SidebarUser = () => {
       setOpen(false);
 
       setTimeout(() => {
-        toast.success("Logged out successfully");
+        // toast.success("Logged out successfully");
         router.push("/");
       }, 1500);
     } catch (error) {
